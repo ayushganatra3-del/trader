@@ -2,21 +2,26 @@ name: Trading agent
 
 # Runs the multi-strategy agent around the clock (crypto never closes; stock
 # sleeves only trade during market hours). Each run trades for ~29 minutes and
-# a new run is scheduled every 30 minutes; the concurrency group queues the
-# next run behind the current one so they never overlap.
+# then starts the next run itself; the schedule below is a back-up in case the
+# chain breaks. The concurrency group queues runs so they never overlap.
+#
+# To stop it: set the repository variable AGENT_ENABLED to false (or disable
+# the workflow under Actions).
 #
 # State (ledger, trades, leaderboard) is committed to the `agent-state`
 # branch: open https://github.com/<owner>/<repo>/tree/agent-state to see it.
 #
 # Settings -> Secrets and variables -> Actions:
-#   variables: AGENT_MODE = paper (default) | alpaca-paper | alpaca-live
+#   variables: AGENT_ENABLED = false to stop trading
+#              AGENT_MODE = paper (default) | alpaca-paper | alpaca-live
 #              AGENT_KRONOS = true to add the Kronos AI forecaster
 #   secrets:   APCA_API_KEY_ID, APCA_API_SECRET_KEY (Alpaca keys)
 #              AGENT_LIVE_CONFIRM = I-ACCEPT-REAL-MONEY-RISK (only for alpaca-live)
 
 on:
   schedule:
-    - cron: '*/30 * * * *'
+    # off the top of the hour: GitHub delays or drops :00/:30 schedules under load
+    - cron: '7,37 * * * *'
   workflow_dispatch:
     inputs:
       minutes:
@@ -33,11 +38,12 @@ concurrency:
 
 jobs:
   trade:
-    if: github.repository == 'ayushganatra3-del/trader'
+    if: github.repository == 'ayushganatra3-del/trader' && vars.AGENT_ENABLED != 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 50
     permissions:
       contents: write
+      actions: write  # to start the next run
     defaults:
       run:
         shell: bash
@@ -120,6 +126,13 @@ jobs:
             sleep $((attempt * 5))
           done
           exit 1
+
+      - name: Start the next run
+        # Only after a full, successful run, so a broken setup can't loop quickly.
+        if: steps.trade.outcome == 'success' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run agent.yml --repo "$GITHUB_REPOSITORY" --ref main -f minutes=29
 
       - name: Keep a copy if saving failed
         if: failure() && steps.persist.outcome == 'failure'
