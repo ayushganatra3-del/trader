@@ -6,6 +6,7 @@ Bars are indexed by their UTC start time and contain only *completed* bars.
 """
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 import json
 import logging
 import time
@@ -188,7 +189,7 @@ class MarketData:
         """Fetch new bars where due. Returns {symbol: error} for failures."""
         now = now or pd.Timestamp.now(tz="UTC")
         errors = {s: e for s, e in self.errors.items() if s in self.bars and not self._due(self.config.asset(s), self.bars[s], now)}
-        changed = False
+        jobs = []
         for asset in self.config.universe:
             old = self.bars.get(asset.symbol, empty_bars())
             if not self._due(asset, old, now):
@@ -200,14 +201,29 @@ class MarketData:
                 range_ = "1d"
             else:
                 range_ = "5d"
+            jobs.append((asset, range_))
+
+        def fetch(job):
+            asset, range_ = job
             try:
-                new = self._fetch(asset, range_, now)
-                self.bars[asset.symbol] = merge_bars(old, new)
+                return asset, self._fetch(asset, range_, now), None
+            except Exception as error:
+                return asset, None, error
+
+        changed = False
+        started = time.monotonic()
+        with ThreadPoolExecutor(max_workers=6) as pool:
+            for asset, new, error in pool.map(fetch, jobs):
+                if error is not None:
+                    errors[asset.symbol] = str(error)[:300]
+                    log.warning("Data error for %s: %s", asset.symbol, error)
+                    continue
+                self.bars[asset.symbol] = merge_bars(self.bars.get(asset.symbol, empty_bars()), new)
                 self.last_fetch[asset.symbol] = now
                 changed = True
-            except Exception as error:
-                errors[asset.symbol] = str(error)[:300]
-                log.warning("Data error for %s: %s", asset.symbol, error)
+        if jobs:
+            log.info("Fetched %d/%d symbols in %.1fs", len(jobs) - len([j for j in jobs if j[0].symbol in errors]),
+                     len(jobs), time.monotonic() - started)
         self.errors = errors
         if self.last_fx is None or now - self.last_fx >= pd.Timedelta(minutes=30):
             self._refresh_fx(now)
