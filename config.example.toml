@@ -1,0 +1,39 @@
+# Copy to config.toml (or set AGENT_CONFIG=path) and change what you need.
+# Anything left out keeps its default from agent/config.py.
+
+starting_capital_gbp = 100.0
+
+# Symbols: plain US tickers, "-USD" crypto pairs, or ".L" London listings.
+# universe = ["SPY", "QQQ", "TQQQ", "SQQQ", "NVDA", "TSLA", "AMD", "BTC-USD", "ETH-USD", "SOL-USD"]
+
+# Strategies to switch off, by name (see the leaderboard for names).
+# disabled_strategies = ["MACD cross", "Heikin-Ashi"]
+
+[cost_bps]          # modelled cost per side: commission + spread + slippage
+us_equity = 5.0
+crypto = 30.0       # Alpaca crypto taker fee is 25 bps at the lowest tier
+
+[risk]
+slots = 4                        # positions per sleeve, each 1/slots of equity
+max_symbol_weight = 0.35
+daily_loss_limit = 0.06          # flatten + pause a sleeve for the rest of the UTC day
+kill_drawdown = 0.5              # disable a sleeve for good after -50% from its peak
+flatten_minutes_before_close = 10
+no_entry_minutes_before_close = 30
+
+[meta]              # the "Agent" walk-forward selector
+lookback_days = 10
+top_k = 5
+min_trades = 3
+
+[kronos]            # optional AI forecaster (pip install -r requirements-kronos.txt)
+enabled = false
+model = "NeoQuasar/Kronos-small"
+every_minutes = 15
+
+[broker]
+mode = "paper"      # "paper" | "alpaca-paper" | "alpaca-live" (real money)
+sleeve = "Agent"    # which sleeve the broker account copies
+capital_gbp = 100.0 # hard cap on money deployed, whatever the account holds
+trade_crypto = true
+trade_stocks = true

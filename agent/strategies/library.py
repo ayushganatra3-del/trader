@@ -1,0 +1,280 @@
+"""The strategy zoo: well-known intraday rule sets, each in a few lines.
+
+All are long-only (a small cash account can't short; inverse ETFs such as
+SQQQ in the universe give bearish exposure). Parameters are textbook defaults,
+not fitted to recent data, so backtests are not tuned to the test period.
+"""
+from __future__ import annotations
+
+import pandas as pd
+
+from ..indicators import Features, crossed_above, crossed_below
+from .base import Strategy
+
+EQUITIES = ("us_equity", "uk_equity")
+
+
+def _false(f: Features) -> pd.Series:
+    return pd.Series(False, index=f.index)
+
+
+# ----------------------------------------------------------------- trend
+
+def ema_cross(fast: int, slow: int):
+    def fn(f: Features):
+        a, b = f.ema(fast), f.ema(slow)
+        return crossed_above(a, b), crossed_below(a, b)
+    return fn
+
+
+def triple_ema(f: Features):
+    e1, e2, e3 = f.ema(8), f.ema(21), f.ema(55)
+    aligned = (e1 > e2) & (e2 > e3)
+    return aligned & ~aligned.shift(1, fill_value=False), e1 < e2
+
+
+def macd_cross(f: Features):
+    line, signal = f.macd()
+    return crossed_above(line, signal), crossed_below(line, signal)
+
+
+def macd_zero(f: Features):
+    line, signal = f.macd()
+    return crossed_above(line, 0.0) & (line > signal), crossed_below(line, signal)
+
+
+def supertrend(f: Features):
+    trend = f.supertrend(10, 3.0)
+    return (trend > 0) & (trend.shift(1) < 0), trend < 0
+
+
+def psar(f: Features):
+    trend = f.psar()
+    return (trend > 0) & (trend.shift(1) < 0) & (f.close > f.ema(50)), trend < 0
+
+
+def adx_trend(f: Features):
+    adx, plus_di, minus_di = f.adx(14)
+    return crossed_above(plus_di, minus_di) & (adx > 20), crossed_below(plus_di, minus_di)
+
+
+def ichimoku(f: Features):
+    tenkan, kijun, top, _ = f.ichimoku()
+    above = f.close > top
+    return crossed_above(tenkan, kijun) & above, f.close < kijun
+
+
+def heikin_ashi(f: Features):
+    ho, hh, hl, hc = f.heikin_ashi()
+    green = hc > ho
+    strong = green & (hl >= ho)  # no lower wick
+    streak = strong & strong.shift(1, fill_value=False)
+    return streak & ~streak.shift(1, fill_value=False), ~green
+
+
+def ma_pullback(f: Features):
+    """Buy a dip to the 20 EMA inside an up-trend (EMA20 > EMA50 > EMA200)."""
+    e20, e50, e200 = f.ema(20), f.ema(50), f.ema(200)
+    trend = (e20 > e50) & (e50 > e200)
+    touched = f.low <= e20
+    return trend & touched & (f.close > e20) & (f.close > f.open), f.close < e50
+
+
+# ----------------------------------------------------------------- momentum
+
+def vwap_momentum(f: Features):
+    """The original GPT rule: above session VWAP with positive 20-minute return."""
+    vwap = f.vwap()
+    up = (f.close > vwap) & (f.roc(4) > 0)
+    return up & ~up.shift(1, fill_value=False), f.close < vwap
+
+
+def roc_volume(f: Features):
+    roc = f.roc(12)
+    vol = f.volume_ratio(20)
+    return (roc > 0.006) & (vol > 1.5) & (f.close > f.ema(20)), roc < 0
+
+
+def rsi_momentum(f: Features):
+    rsi = f.rsi(14)
+    return crossed_above(rsi, 60) & (f.close > f.ema(50)), crossed_below(rsi, 45)
+
+
+def obv_trend(f: Features):
+    obv = f.obv()
+    obv_ema = obv.ewm(span=20, adjust=False, min_periods=20).mean()
+    cond = (obv > obv_ema) & (f.close > f.ema(20)) & (f.ema(20) > f.ema(50))
+    return cond & ~cond.shift(1, fill_value=False), (obv < obv_ema) & (f.close < f.ema(20))
+
+
+def gap_and_go(f: Features):
+    """Stocks gapping up >1% that break the first 5-minute bar's high."""
+    gap = f.session_open() / f.prev_session_close() - 1
+    first_high = f.high.where(f.session["since_open"] < 5).groupby(f.session["session"]).transform("max")
+    since = f.session["since_open"]
+    entry = (gap > 0.01) & (since >= 5) & (since < 90) & crossed_above(f.close, first_high)
+    return entry, f.close < f.vwap()
+
+
+# ----------------------------------------------------------------- breakout
+
+def donchian(entry_n: int, exit_n: int):
+    def fn(f: Features):
+        return f.close > f.highest(entry_n), f.close < f.lowest(exit_n)
+    return fn
+
+
+def opening_range_breakout(minutes: int):
+    def fn(f: Features):
+        high, low, complete = f.opening_range(minutes)
+        entry = complete & crossed_above(f.close, high) & (f.session["since_open"] < 240)
+        return entry, f.close < (high + low) / 2
+    return fn
+
+
+def bollinger_breakout(f: Features):
+    lower, mid, upper = f.bollinger(20, 2.0)
+    return crossed_above(f.close, upper), f.close < mid
+
+
+def keltner_breakout(f: Features):
+    lower, mid, upper = f.keltner(20, 2.0)
+    return crossed_above(f.close, upper), f.close < mid
+
+
+def squeeze_breakout(f: Features):
+    """TTM-style squeeze: Bollinger bands inside Keltner, then release upward."""
+    bl, bm, bu = f.bollinger(20, 2.0)
+    kl, km, ku = f.keltner(20, 1.5)
+    squeezed = (bu < ku) & (bl > kl)
+    was_squeezed = squeezed.shift(1, fill_value=False).rolling(6, min_periods=1).max().astype(bool)
+    return was_squeezed & ~squeezed & (f.close > bu) & (f.roc(3) > 0), f.close < bm
+
+
+def volume_breakout(f: Features):
+    entry = (f.volume_ratio(20) > 3.0) & (f.close > f.open) & (f.close > f.highest(20))
+    return entry, f.close < f.ema(9)
+
+
+# ----------------------------------------------------------------- mean reversion
+
+def rsi_reversion(f: Features):
+    rsi = f.rsi(14)
+    return crossed_above(rsi, 30), rsi > 55
+
+
+def connors_rsi2(f: Features):
+    rsi2 = f.rsi(2)
+    return (rsi2 < 10) & (f.close > f.sma(200)), f.close > f.sma(5)
+
+
+def bollinger_reversion(f: Features):
+    lower, mid, upper = f.bollinger(20, 2.0)
+    return crossed_above(f.close, lower), f.close >= mid
+
+
+def zscore_reversion(f: Features):
+    z = f.zscore(50)
+    return crossed_above(z, -2.0), z > 0
+
+
+def vwap_reversion(f: Features):
+    vwap, sd = f.vwap(), f.vwap_std()
+    stretched = f.close < vwap - 2 * sd
+    return stretched & (f.close > f.open), f.close >= vwap
+
+
+def stochastic_reversion(f: Features):
+    k, d = f.stochastic(14, 3)
+    return crossed_above(k, d) & (k < 25), k > 80
+
+
+def williams_reversion(f: Features):
+    wr = f.williams_r(14)
+    return crossed_above(wr, -80), wr > -20
+
+
+def cci_reversion(f: Features):
+    cci = f.cci(20)
+    return crossed_above(cci, -100), cci > 100
+
+
+def mfi_reversion(f: Features):
+    mfi = f.mfi(14)
+    return crossed_above(mfi, 20), mfi > 70
+
+
+# ----------------------------------------------------------------- benchmarks
+
+def always_long(f: Features):
+    return pd.Series(True, index=f.index), _false(f)
+
+
+def model_signal(key: str):
+    """Signals supplied externally (e.g. Kronos forecasts) via Features.extra."""
+    def fn(f: Features):
+        forecast = f.extra.get(key)
+        if forecast is None or forecast.empty:
+            return _false(f), _false(f)
+        aligned = forecast.reindex(f.index).ffill(limit=6)
+        threshold = f.extra.get(f"{key}_threshold", 0.004)
+        return aligned > threshold, aligned < 0
+    return fn
+
+
+S = Strategy
+STRATEGIES: tuple[Strategy, ...] = (
+    # trend following
+    S("EMA 9/21 cross", "ema_cross", "trend", "Fast EMA crosses the slow EMA", ema_cross(9, 21), params={"fast": 9, "slow": 21}),
+    S("EMA 20/50 cross", "ema_cross", "trend", "Slower EMA crossover", ema_cross(20, 50), params={"fast": 20, "slow": 50}),
+    S("Triple EMA stack", "triple_ema", "trend", "8>21>55 EMAs line up", triple_ema),
+    S("MACD cross", "macd", "trend", "MACD crosses its signal line", macd_cross),
+    S("MACD zero-line", "macd", "trend", "MACD crosses above zero", macd_zero),
+    S("Supertrend", "supertrend", "trend", "Supertrend(10,3) flips up", supertrend, stop_atr=None),
+    S("Parabolic SAR", "psar", "trend", "SAR flips below price above EMA50", psar),
+    S("ADX DI cross", "adx", "trend", "+DI crosses -DI with ADX>20", adx_trend),
+    S("Ichimoku", "ichimoku", "trend", "Tenkan/Kijun cross above the cloud", ichimoku),
+    S("Heikin-Ashi", "heikin_ashi", "trend", "Two strong green HA candles", heikin_ashi),
+    S("Trend pullback", "pullback", "trend", "Dip to EMA20 inside an EMA20>50>200 trend", ma_pullback, take_atr=4.0),
+    # momentum
+    S("VWAP momentum", "vwap_momentum", "momentum", "Above session VWAP with positive 20-min return (original GPT rule)", vwap_momentum),
+    S("ROC + volume", "roc_volume", "momentum", "1-hour return >0.6% on 1.5x volume", roc_volume, trail_atr=2.5),
+    S("RSI momentum", "rsi_momentum", "momentum", "RSI crosses 60 in an up-trend", rsi_momentum),
+    S("OBV trend", "obv", "momentum", "On-balance volume confirms the trend", obv_trend),
+    S("Gap and go", "gap_and_go", "momentum", "Gap up >1% breaks the first-bar high", gap_and_go, trail_atr=2.0, kinds=EQUITIES),
+    # breakout
+    S("Donchian 20/10", "donchian", "breakout", "Turtle breakout of a 20-bar high", donchian(20, 10), params={"entry": 20, "exit": 10}),
+    S("Donchian 55/20", "donchian", "breakout", "Slow turtle breakout", donchian(55, 20), params={"entry": 55, "exit": 20}),
+    S("Opening range 15m", "orb", "breakout", "Break of the first 15 minutes' high", opening_range_breakout(15), kinds=EQUITIES),
+    S("Opening range 30m", "orb", "breakout", "Break of the first 30 minutes' high", opening_range_breakout(30), kinds=EQUITIES),
+    S("Bollinger breakout", "bb_breakout", "breakout", "Close above the upper Bollinger band", bollinger_breakout, trail_atr=2.0),
+    S("Keltner breakout", "keltner", "breakout", "Close above the upper Keltner channel", keltner_breakout, trail_atr=2.0),
+    S("Squeeze breakout", "squeeze", "breakout", "Volatility squeeze releases upward", squeeze_breakout, trail_atr=2.0),
+    S("Volume breakout", "volume_breakout", "breakout", "3x volume bar breaks a 20-bar high", volume_breakout, max_bars=24),
+    # mean reversion
+    S("RSI(14) reversion", "rsi_reversion", "reversion", "RSI climbs back above 30", rsi_reversion, take_atr=3.0),
+    S("Connors RSI(2)", "connors_rsi2", "reversion", "RSI(2)<10 above the 200 SMA", connors_rsi2, max_bars=36),
+    S("Bollinger reversion", "bb_reversion", "reversion", "Close back inside the lower band", bollinger_reversion, take_atr=3.0),
+    S("Z-score reversion", "zscore", "reversion", "50-bar z-score recovers from -2", zscore_reversion),
+    S("VWAP reversion", "vwap_reversion", "reversion", "Bounce from 2 sigma below VWAP", vwap_reversion),
+    S("Stochastic reversion", "stoch", "reversion", "%K crosses %D below 25", stochastic_reversion),
+    S("Williams %R", "williams", "reversion", "%R climbs out of oversold", williams_reversion),
+    S("CCI reversion", "cci", "reversion", "CCI climbs back above -100", cci_reversion),
+    S("MFI reversion", "mfi", "reversion", "Money-flow index leaves oversold", mfi_reversion),
+)
+
+KRONOS_STRATEGY = S("Kronos forecast", "kronos", "model",
+                    "Kronos foundation-model forecast of the next hour's return",
+                    model_signal("kronos"), stop_atr=2.0, max_bars=24)
+
+BENCHMARKS: tuple[Strategy, ...] = (
+    S("Hold SPY", "benchmark", "benchmark", "Buy and hold the S&P 500 (not a day trade)", always_long,
+      stop_atr=None, intraday=False, benchmark=True, params={"symbols": ["SPY"]}),
+    S("Hold BTC", "benchmark", "benchmark", "Buy and hold Bitcoin", always_long,
+      stop_atr=None, intraday=False, benchmark=True, params={"symbols": ["BTC-USD"]}),
+)
+
+
+def all_strategies(kronos: bool = False, disabled: tuple[str, ...] = ()) -> list[Strategy]:
+    chosen = list(STRATEGIES) + ([KRONOS_STRATEGY] if kronos else []) + list(BENCHMARKS)
+    return [strategy for strategy in chosen if strategy.name not in disabled]
