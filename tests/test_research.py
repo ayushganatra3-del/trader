@@ -5,7 +5,7 @@ import pytest
 from agent.config import Config
 from agent.data import synthetic_bars
 from agent.indicators import Features
-from agent.research import AGGRESSIVE, CONSENSUS, META, leaderboard, run_positions, run_research
+from agent.research import AGGRESSIVE, CONSENSUS, META, ROTATION, leaderboard, run_positions, run_research
 from agent.sessions import session_frame
 from agent.strategies import BENCHMARKS, STRATEGIES, all_strategies
 
@@ -43,7 +43,7 @@ def test_no_edge_on_a_pure_random_walk():
     config = Config()
     bars = synthetic_bars(config, days=40, seed=1, end=END, random_walk=True)
     board = leaderboard(run_research(bars, config, all_strategies())).set_index("sleeve")
-    for name in (META, AGGRESSIVE, CONSENSUS):
+    for name in (META, AGGRESSIVE, CONSENSUS, ROTATION):
         assert board.loc[name, "return_pct"] < 10, name
     strategies = board[board["kind"] == "strategy"]
     assert (strategies["return_pct"] < 15).all()
@@ -136,3 +136,13 @@ def test_hourly_signals_only_fire_when_the_hour_completes(small_config, small_ba
     assert len(fired) > 0
     # the 5-minute bar that completes an hour starts at :55
     assert set(fired.minute) == {55}
+
+
+def test_rotation_waits_for_its_lookback(small_config, small_bars):
+    research = run_research(small_bars, small_config, all_strategies())
+    weights = research.sleeves[ROTATION].weights
+    lookback = small_config.meta.rotation_lookback_days
+    first_day = research.index[0].normalize()
+    early = weights[weights.index < first_day + pd.Timedelta(days=min(lookback, 14))]
+    assert early.to_numpy().sum() == 0
+    assert (weights.sum(axis=1) <= 1 + 1e-9).all()

@@ -84,6 +84,8 @@ class MetaConfig:
     aggressive_top_k: int = 2
     aggressive_symbol_cap: float = 1.0
     consensus_threshold: float = 0.34
+    rotation_lookback_days: int = 20  # "Agent (rotation)": ranks whole strategy sleeves
+    rotation_top_k: int = 3
 
 
 @dataclass
