@@ -1,6 +1,6 @@
 # Trading agent — live leaderboard
 
-Mode: **paper** · started 2026-09-24T19:49:18.203581Z · updated 2026-09-24T20:36:05.000158+00:00 · 31 ticks
+Mode: **paper** · started 2026-09-24T19:49:18.203581Z · updated 2026-09-24T21:15:05.000148+00:00 · 60 ticks
 
 > Paper money unless the broker mode says otherwise. Backtests use the last ~60 days of 5-minute bars with modelled costs; past results do not predict future returns, and most day-trading strategies lose money after costs.
 
@@ -22,88 +22,88 @@ Closed trades 1, win rate 100.0%, fees £0.12, max drawdown -0.06%.
 
 | # | Sleeve | Style | Live £ | Live % | Trades | Win % | Backtest % | Sharpe | Max DD % | BT trades |
 |---:|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| 1 | Hold BTC | benchmark | 100.85 | 0.85 | 0 | — | 30.02 | 3.73 | -8.63 | 1 |
-| 2 | EMA 20/50 cross | trend | 100.80 | 0.80 | 0 | — | -77.51 | -17.39 | -77.74 | 1285 |
-| 3 | VWAP momentum | momentum | 100.78 | 0.79 | 0 | — | -98.41 | -40.43 | -98.42 | 4353 |
-| 4 | Supertrend | trend | 100.69 | 0.69 | 1 | 100.0 | -86.00 | -24.94 | -86.02 | 1657 |
-| 5 | Triple EMA stack | trend | 100.56 | 0.56 | 4 | 100.0 | -92.27 | -36.75 | -92.27 | 2237 |
-| 6 | EMA 9/21 cross | trend | 100.54 | 0.54 | 4 | 100.0 | -97.19 | -44.35 | -97.19 | 3045 |
-| 7 | RSI momentum | momentum | 100.43 | 0.43 | 4 | 100.0 | -89.26 | -31.40 | -89.26 | 2013 |
-| 8 | Agent (aggressive) | meta | 100.43 | 0.43 | 1 | 100.0 | 0.77 | 0.52 | -3.48 | 90 |
-| 9 | Consensus | meta | 100.36 | 0.36 | 4 | 75.0 | -98.05 | -60.11 | -98.05 | 3285 |
-| 10 | MACD zero-line | trend | 100.35 | 0.35 | 2 | 100.0 | -91.23 | -40.85 | -91.23 | 2041 |
-| 11 | MACD cross | trend | 100.35 | 0.35 | 2 | 100.0 | -99.64 | -72.61 | -99.64 | 5213 |
-| 12 | Donchian 20/10 | breakout | 100.35 | 0.35 | 3 | 100.0 | -90.34 | -35.51 | -90.39 | 2233 |
-| 13 | Connors RSI(2) | reversion | 100.22 | 0.22 | 4 | 50.0 | -95.89 | -42.57 | -95.89 | 3081 |
-| 14 | Trend pullback | trend | 100.19 | 0.19 | 6 | 83.3 | -89.03 | -32.79 | -89.03 | 1956 |
-| 15 | Agent | meta | 100.17 | 0.17 | 1 | 100.0 | -2.49 | -2.20 | -4.69 | 190 |
-| 16 | Parabolic SAR | trend | 100.17 | 0.17 | 1 | 100.0 | -96.53 | -61.10 | -96.53 | 3104 |
-| 17 | Ichimoku | trend | 100.08 | 0.08 | 4 | 75.0 | -78.19 | -29.09 | -78.19 | 1503 |
-| 18 | CCI reversion | reversion | 100.07 | 0.07 | 0 | — | -98.09 | -56.58 | -98.10 | 3935 |
-| 19 | OBV trend | momentum | 100.07 | 0.07 | 5 | 60.0 | -95.28 | -52.40 | -95.28 | 2984 |
-| 20 | Gap and go | momentum | 100.00 | 0.00 | 0 | — | 8.54 | 3.72 | -2.90 | 100 |
-| 21 | Hold SPY | benchmark | 100.00 | 0.00 | 0 | — | 3.98 | 2.07 | -3.66 | 1 |
-| 22 | Opening range 30m | breakout | 100.00 | 0.00 | 0 | — | -9.84 | -4.42 | -14.37 | 363 |
-| 23 | Opening range 15m | breakout | 100.00 | 0.00 | 0 | — | -10.67 | -3.92 | -16.77 | 440 |
-| 24 | Volume breakout | breakout | 100.00 | 0.00 | 0 | — | -61.82 | -26.89 | -62.01 | 790 |
-| 25 | Squeeze breakout | breakout | 100.00 | 0.00 | 0 | — | -64.94 | -30.05 | -65.04 | 1061 |
-| 26 | Donchian 55/20 | breakout | 100.00 | 0.00 | 0 | — | -67.63 | -17.12 | -67.80 | 1103 |
-| 27 | VWAP reversion | reversion | 100.00 | 0.00 | 0 | — | -68.16 | -17.40 | -68.55 | 1162 |
-| 28 | RSI(14) reversion | reversion | 100.00 | 0.00 | 0 | — | -70.04 | -22.03 | -70.47 | 1240 |
-| 29 | Keltner breakout | breakout | 100.00 | 0.00 | 0 | — | -82.58 | -37.39 | -82.70 | 1586 |
-| 30 | Z-score reversion | reversion | 100.00 | 0.00 | 0 | — | -82.63 | -28.98 | -82.80 | 1726 |
-| 31 | ADX DI cross | trend | 100.00 | 0.00 | 0 | — | -86.81 | -48.54 | -86.84 | 1779 |
-| 32 | Bollinger breakout | breakout | 100.00 | 0.00 | 0 | — | -93.54 | -49.85 | -93.60 | 2477 |
-| 33 | Heikin-Ashi | trend | 100.00 | 0.00 | 0 | — | -99.86 | -111.40 | -99.86 | 6761 |
-| 34 | ROC + volume | momentum | 99.96 | -0.04 | 2 | 50.0 | -68.32 | -19.02 | -68.62 | 1208 |
-| 35 | MFI reversion | reversion | 99.80 | -0.20 | 0 | — | -83.75 | -36.62 | -83.82 | 1696 |
-| 36 | Stochastic reversion | reversion | 99.60 | -0.40 | 1 | 0.0 | -95.60 | -53.85 | -95.62 | 3406 |
-| 37 | Williams %R | reversion | 99.52 | -0.48 | 0 | — | -99.39 | -70.84 | -99.39 | 5090 |
-| 38 | Bollinger reversion | reversion | 99.52 | -0.48 | 0 | — | -95.59 | -47.78 | -95.59 | 3120 |
+| 1 | Hold BTC | benchmark | 100.93 | 0.93 | 0 | — | 30.13 | 3.74 | -8.63 | 1 |
+| 2 | EMA 20/50 cross | trend | 100.90 | 0.90 | 0 | — | -77.06 | -17.21 | -77.31 | 1283 |
+| 3 | VWAP momentum | momentum | 100.86 | 0.86 | 0 | — | -98.20 | -38.07 | -98.21 | 4282 |
+| 4 | Triple EMA stack | trend | 100.45 | 0.45 | 4 | 100.0 | -92.29 | -36.72 | -92.29 | 2239 |
+| 5 | EMA 9/21 cross | trend | 100.44 | 0.44 | 4 | 100.0 | -97.19 | -44.26 | -97.19 | 3051 |
+| 6 | RSI momentum | momentum | 100.43 | 0.43 | 4 | 100.0 | -89.41 | -31.58 | -89.41 | 2017 |
+| 7 | Agent (aggressive) | meta | 100.43 | 0.43 | 1 | 100.0 | 0.77 | 0.52 | -3.48 | 90 |
+| 8 | Supertrend | trend | 100.42 | 0.42 | 4 | 75.0 | -85.40 | -24.67 | -85.42 | 1630 |
+| 9 | Donchian 20/10 | breakout | 100.35 | 0.35 | 3 | 100.0 | -90.26 | -34.68 | -90.31 | 2222 |
+| 10 | MACD cross | trend | 100.30 | 0.30 | 2 | 100.0 | -99.64 | -72.53 | -99.64 | 5198 |
+| 11 | MACD zero-line | trend | 100.24 | 0.24 | 2 | 100.0 | -91.25 | -40.63 | -91.26 | 2048 |
+| 12 | Agent | meta | 100.17 | 0.17 | 1 | 100.0 | -2.49 | -2.20 | -4.69 | 190 |
+| 13 | Consensus | meta | 100.14 | 0.14 | 5 | 60.0 | -98.09 | -60.42 | -98.09 | 3302 |
+| 14 | Connors RSI(2) | reversion | 100.12 | 0.12 | 6 | 50.0 | -95.94 | -42.76 | -95.94 | 3086 |
+| 15 | Ichimoku | trend | 100.08 | 0.08 | 4 | 75.0 | -78.34 | -29.43 | -78.34 | 1497 |
+| 16 | Gap and go | momentum | 100.00 | 0.00 | 0 | — | 8.54 | 3.72 | -2.90 | 100 |
+| 17 | Hold SPY | benchmark | 100.00 | 0.00 | 0 | — | 3.98 | 2.07 | -3.66 | 1 |
+| 18 | Opening range 30m | breakout | 100.00 | 0.00 | 0 | — | -9.84 | -4.42 | -14.37 | 363 |
+| 19 | Opening range 15m | breakout | 100.00 | 0.00 | 0 | — | -10.67 | -3.92 | -16.77 | 440 |
+| 20 | Volume breakout | breakout | 100.00 | 0.00 | 0 | — | -60.39 | -24.06 | -60.59 | 771 |
+| 21 | Squeeze breakout | breakout | 100.00 | 0.00 | 0 | — | -65.59 | -30.06 | -65.69 | 1074 |
+| 22 | Donchian 55/20 | breakout | 100.00 | 0.00 | 0 | — | -67.12 | -16.69 | -67.29 | 1095 |
+| 23 | VWAP reversion | reversion | 100.00 | 0.00 | 0 | — | -68.85 | -17.79 | -69.23 | 1170 |
+| 24 | RSI(14) reversion | reversion | 100.00 | 0.00 | 0 | — | -69.71 | -22.01 | -70.14 | 1232 |
+| 25 | Keltner breakout | breakout | 100.00 | 0.00 | 0 | — | -82.02 | -37.46 | -82.15 | 1559 |
+| 26 | Z-score reversion | reversion | 100.00 | 0.00 | 0 | — | -82.45 | -29.08 | -82.63 | 1720 |
+| 27 | ADX DI cross | trend | 100.00 | 0.00 | 0 | — | -87.20 | -49.89 | -87.23 | 1787 |
+| 28 | Bollinger breakout | breakout | 100.00 | 0.00 | 0 | — | -93.47 | -49.80 | -93.54 | 2470 |
+| 29 | ROC + volume | momentum | 99.96 | -0.04 | 2 | 50.0 | -68.01 | -18.57 | -68.32 | 1203 |
+| 30 | OBV trend | momentum | 99.86 | -0.14 | 6 | 50.0 | -96.09 | -52.99 | -96.10 | 3108 |
+| 31 | Trend pullback | trend | 99.79 | -0.21 | 8 | 62.5 | -89.05 | -32.64 | -89.05 | 1962 |
+| 32 | CCI reversion | reversion | 99.79 | -0.21 | 1 | 100.0 | -98.05 | -57.12 | -98.05 | 3927 |
+| 33 | Heikin-Ashi | trend | 99.62 | -0.38 | 2 | 0.0 | -99.84 | -111.42 | -99.84 | 6715 |
+| 34 | MFI reversion | reversion | 99.60 | -0.40 | 1 | 0.0 | -82.01 | -36.09 | -82.08 | 1611 |
+| 35 | Bollinger reversion | reversion | 99.51 | -0.49 | 1 | 0.0 | -95.48 | -47.27 | -95.48 | 3111 |
+| 36 | Williams %R | reversion | 99.47 | -0.53 | 1 | 0.0 | -99.35 | -70.66 | -99.35 | 5048 |
+| 37 | Parabolic SAR | trend | 99.45 | -0.55 | 4 | 25.0 | -96.60 | -62.34 | -96.60 | 3113 |
+| 38 | Stochastic reversion | reversion | 99.38 | -0.62 | 3 | 0.0 | -95.27 | -52.61 | -95.28 | 3359 |
 
 ## Recent trades
 
 | Time (UTC) | Sleeve | Side | Symbol | £ | P/L £ | Why |
 |---|---|---|---|---:|---:|---|
-| 2026-09-24T20:35 | Williams %R | buy | SOL-USD | 4.98 | — | rebalance up |
-| 2026-09-24T20:35 | Williams %R | sell | XRP-USD | 4.98 | -0.03 | rebalance down |
-| 2026-09-24T20:35 | Connors RSI(2) | sell | BTC-USD | 24.99 | -0.15 | exit signal |
-| 2026-09-24T20:35 | EMA 9/21 cross | sell | ETH-USD | 25.11 | 0.11 | exit signal |
-| 2026-09-24T20:30 | Williams %R | buy | SOL-USD | 10.08 | — | entry signal |
-| 2026-09-24T20:30 | Williams %R | buy | ETH-USD | 19.96 | — | entry signal |
-| 2026-09-24T20:30 | Williams %R | buy | BTC-USD | 19.96 | — | entry signal |
-| 2026-09-24T20:30 | Stochastic reversion | buy | SOL-USD | 24.95 | — | entry signal |
-| 2026-09-24T20:30 | Stochastic reversion | buy | BTC-USD | 24.95 | — | entry signal |
-| 2026-09-24T20:30 | Bollinger reversion | buy | ETH-USD | 24.92 | — | entry signal |
-| 2026-09-24T20:30 | Triple EMA stack | sell | ETH-USD | 25.12 | 0.12 | exit signal |
-| 2026-09-24T20:25 | RSI momentum | sell | ETH-USD | 25.08 | 0.08 | exit signal |
-| 2026-09-24T20:25 | Trend pullback | sell | XRP-USD | 20.13 | 0.13 | exit signal |
-| 2026-09-24T20:25 | Trend pullback | sell | ETH-USD | 25.07 | 0.02 | exit signal |
-| 2026-09-24T20:25 | Trend pullback | sell | DOGE-USD | 24.92 | -0.25 | exit signal |
-| 2026-09-24T20:25 | Ichimoku | sell | ETH-USD | 25.08 | 0.08 | exit signal |
-| 2026-09-24T20:25 | Supertrend | buy | SOL-USD | 5.08 | — | rebalance up |
-| 2026-09-24T20:25 | Supertrend | buy | ETH-USD | 5.06 | — | rebalance up |
-| 2026-09-24T20:25 | Supertrend | sell | BTC-USD | 20.09 | 0.09 | exit signal |
-| 2026-09-24T20:20 | MFI reversion | buy | DOGE-USD | 25.00 | — | entry |
-| 2026-09-24T20:20 | CCI reversion | buy | DOGE-USD | 25.08 | — | entry signal |
-| 2026-09-24T20:20 | Stochastic reversion | sell | DOGE-USD | 24.87 | -0.13 | target is flat |
-| 2026-09-24T20:20 | Bollinger reversion | buy | SOL-USD | 25.00 | — | entry signal |
-| 2026-09-24T20:20 | Bollinger reversion | buy | DOGE-USD | 25.00 | — | entry signal |
-| 2026-09-24T20:20 | Bollinger reversion | buy | BTC-USD | 25.00 | — | entry signal |
-| 2026-09-24T20:20 | Connors RSI(2) | sell | DOGE-USD | 25.08 | -0.06 | exit signal |
-| 2026-09-24T20:20 | OBV trend | buy | XRP-USD | 25.08 | — | entry signal |
-| 2026-09-24T20:20 | OBV trend | sell | DOGE-USD | 25.07 | -0.13 | target is flat |
-| 2026-09-24T20:20 | OBV trend | sell | BTC-USD | 24.96 | -0.18 | target is flat |
-| 2026-09-24T20:20 | Trend pullback | buy | DOGE-USD | 25.17 | — | entry signal |
-| 2026-09-24T20:15 | Connors RSI(2) | buy | ETH-USD | 25.11 | — | entry signal |
-| 2026-09-24T20:15 | Connors RSI(2) | buy | DOGE-USD | 25.14 | — | entry signal |
-| 2026-09-24T20:15 | Connors RSI(2) | buy | BTC-USD | 25.14 | — | entry signal |
-| 2026-09-24T20:15 | Donchian 20/10 | sell | SOL-USD | 25.09 | 0.09 | stop-loss |
-| 2026-09-24T20:15 | Donchian 20/10 | sell | ETH-USD | 25.12 | 0.12 | exit signal |
-| 2026-09-24T20:15 | Donchian 20/10 | sell | BTC-USD | 25.13 | 0.13 | stop-loss |
-| 2026-09-24T20:15 | OBV trend | sell | ETH-USD | 25.12 | 0.12 | exit signal |
-| 2026-09-24T20:15 | RSI momentum | sell | SOL-USD | 25.09 | 0.09 | exit signal |
-| 2026-09-24T20:15 | RSI momentum | sell | DOGE-USD | 25.14 | 0.14 | exit signal |
-| 2026-09-24T20:15 | RSI momentum | sell | BTC-USD | 25.13 | 0.13 | stop-loss |
+| 2026-09-24T21:10 | Trend pullback | sell | ETH-USD | 24.84 | -0.19 | exit signal |
+| 2026-09-24T21:10 | Parabolic SAR | sell | DOGE-USD | 24.86 | -0.19 | exit signal |
+| 2026-09-24T21:10 | Supertrend | sell | SOL-USD | 24.99 | -0.18 | exit signal |
+| 2026-09-24T21:05 | MFI reversion | buy | SOL-USD | 24.92 | — | entry signal |
+| 2026-09-24T21:05 | Stochastic reversion | buy | DOGE-USD | 24.87 | — | entry signal |
+| 2026-09-24T21:05 | Trend pullback | sell | BTC-USD | 24.88 | -0.16 | exit signal |
+| 2026-09-24T21:05 | Parabolic SAR | buy | ETH-USD | 24.90 | — | entry signal |
+| 2026-09-24T21:00 | MFI reversion | sell | SOL-USD | 24.81 | -0.14 | target is flat |
+| 2026-09-24T21:00 | Stochastic reversion | sell | DOGE-USD | 24.75 | -0.18 | target is flat |
+| 2026-09-24T21:00 | OBV trend | buy | XRP-USD | 24.98 | — | entry |
+| 2026-09-24T21:00 | Heikin-Ashi | sell | XRP-USD | 24.80 | -0.20 | exit signal |
+| 2026-09-24T21:00 | Heikin-Ashi | sell | BTC-USD | 24.82 | -0.18 | exit signal |
+| 2026-09-24T21:00 | Parabolic SAR | buy | DOGE-USD | 5.03 | — | rebalance up |
+| 2026-09-24T21:00 | Parabolic SAR | sell | SOL-USD | 19.87 | -0.15 | target is flat |
+| 2026-09-24T21:00 | Parabolic SAR | sell | ETH-USD | 19.89 | -0.14 | target is flat |
+| 2026-09-24T21:00 | Supertrend | buy | SOL-USD | 25.17 | — | entry |
+| 2026-09-24T21:00 | Supertrend | buy | ETH-USD | 25.17 | — | entry |
+| 2026-09-24T20:55 | Consensus | sell | XRP-USD | 24.87 | -0.22 | target is flat |
+| 2026-09-24T20:55 | MFI reversion | buy | SOL-USD | 24.95 | — | entry |
+| 2026-09-24T20:55 | OBV trend | sell | XRP-USD | 24.93 | -0.16 | target is flat |
+| 2026-09-24T20:51 | Parabolic SAR | buy | SOL-USD | 9.98 | — | rebalance up |
+| 2026-09-24T20:51 | Parabolic SAR | sell | XRP-USD | 5.02 | -0.02 | rebalance down |
+| 2026-09-24T20:51 | Parabolic SAR | sell | BTC-USD | 4.99 | -0.02 | rebalance down |
+| 2026-09-24T20:50 | Consensus | buy | XRP-USD | 25.09 | — | entry |
+| 2026-09-24T20:50 | CCI reversion | buy | SOL-USD | 9.93 | — | rebalance up |
+| 2026-09-24T20:50 | CCI reversion | buy | ETH-USD | 5.04 | — | rebalance up |
+| 2026-09-24T20:50 | CCI reversion | buy | BTC-USD | 5.03 | — | rebalance up |
+| 2026-09-24T20:50 | CCI reversion | sell | XRP-USD | 20.02 | 0.24 | exit signal |
+| 2026-09-24T20:50 | Williams %R | buy | SOL-USD | 9.90 | — | rebalance up |
+| 2026-09-24T20:50 | Williams %R | buy | ETH-USD | 5.03 | — | rebalance up |
+| 2026-09-24T20:50 | Williams %R | buy | BTC-USD | 5.00 | — | rebalance up |
+| 2026-09-24T20:50 | Williams %R | sell | XRP-USD | 19.94 | -0.05 | exit signal |
+| 2026-09-24T20:50 | Stochastic reversion | sell | XRP-USD | 24.93 | -0.07 | exit signal |
+| 2026-09-24T20:50 | Bollinger reversion | sell | BTC-USD | 24.90 | -0.10 | exit signal |
+| 2026-09-24T20:50 | OBV trend | buy | BTC-USD | 25.04 | — | entry |
+| 2026-09-24T20:50 | Trend pullback | buy | ETH-USD | 25.03 | — | entry signal |
+| 2026-09-24T20:50 | Heikin-Ashi | buy | XRP-USD | 25.00 | — | entry signal |
+| 2026-09-24T20:50 | Heikin-Ashi | buy | BTC-USD | 25.00 | — | entry signal |
+| 2026-09-24T20:50 | Parabolic SAR | buy | SOL-USD | 10.04 | — | entry |
+| 2026-09-24T20:50 | Parabolic SAR | buy | ETH-USD | 20.02 | — | entry signal |
 
 Open `dashboard.html` (download it or use a raw HTML viewer) for charts.
