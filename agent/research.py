@@ -120,6 +120,16 @@ def run_positions(entries, exits, close, atr, force_flat, no_entry, stop_mult, t
     return out, reason, changed_at
 
 
+def _atr_on_index(f: Features, timeframe: int, index: pd.DatetimeIndex) -> np.ndarray:
+    """ATR(14) of the strategy's timeframe, known from each bar's close onward."""
+    if timeframe == f.bar_minutes:
+        atr = f.atr(14)
+    else:
+        higher, anchor = f.resampled(timeframe)
+        atr = f.on_base(higher.atr(14), anchor, events=False)
+    return atr.reindex(index).to_numpy()
+
+
 def _scatter(series: pd.Series, loc: np.ndarray, steps: int) -> np.ndarray:
     out = np.zeros(steps, dtype=bool)
     out[loc] = series.fillna(False).to_numpy(dtype=bool)
@@ -176,7 +186,7 @@ def sleeve_stats(returns: pd.Series, trades: list[float], exposure: float, capit
     }
 
 
-def curve(returns: pd.Series, capital: float, points: int = 300) -> list[list]:
+def curve(returns: pd.Series, capital: float, points: int = 150) -> list[list]:
     if returns.empty:
         return []
     equity = capital * (1 + returns).cumprod()
@@ -184,7 +194,7 @@ def curve(returns: pd.Series, capital: float, points: int = 300) -> list[list]:
     sampled = equity.iloc[::step]
     if sampled.index[-1] != equity.index[-1]:
         sampled = pd.concat([sampled, equity.iloc[-1:]])
-    return [[ts.isoformat(), round(float(value), 4)] for ts, value in sampled.items()]
+    return [[ts.isoformat(), round(float(value), 2)] for ts, value in sampled.items()]
 
 
 # --------------------------------------------------------------- main entry
@@ -209,7 +219,7 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
     locs = {s: index.get_indexer(usable[s].index) for s in symbols}
 
     close_raw = pd.DataFrame({s: usable[s]["close"] for s in symbols}).reindex(index)
-    atr = np.full((steps, n_sym), np.nan)
+    atr_cols: dict[tuple[str, int], np.ndarray] = {}  # (symbol, timeframe) -> ATR on the union index
     force_flat_sym = {}
     no_entry_sym = {}
     features = {}
@@ -217,7 +227,6 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
         asset = config.asset(s)
         f = Features(usable[s], asset.kind, extra=(extra or {}).get(s))
         features[s] = f
-        atr[:, sym_pos[s]] = f.atr(14).reindex(index).to_numpy()
         if asset.kind == "crypto":
             force_flat_sym[s] = np.zeros(steps, bool)
             no_entry_sym[s] = np.zeros(steps, bool)
@@ -232,7 +241,7 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
     # ---- signals for every applicable (strategy, symbol) pair
     columns: list[tuple[str, str]] = []
     entries_cols, exits_cols, flat_cols, noent_cols, col_sym = [], [], [], [], []
-    stop_m, take_m, trail_m, limit_m = [], [], [], []
+    stop_m, take_m, trail_m, limit_m, col_atr = [], [], [], [], []
     for strategy in strategies:
         wanted = strategy.params.get("symbols") if strategy.benchmark else None
         for s in symbols:
@@ -251,16 +260,22 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
             flat_cols.append(force_flat_sym[s] if intraday_flat else np.zeros(steps, bool))
             noent_cols.append(no_entry_sym[s] if asset.kind != "crypto" and not strategy.benchmark else np.zeros(steps, bool))
             col_sym.append(sym_pos[s])
+            key = (s, strategy.timeframe)
+            if key not in atr_cols:
+                atr_cols[key] = _atr_on_index(features[s], strategy.timeframe, index)
+            col_atr.append(key)
             stop_m.append(_nan(strategy.stop_atr))
             take_m.append(_nan(strategy.take_atr))
             trail_m.append(_nan(strategy.trail_atr))
-            limit_m.append(_nan(strategy.max_bars))
+            scale = strategy.timeframe / 5  # max_bars counts the strategy's own bars
+            limit_m.append(_nan(strategy.max_bars * scale if strategy.max_bars else None))
     if not columns:
         raise ValueError("No strategy produced signals")
     col_sym_arr = np.asarray(col_sym)
     close_np = close_raw.to_numpy()
     pos, reasons, changed_at = run_positions(
-        np.column_stack(entries_cols), np.column_stack(exits_cols), close_np[:, col_sym_arr], atr[:, col_sym_arr],
+        np.column_stack(entries_cols), np.column_stack(exits_cols), close_np[:, col_sym_arr],
+        np.column_stack([atr_cols[key] for key in col_atr]),
         np.column_stack(flat_cols), np.column_stack(noent_cols),
         np.asarray(stop_m), np.asarray(take_m), np.asarray(trail_m), np.asarray(limit_m))
     last_reason = {}

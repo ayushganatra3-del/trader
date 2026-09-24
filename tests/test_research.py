@@ -49,17 +49,22 @@ def test_no_edge_on_a_pure_random_walk():
     assert (strategies["return_pct"] < 15).all()
 
 
-def test_stock_positions_are_flat_overnight(small_config, small_bars):
+def test_intraday_stock_positions_are_flat_overnight(small_config, small_bars):
     research = run_research(small_bars, small_config, all_strategies())
     sess = session_frame(small_bars["NVDA"].index, "us_equity")
     last_bars = sess.groupby("session")["to_close"].idxmin()
     last_bars = last_bars[sess.loc[last_bars, "to_close"].to_numpy() <= 0]  # completed sessions only
     assert len(last_bars) >= 5
+    swing_overnight = 0
     for name, sleeve in research.sleeves.items():
-        if sleeve.kind == "benchmark":
+        if sleeve.kind != "strategy":
             continue
         held = sleeve.weights.loc[last_bars, "NVDA"]
-        assert (held == 0).all(), name
+        if sleeve.strategy.intraday:
+            assert (held == 0).all(), name
+        else:
+            swing_overnight += int((held > 0).sum())
+    assert swing_overnight > 0  # hourly swing sleeves are allowed to carry positions
 
 
 def test_sleeve_weights_respect_limits(small_config, small_bars):
@@ -121,3 +126,13 @@ def test_time_stop_flatten_and_no_entry():
 def test_missing_bars_do_not_trade():
     pos = _engine([10, np.nan, np.nan, 10], [False, True, True, False])
     assert pos.tolist() == [False, False, False, False]
+
+
+def test_hourly_signals_only_fire_when_the_hour_completes(small_config, small_bars):
+    swing = next(s for s in STRATEGIES if s.timeframe == 60 and s.family == "ema_cross")
+    f = Features(small_bars["BTC-USD"], "crypto")
+    entry, exit_ = swing.fn(f)
+    fired = entry[entry].index.append(exit_[exit_].index)
+    assert len(fired) > 0
+    # the 5-minute bar that completes an hour starts at :55
+    assert set(fired.minute) == {55}

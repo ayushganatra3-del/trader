@@ -8,6 +8,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
+from .config import SESSIONS
 from .sessions import session_frame
 
 
@@ -48,6 +49,50 @@ class Features:
         if key not in cache:
             cache[key] = compute()
         return cache[key]
+
+    # ------------------------------------------------------------ timeframes
+    def resampled(self, minutes: int) -> tuple["Features", pd.Series]:
+        """Features on ``minutes``-long bars built from these bars.
+
+        Returns (features, anchor): ``anchor`` maps each higher bar's start to
+        the last base bar inside it, i.e. the bar at whose close the higher
+        bar is complete. A still-forming final bar is dropped, so signals
+        never depend on a bar that will change later.
+        """
+        def compute():
+            index = self.index
+            spec = SESSIONS.get(self.kind)
+            freq = pd.Timedelta(minutes=minutes)
+            if spec is None:
+                labels = index.floor(freq)
+            else:
+                tz, open_, _ = spec
+                hours, mins = (int(x) for x in open_.split(":"))
+                offset = pd.Timedelta(minutes=(hours * 60 + mins) % minutes)
+                naive = index.tz_convert(tz).tz_localize(None)
+                labels = ((naive - offset).floor(freq) + offset).tz_localize(tz).tz_convert("UTC")
+            labels = pd.DatetimeIndex(labels).as_unit("ns")
+            grouped = self.bars.groupby(labels)
+            higher = grouped.agg({"open": "first", "high": "max", "low": "min", "close": "last", "volume": "sum"})
+            anchor = pd.Series(index, index=labels).groupby(level=0).max()
+            if len(higher):
+                last_end = anchor.iloc[-1] + pd.Timedelta(minutes=self.bar_minutes)
+                session_over = spec is not None and self.session["to_close"].iloc[-1] <= 0
+                if last_end < higher.index[-1] + freq and not session_over:
+                    higher, anchor = higher.iloc[:-1], anchor.iloc[:-1]
+            return Features(higher, self.kind, bar_minutes=minutes, extra=self.extra), anchor
+        return self._memo(("tf", minutes), compute)
+
+    def on_base(self, series: pd.Series, anchor: pd.Series, events: bool = True) -> pd.Series:
+        """Place higher-timeframe values on this (base) index at their anchor bars."""
+        placed = pd.Series(series.to_numpy(), index=pd.DatetimeIndex(anchor.reindex(series.index).to_numpy()))
+        placed = placed[placed.index.notna()]
+        if events:
+            out = pd.Series(False, index=self.index)
+            hits = placed[placed.fillna(False).astype(bool)].index
+            out.loc[out.index.isin(hits)] = True
+            return out
+        return placed.reindex(self.index).ffill()
 
     # ------------------------------------------------------------ basics
     def sma(self, n: int) -> pd.Series:
