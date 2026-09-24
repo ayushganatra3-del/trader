@@ -27,6 +27,10 @@ INTERVAL_SECONDS = {"1m": 60, "2m": 120, "5m": 300, "15m": 900, "30m": 1800, "60
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
 
 
+class RateLimited(RuntimeError):
+    """The provider refused us for making too many requests (HTTP 429)."""
+
+
 def _http_json(url: str, timeout: float = 20.0, retries: int = 3):
     last_error = None
     for attempt in range(retries):
@@ -36,10 +40,22 @@ def _http_json(url: str, timeout: float = 20.0, retries: int = 3):
                 return json.loads(response.read(20_000_000))
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ConnectionError) as error:
             last_error = error
-            if isinstance(error, urllib.error.HTTPError) and error.code in (400, 404):
-                break
+            if isinstance(error, urllib.error.HTTPError):
+                if error.code in (400, 401, 403, 404):
+                    break
+                if error.code == 429:
+                    if attempt >= 1:
+                        raise RateLimited(f"GET {url.split('?')[0]}: HTTP 429 Too Many Requests") from error
+                    time.sleep(1.0)
+                    continue
             time.sleep(1.5 * (attempt + 1))
     raise RuntimeError(f"GET {url.split('?')[0]} failed: {last_error}")
+
+
+def _range_days(range_: str) -> float:
+    if not range_.endswith("d"):
+        raise ValueError(f"Unsupported range {range_!r}")
+    return float(range_[:-1])
 
 
 def empty_bars() -> pd.DataFrame:
@@ -87,6 +103,7 @@ def parse_yahoo(payload: dict, interval: str = "5m", now: pd.Timestamp | None = 
 
 
 def fetch_yahoo(symbol: str, interval: str = "5m", range_: str = "60d", now=None) -> pd.DataFrame:
+    """Plain HTTP to Yahoo's chart API (often rate-limited from cloud servers)."""
     params = urllib.parse.urlencode({"interval": interval, "range": range_, "includePrePost": "false"})
     last_error = None
     for host in ("query1", "query2"):
@@ -96,7 +113,37 @@ def fetch_yahoo(symbol: str, interval: str = "5m", range_: str = "60d", now=None
             return frame
         except (RuntimeError, ValueError) as error:
             last_error = error
+    if isinstance(last_error, RateLimited):
+        raise RateLimited(f"Yahoo {symbol}: {last_error}")
     raise RuntimeError(f"Yahoo {symbol}: {last_error}")
+
+
+def fetch_yfinance(symbol: str, interval: str = "5m", range_: str = "60d", now=None) -> pd.DataFrame:
+    """Yahoo via the yfinance library, which copes with Yahoo's bot blocking."""
+    import yfinance as yf
+    from yfinance.exceptions import YFRateLimitError
+
+    now = pd.Timestamp.now(tz="UTC") if now is None else now
+    days = min(_range_days(range_), 59.0)  # Yahoo keeps 60 days of intraday bars
+    ticker = yf.Ticker(symbol)
+    try:
+        frame = ticker.history(start=now - pd.Timedelta(days=days), end=now + pd.Timedelta(minutes=10),
+                               interval=interval, prepost=False, actions=False, auto_adjust=False,
+                               raise_errors=True, timeout=20)
+    except YFRateLimitError as error:
+        raise RateLimited(f"yfinance {symbol}: {error}") from error
+    if frame is None or frame.empty:
+        return empty_bars()
+    frame = frame.rename(columns=str.lower)
+    frame.index = pd.DatetimeIndex(frame.index).tz_convert("UTC")
+    currency = (ticker.history_metadata or {}).get("currency") or "USD"
+    if currency in ("GBp", "GBX"):
+        frame[["open", "high", "low", "close"]] *= 0.01
+    return clean_bars(frame, interval, now)
+
+
+def fetch_coinbase_range(symbol: str, interval: str = "5m", range_: str = "2d", now=None) -> pd.DataFrame:
+    return fetch_coinbase(symbol, interval, days=min(_range_days(range_), 60.0), now=now)
 
 
 def fetch_coinbase(symbol: str, interval: str = "5m", days: float = 2.0, now=None) -> pd.DataFrame:
@@ -141,7 +188,8 @@ class MarketData:
     def __init__(self, config: Config, cache_dir: str | Path | None = None, fetcher=None):
         self.config = config
         self.cache_dir = Path(cache_dir) if cache_dir else None
-        self.fetcher = fetcher or fetch_yahoo
+        self.fetcher = fetcher  # a custom fetcher replaces the provider chain (tests)
+        self.cooldown: dict[str, float] = {}
         self.bars: dict[str, pd.DataFrame] = {}
         self.errors: dict[str, str] = {}
         self.gbpusd: pd.Series = pd.Series(dtype=float)
@@ -162,15 +210,34 @@ class MarketData:
     def _path(self, symbol: str) -> Path:
         return self.cache_dir / f"{symbol.replace('/', '_')}.csv.gz"
 
+    def _providers(self, kind: str) -> list[tuple[str, object]]:
+        if self.fetcher is not None:
+            return [("custom", self.fetcher)]
+        chain = [("yfinance", fetch_yfinance), ("yahoo", fetch_yahoo)]
+        if kind == "crypto":
+            chain.insert(0, ("coinbase", fetch_coinbase_range))
+        return chain
+
+    def _fetch_symbol(self, symbol: str, kind: str, interval: str, range_: str, now) -> pd.DataFrame:
+        """Try each provider in turn; a rate-limited provider is skipped for 10 minutes."""
+        errors = []
+        for name, provider in self._providers(kind):
+            if self.cooldown.get(name, 0.0) > time.monotonic():
+                errors.append(f"{name}: cooling down after a rate limit")
+                continue
+            try:
+                return provider(symbol, interval, range_, now=now)
+            except ImportError as error:
+                errors.append(f"{name}: not installed ({error})")
+            except RateLimited as error:
+                self.cooldown[name] = time.monotonic() + 600
+                errors.append(f"{name}: {error}")
+            except Exception as error:
+                errors.append(f"{name}: {error}")
+        raise RuntimeError("; ".join(errors)[:600] or "no data provider")
+
     def _fetch(self, asset: Asset, range_: str, now) -> pd.DataFrame:
-        try:
-            return self.fetcher(asset.symbol, self.config.interval, range_, now=now)
-        except Exception as error:
-            if asset.kind != "crypto" or self.fetcher is not fetch_yahoo:
-                raise
-            log.warning("Yahoo failed for %s (%s); trying Coinbase", asset.symbol, error)
-            days = 60.0 if range_.endswith("d") and int(range_[:-1]) > 5 else 2.0
-            return fetch_coinbase(asset.symbol, self.config.interval, days=days, now=now)
+        return self._fetch_symbol(asset.symbol, asset.kind, self.config.interval, range_, now)
 
     def _due(self, asset: Asset, old: pd.DataFrame, now: pd.Timestamp) -> bool:
         """Only hit the provider when a new completed bar could exist."""
@@ -236,7 +303,8 @@ class MarketData:
         if not any(asset.currency == "USD" for asset in self.config.universe):
             return
         try:
-            frame = self.fetcher("GBPUSD=X", "1h" if self.fetcher is fetch_yahoo else self.config.interval, "60d", now=now)
+            interval = self.config.interval if self.fetcher is not None else "1h"
+            frame = self._fetch_symbol("GBPUSD=X", "fx", interval, "30d", now)
             if not frame.empty:
                 self.gbpusd = frame["close"]
         except Exception as error:
