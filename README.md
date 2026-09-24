@@ -32,9 +32,10 @@ On top of the strategies sits the **Agent**: a walk-forward selector. Every day 
 
 ## Start it (no computer needed)
 
-1. Merge this branch into `main`. The **Trading agent** workflow then runs every 30 minutes and trades for 29 minutes each run, so it runs non-stop in paper mode.
-2. To start immediately, go to **Actions → Trading agent → Run workflow**.
-3. Watch results at **`https://github.com/ayushganatra3-del/trader/tree/agent-state`**. Its README is the live leaderboard. `dashboard.html` has charts and `trades.jsonl` lists every trade.
+1. Once the code is on `main`, the **Trading agent** workflow trades in 29-minute runs, back to back, in paper mode.
+2. To start immediately, go to **Actions → Trading agent → Run workflow**. Each run starts the next one when it finishes, and a schedule at :07 and :37 past each hour restarts the chain if it ever breaks.
+3. To stop it, set the repository variable `AGENT_ENABLED` to `false` (**Settings → Secrets and variables → Actions → Variables**), or disable the workflow in Actions.
+4. Watch results at **`https://github.com/ayushganatra3-del/trader/tree/agent-state`**. Its README is the live leaderboard. `dashboard.html` has charts and `trades.jsonl` lists every trade.
 
 The first run downloads 60 days of history, so the backtest leaderboard and today's picks appear straight away. The paper results then build up from that moment on.
 
