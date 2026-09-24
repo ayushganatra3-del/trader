@@ -61,6 +61,17 @@ def cmd_run(args, config):
 
 
 def cmd_doctor(args, config):
+    from . import data
+
+    now = pd.Timestamp.now(tz="UTC")
+    for name, provider, symbol in (("yfinance", data.fetch_yfinance, "SPY"), ("yahoo", data.fetch_yahoo, "SPY"),
+                                   ("coinbase", data.fetch_coinbase_range, "BTC-USD"),
+                                   ("yfinance", data.fetch_yfinance, "BTC-USD")):
+        try:
+            frame = provider(symbol, config.interval, "2d", now=now)
+            print(f"provider {name:<9} {symbol:<8} ok   {len(frame)} bars, last {frame.index[-1] if len(frame) else None}")
+        except Exception as error:
+            print(f"provider {name:<9} {symbol:<8} FAIL {str(error)[:200]}")
     market = MarketData(config, None)
     ok = True
     for asset in config.universe:

@@ -81,3 +81,69 @@ def test_refresh_only_fetches_when_a_new_bar_is_due(tmp_path):
     assert [c for c in calls if c[0] == "BTC-USD"] == []
     market.refresh(pd.Timestamp("2026-09-24 14:05:10", tz="UTC"))
     assert ("BTC-USD", "1d") in calls
+
+
+def test_provider_chain_falls_back_and_cools_down(monkeypatch):
+    from agent import data as d
+
+    config = Config(universe=(_us("AAPL"), _crypto("BTC-USD")))
+    idx = pd.date_range("2026-09-24 13:30", periods=3, freq="5min", tz="UTC")
+    bars = pd.DataFrame({"open": 1.0, "high": 2.0, "low": 0.5, "close": 1.5, "volume": 5.0}, index=idx)
+    calls = []
+
+    def limited(name):
+        def fn(symbol, interval, range_, now=None):
+            calls.append((name, symbol))
+            raise d.RateLimited("429")
+        return fn
+
+    def ok(name):
+        def fn(symbol, interval, range_, now=None):
+            calls.append((name, symbol))
+            return bars
+        return fn
+
+    monkeypatch.setattr(d, "fetch_yfinance", limited("yfinance"))
+    monkeypatch.setattr(d, "fetch_yahoo", ok("yahoo"))
+    monkeypatch.setattr(d, "fetch_coinbase_range", ok("coinbase"))
+    market = MarketData(config, None)
+    errors = market.refresh(NOW)
+    assert errors == {}
+    assert ("coinbase", "BTC-USD") in calls and ("yahoo", "AAPL") in calls
+    # yfinance hit a rate limit once and is then skipped for the cool-down
+    assert sum(1 for name, _ in calls if name == "yfinance") == 1
+
+
+def test_fetch_yfinance_parses_history(monkeypatch):
+    import sys
+    import types
+
+    from agent import data as d
+
+    idx = pd.date_range("2026-09-24 09:30", periods=4, freq="5min", tz="America/New_York")
+    history = pd.DataFrame({"Open": 10.0, "High": 11.0, "Low": 9.0, "Close": [10.0, 10.5, 10.2, 10.4],
+                            "Adj Close": 10.0, "Volume": 100}, index=idx)
+
+    class Ticker:
+        history_metadata = {"currency": "GBp"}
+
+        def __init__(self, symbol):
+            self.symbol = symbol
+
+        def history(self, **kwargs):
+            assert kwargs["interval"] == "5m" and kwargs["prepost"] is False
+            return history
+
+    class YFRateLimitError(Exception):
+        pass
+
+    fake = types.ModuleType("yfinance")
+    fake.Ticker = Ticker
+    exceptions = types.ModuleType("yfinance.exceptions")
+    exceptions.YFRateLimitError = YFRateLimitError
+    monkeypatch.setitem(sys.modules, "yfinance", fake)
+    monkeypatch.setitem(sys.modules, "yfinance.exceptions", exceptions)
+    frame = d.fetch_yfinance("VUSA.L", "5m", "60d", now=pd.Timestamp("2026-09-24 14:00", tz="UTC"))
+    assert list(frame.columns) == ["open", "high", "low", "close", "volume"]
+    assert str(frame.index.tz) == "UTC" and frame.index[0] == pd.Timestamp("2026-09-24 13:30", tz="UTC")
+    assert frame["close"].iloc[1] == pytest.approx(0.105)  # pence -> pounds

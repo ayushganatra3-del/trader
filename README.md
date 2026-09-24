@@ -19,7 +19,7 @@ On top of the strategies sits the **Agent**: a walk-forward selector. Every day 
 | Benchmarks | Hold SPY, Hold BTC |
 
 - **Universe:** 21 symbols by default: SPY, QQQ, IWM, TQQQ, SQQQ, SOXL, NVDA, TSLA, AAPL, MSFT, AMD, META, AMZN, GOOGL, PLTR, COIN, plus BTC, ETH, SOL, XRP and DOGE. Crypto trades 24/7, so the agent is never idle.
-- **Data:** 5-minute bars from Yahoo Finance, with Coinbase as a fallback for crypto.
+- **Data:** 5-minute bars. Stocks come from Yahoo Finance via `yfinance`; crypto comes from Coinbase. If a source rate-limits the agent, it is skipped for 10 minutes and the next one is used.
 - **Execution:** a signal on a bar's close is executed on the next tick.
 
 **Risk rules** (per sleeve):
