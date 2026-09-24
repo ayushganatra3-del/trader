@@ -56,6 +56,7 @@ test('ledger rejects a hypothetical fill before its recorded decision', () => {
 test('ledger fetch stays on the fixed public data URL and rejects unavailable source', async () => {
   let url, options;
   const result = await readCloudLedger(async (u, o) => { url = u; options = o; return Response.json(dashboard()); });
-  assert.equal(url, ledgerURL); assert.equal(options.redirect, 'error'); assert.equal(result.version, 1);
+  assert.equal(url, ledgerURL); assert.equal(options.redirect, 'manual'); assert.equal(result.version, 1);
   await assert.rejects(readCloudLedger(async () => new Response('', { status: 404 })), /not been published/);
+  await assert.rejects(readCloudLedger(async () => new Response('', { status: 302, headers: { Location: 'https://unrelated.example' } })), /could not be reached/);
 });

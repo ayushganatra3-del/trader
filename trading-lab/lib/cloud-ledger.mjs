@@ -29,7 +29,7 @@ export function validateDashboard(value) {
 }
 
 export async function readCloudLedger(fetcher = fetch) {
-  const response = await fetcher(ledgerURL, { redirect: 'error', cache: 'no-store', signal: AbortSignal.timeout(15000), headers: { Accept: 'application/json' } });
+  const response = await fetcher(ledgerURL, { redirect: 'manual', cache: 'no-store', signal: AbortSignal.timeout(15000), headers: { Accept: 'application/json' } });
   if (!response.ok) throw Error(response.status === 404 ? 'The cloud ledger has not been published yet.' : 'The cloud ledger could not be reached.');
   return validateDashboard(await boundedJSON(response, 4_000_000));
 }
