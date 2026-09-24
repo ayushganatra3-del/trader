@@ -34,6 +34,7 @@ REASONS = {0: "", 1: "exit signal", 2: "stop-loss", 3: "take-profit", 4: "time s
 META = "Agent"
 AGGRESSIVE = "Agent (aggressive)"
 CONSENSUS = "Consensus"
+ROTATION = "Agent (rotation)"
 
 
 @dataclass
@@ -383,9 +384,43 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
         agree = votes >= meta_cfg.consensus_threshold
         sleeves[CONSENSUS] = make_sleeve(CONSENSUS, "meta", slot_weights(agree, risk.slots, risk.max_symbol_weight))
 
+    rotation = _rotation_sleeve(sleeves, index, meta_cfg)
+    if rotation is not None:
+        sleeves[ROTATION] = make_sleeve(ROTATION, "meta", rotation)
+
     last_bar = {s: usable[s].index[-1] for s in symbols}
     return Research(index, symbols, close_ff, last_bar, sleeves, columns, pos, last_reason, selection,
                     history.to_frame("picks") if history is not None else None)
+
+
+def _rotation_sleeve(sleeves: dict[str, SleeveResult], index: pd.DatetimeIndex, meta_cfg) -> np.ndarray | None:
+    """Each UTC day, copy the top-k strategy sleeves by risk-adjusted return
+    over the previous ``rotation_lookback_days`` days (whole sleeves, not
+    strategy/symbol pairs, so far fewer candidates and less luck-chasing)."""
+    names = [n for n, s in sleeves.items() if s.kind == "strategy"]
+    k, lookback = meta_cfg.rotation_top_k, meta_cfg.rotation_lookback_days
+    if len(names) < k or k <= 0:
+        return None
+    day_idx, _ = pd.factorize(index.normalize(), sort=True)
+    returns = pd.DataFrame({n: sleeves[n].returns.to_numpy() for n in names})
+    daily = returns.groupby(day_idx).sum()
+    mean = daily.rolling(lookback, min_periods=lookback).mean().shift(1)
+    std = daily.rolling(lookback, min_periods=lookback).std().shift(1)
+    total = daily.rolling(lookback, min_periods=lookback).sum().shift(1)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        score = (mean / std).where((total > 0) & (std > 0)).to_numpy()
+    score = np.where(np.isfinite(score), score, -np.inf)
+    top = np.argsort(-score, axis=1)[:, :k]
+    chosen = np.zeros_like(score, dtype=bool)
+    chosen[np.arange(len(score))[:, None], top] = True
+    chosen &= np.isfinite(score)
+    weights = np.zeros(sleeves[names[0]].weights.shape)
+    bar_choice = chosen[day_idx]
+    for j, name in enumerate(names):
+        pick = bar_choice[:, j]
+        if pick.any():
+            weights[pick] += sleeves[name].weights.to_numpy()[pick] / k
+    return weights
 
 
 def leaderboard(research: Research) -> pd.DataFrame:

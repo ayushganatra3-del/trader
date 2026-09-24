@@ -78,6 +78,9 @@ def _meta_description(name: str, config: Config) -> str:
                 f"{meta.lookback_days}-day risk-adjusted return (min {meta.min_trades} trades)")
     if name == "Agent (aggressive)":
         return f"Concentrated selector: top {meta.aggressive_top_k} pairs, up to 100% in one symbol"
+    if name == "Agent (rotation)":
+        return (f"Strategy rotation: each UTC day copies the top {meta.rotation_top_k} strategy sleeves by "
+                f"{meta.rotation_lookback_days}-day risk-adjusted return")
     if name == "Consensus":
         return f"Long when at least {meta.consensus_threshold:.0%} of strategies agree on a symbol"
     return ""

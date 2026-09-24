@@ -15,7 +15,7 @@ On top of the strategies sits the **Agent**: a walk-forward selector. Every day 
 | Breakout | Donchian 20/10 and 55/20, Opening range 15m/30m, Bollinger, Keltner, Squeeze, Volume breakout |
 | Mean reversion | RSI(14), Connors RSI(2), Bollinger, Z-score, VWAP, Stochastic, Williams %R, CCI, MFI |
 | AI model | Kronos forecast (optional, [shiyu-coder/Kronos](https://github.com/shiyu-coder/Kronos)) |
-| Meta | **Agent** (top 5 pairs), **Agent (aggressive)** (top 2, concentrated), **Consensus** (majority vote) |
+| Meta | **Agent** (top 5 strategy/symbol pairs), **Agent (aggressive)** (top 2, concentrated), **Agent (rotation)** (copies the top 3 whole strategies by 20-day risk-adjusted return), **Consensus** (majority vote) |
 | Benchmarks | Hold SPY, Hold BTC |
 | Hourly swing | Every rule above except opening-range and gap-and-go, re-run on 1-hour bars (named "… · 1h"). They trade far less, so costs eat less, and they may hold stocks overnight. |
 
