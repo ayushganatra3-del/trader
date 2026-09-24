@@ -18,7 +18,7 @@ DISCLAIMER = ("Paper money unless the broker mode says otherwise. Backtests use 
               "lose money after costs.")
 
 
-def _live_curves(history: list[dict], names: list[str], points: int = 300) -> dict[str, list]:
+def _live_curves(history: list[dict], names: list[str], points: int = 200) -> dict[str, list]:
     if not history:
         return {}
     step = max(1, len(history) // points)

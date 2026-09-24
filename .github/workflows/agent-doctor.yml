@@ -1,7 +1,9 @@
 name: Agent data check
 
-# Confirms from GitHub's own servers that each market-data provider answers.
-# Runs on pull requests that touch the agent, and on demand.
+# Confirms from GitHub's own servers that each market-data provider answers,
+# then prints a 60-day real-data backtest leaderboard so strategy changes can
+# be judged on real prices. Runs on pull requests that touch the agent, and on
+# demand.
 
 on:
   pull_request:
@@ -15,7 +17,7 @@ permissions:
 jobs:
   doctor:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -28,3 +30,5 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Check every symbol's data source
         run: python -m agent doctor
+      - name: Backtest every strategy on the last 60 days of real prices
+        run: python -m agent backtest --cache-dir .cache/bars

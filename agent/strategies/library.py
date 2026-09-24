@@ -6,6 +6,8 @@ not fitted to recent data, so backtests are not tuned to the test period.
 """
 from __future__ import annotations
 
+import dataclasses
+
 import pandas as pd
 
 from ..indicators import Features, crossed_above, crossed_below
@@ -204,6 +206,19 @@ def mfi_reversion(f: Features):
     return crossed_above(mfi, 20), mfi > 70
 
 
+# ----------------------------------------------------------------- timeframes
+
+def on_timeframe(fn, minutes: int):
+    """Run a rule on ``minutes``-long bars; events land on the completing 5m bar."""
+    def wrapped(f: Features):
+        higher, anchor = f.resampled(minutes)
+        if len(higher.index) < 2:
+            return _false(f), _false(f)
+        entry, exit_ = fn(higher)
+        return f.on_base(entry, anchor), f.on_base(exit_, anchor)
+    return wrapped
+
+
 # ----------------------------------------------------------------- benchmarks
 
 def always_long(f: Features):
@@ -223,7 +238,7 @@ def model_signal(key: str):
 
 
 S = Strategy
-STRATEGIES: tuple[Strategy, ...] = (
+INTRADAY: tuple[Strategy, ...] = (
     # trend following
     S("EMA 9/21 cross", "ema_cross", "trend", "Fast EMA crosses the slow EMA", ema_cross(9, 21), params={"fast": 9, "slow": 21}),
     S("EMA 20/50 cross", "ema_cross", "trend", "Slower EMA crossover", ema_cross(20, 50), params={"fast": 20, "slow": 50}),
@@ -262,6 +277,16 @@ STRATEGIES: tuple[Strategy, ...] = (
     S("CCI reversion", "cci", "reversion", "CCI climbs back above -100", cci_reversion),
     S("MFI reversion", "mfi", "reversion", "Money-flow index leaves oversold", mfi_reversion),
 )
+
+# Hourly "swing" versions: far fewer trades, so costs bite less, and stock
+# positions may be held overnight (which also avoids US day-trade limits).
+# Opening-range and gap rules only make sense intraday.
+SWING: tuple[Strategy, ...] = tuple(
+    dataclasses.replace(s, name=f"{s.name} · 1h", fn=on_timeframe(s.fn, 60), timeframe=60, intraday=False,
+                        description=s.description + " (hourly bars, can hold overnight)")
+    for s in INTRADAY if s.family not in ("orb", "gap_and_go"))
+
+STRATEGIES: tuple[Strategy, ...] = INTRADAY + SWING
 
 KRONOS_STRATEGY = S("Kronos forecast", "kronos", "model",
                     "Kronos foundation-model forecast of the next hour's return",

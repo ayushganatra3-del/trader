@@ -1,6 +1,6 @@
 # Trading agent
 
-An autonomous, multi-strategy day-trading agent. It runs **33 well-known strategies** at the same time (plus the optional Kronos AI forecaster) on US stocks, leveraged/inverse ETFs and crypto. Each strategy trades its own separate **£100 paper account**, so you can see which ones actually make money.
+An autonomous, multi-strategy trading agent. It runs **63 strategies** at the same time: 33 well-known intraday rules on 5-minute bars, plus 30 hourly "swing" versions of them (plus the optional Kronos AI forecaster) on US stocks, leveraged/inverse ETFs and crypto. Each strategy trades its own separate **£100 paper account**, so you can see which ones actually make money.
 
 On top of the strategies sits the **Agent**: a walk-forward selector. Every day it trades whichever strategy/symbol pairs made the best risk-adjusted returns over the previous 10 days. That is how it "gets better": it keeps moving money toward what is working and away from what isn't.
 
@@ -17,6 +17,7 @@ On top of the strategies sits the **Agent**: a walk-forward selector. Every day 
 | AI model | Kronos forecast (optional, [shiyu-coder/Kronos](https://github.com/shiyu-coder/Kronos)) |
 | Meta | **Agent** (top 5 pairs), **Agent (aggressive)** (top 2, concentrated), **Consensus** (majority vote) |
 | Benchmarks | Hold SPY, Hold BTC |
+| Hourly swing | Every rule above except opening-range and gap-and-go, re-run on 1-hour bars (named "… · 1h"). They trade far less, so costs eat less, and they may hold stocks overnight. |
 
 - **Universe:** 21 symbols by default: SPY, QQQ, IWM, TQQQ, SQQQ, SOXL, NVDA, TSLA, AAPL, MSFT, AMD, META, AMZN, GOOGL, PLTR, COIN, plus BTC, ETH, SOL, XRP and DOGE. Crypto trades 24/7, so the agent is never idle.
 - **Data:** 5-minute bars. Stocks come from Yahoo Finance via `yfinance`; crypto comes from Coinbase. If a source rate-limits the agent, it is skipped for 10 minutes and the next one is used.
@@ -25,7 +26,7 @@ On top of the strategies sits the **Agent**: a walk-forward selector. Every day 
 **Risk rules** (per sleeve):
 - Long only, at most 4 positions of 25% each.
 - ATR stop-losses and trailing stops.
-- Stocks are sold 10 minutes before the US close, so nothing is held overnight.
+- Intraday sleeves sell stocks 10 minutes before the US close, so they hold nothing overnight. Hourly swing sleeves may hold overnight.
 - A −6% day pauses the sleeve until the next day.
 - A −50% drawdown shuts the sleeve down for good.
 - Costs are modelled on every trade: 5 bps per side for stocks, 30 bps per side for crypto.
