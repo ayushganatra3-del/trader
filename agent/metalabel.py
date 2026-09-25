@@ -5,7 +5,7 @@ A primary rule decides the side: here the hourly strategies, which are the
 ones that survive costs. A secondary model then learns which of those
 signals tend to win. Every past trade is labelled by its real outcome (its
 own stop, target, time limit and exit rule act as the "triple barrier",
-costs included). A gradient-boosted tree classifier is retrained each day,
+costs included), weighted by the size of that outcome. A gradient-boosted tree classifier is retrained each day,
 walk-forward, only on trades that had already closed before that day
 (purged), then scores that day's new signals. Signals with no edge are
 skipped. The rest are sized at half-Kelly, with at most 2% of equity at risk
@@ -140,7 +140,10 @@ def meta_label(pos: np.ndarray, columns: list[tuple[str, str]], col_sym: np.ndar
         model = HistGradientBoostingClassifier(max_depth=3, learning_rate=0.05, max_iter=150, min_samples_leaf=20,
                                                l2_regularization=1.0, random_state=0)
         usable = [c for c in FEATURES if np.isfinite(train[c].to_numpy(dtype=float)).any()]  # e.g. no QQQ data
-        model.fit(train[usable].to_numpy(dtype=float), labels.to_numpy())
+        # return-attribution sample weights (Lopez de Prado 4.10): big wins and big losses count most, so the
+        # filter learns expectancy rather than just "wins often, by a little"
+        weight = train["ret"].abs().to_numpy()
+        model.fit(train[usable].to_numpy(dtype=float), labels.to_numpy(), sample_weight=weight / weight.mean())
         prob = model.predict_proba(today[usable].to_numpy(dtype=float))[:, 1]
         payoffs = _payoffs(train)
         for (i, row), p in zip(today.iterrows(), prob):
