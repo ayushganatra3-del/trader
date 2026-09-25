@@ -11,8 +11,10 @@ from pathlib import Path
 import pandas as pd
 
 from . import report
-from .config import Config
+from .config import BROKER_RISK, Config
 from .copytrade import CopyBook, CopyManager
+from .analyst import Analyst
+from .daily import DailyData, daily_books, daily_symbols
 from .data import INTERVAL_SECONDS, MarketData
 from .portfolio import Quote, Sleeve, new_sleeve
 from .research import Research, run_research
@@ -38,6 +40,8 @@ class Engine:
     broker: object | None = None
     forecaster: object | None = None
     copier: object | None = None  # copy-trading sources; built automatically for live market data
+    daily: object | None = None  # daily bars (agent/daily.py); built automatically for live market data
+    analyst: object | None = None  # AI analyst (agent/analyst.py); built when ANTHROPIC_API_KEY is set
     research: Research | None = None
     _data_marker: tuple | None = field(default=None, repr=False)
 
@@ -49,6 +53,12 @@ class Engine:
             self.market = MarketData(self.config, self.cache_dir or Path(".cache/bars"))
             if self.copier is None and self.config.copy.enabled:
                 self.copier = CopyManager(self.config)
+            if self.daily is None and self.config.daily.enabled:
+                self.daily = DailyData(daily_symbols(self.config), Path(self.cache_dir or ".cache/bars") / "daily",
+                                       self.config.daily.history, self.config.daily.refresh_hours)
+            if self.analyst is None and self.config.ai.enabled and Analyst.available():
+                self.analyst = Analyst(self.config)
+        self._daily_cache: tuple | None = None
         if self.broker is None and self.config.broker.mode != "paper":
             from .live import make_broker
             self.broker = make_broker(self.config)
@@ -103,6 +113,27 @@ class Engine:
         self.market.set_universe(self.run_config, live)
         return books
 
+    def _daily_books(self, state: dict, now: pd.Timestamp) -> list[CopyBook]:
+        """Daily-bar sleeves (market timing, swing setups); rebuilt only when new daily bars arrive."""
+        if self.daily is None:
+            return []
+        try:
+            error = self.daily.refresh(now)
+            stamp = self.daily.fetched_at
+            if self._daily_cache is None or self._daily_cache[0] != stamp:
+                books, regime = daily_books(self.daily.bars, self.config, stamp or now)
+                self._daily_cache = (stamp, books, regime)
+            _, books, regime = self._daily_cache
+            state["regime"] = {**regime, "error": error, "fetched_at": iso(stamp) if stamp is not None else None}
+            if self.analyst is not None and regime:
+                book = self.analyst.run(state.setdefault("analyst", {}), self.daily.bars, regime, now)
+                if book is not None:
+                    books = books + [book]
+            return books
+        except Exception as error:  # a daily-data problem must not stop the intraday sleeves
+            log.warning("Daily sleeves failed: %s", error)
+            return self._daily_cache[1] if self._daily_cache else []
+
     def _quotes(self, now: pd.Timestamp) -> dict[str, Quote]:
         quotes = {}
         config = self.run_config
@@ -141,7 +172,7 @@ class Engine:
         started = time.monotonic()
         with self.store.lock():
             state = self._load_state(now)
-            books = self._refresh_copy(state, now)
+            books = self._refresh_copy(state, now) + self._daily_books(state, now)
             errors = self.market.refresh(now)
             marker = tuple((s, f.index[-1]) for s, f in sorted(self.market.bars.items()) if not f.empty)
             marker += tuple((b.name, b.updated_at) for b in books)
@@ -157,11 +188,11 @@ class Engine:
             for name in research.sleeves:
                 data = state["sleeves"].get(name) or new_sleeve(name, self.config.starting_capital_gbp, now_iso)
                 sleeve = Sleeve(data)
-                trades = sleeve.rebalance(research.targets(name), quotes, self.config.risk, now_iso, today,
+                trades = sleeve.rebalance(research.targets(name), quotes, self._risk_for(name), now_iso, today,
                                           self._reason_fn(name, research))
                 state["sleeves"][name] = sleeve.data
                 all_trades.extend(trades)
-            broker_summary = self._sync_broker(research, quotes, now)
+            broker_summary = self._sync_broker(research, quotes, now, state)
             if broker_summary is not None:
                 state["broker"] = broker_summary
                 self.store.append("broker.jsonl", [{"t": now_iso, **broker_summary}])
@@ -182,18 +213,26 @@ class Engine:
                 "agent_equity_gbp": round(state["sleeves"].get("Agent", {}).get("equity_gbp", 0.0), 4),
                 "broker": broker_summary}
 
-    def _sync_broker(self, research: Research, quotes: dict[str, Quote], now: pd.Timestamp):
+    def _risk_for(self, name: str):
+        """The sleeve a real broker account copies gets extra circuit breakers."""
+        if self.config.broker.mode != "paper" and name == self.config.broker.sleeve:
+            return dataclasses.replace(self.config.risk, **BROKER_RISK)
+        return self.config.risk
+
+    def _sync_broker(self, research: Research, quotes: dict[str, Quote], now: pd.Timestamp, state: dict):
         if self.broker is None:
             return None
         from .live import sync_broker
         name = self.config.broker.sleeve
-        if name not in research.sleeves:
+        if name not in research.sleeves or name not in state["sleeves"]:
             return {"ok": False, "error": f"Unknown sleeve {name}"}
         gbpusd = 1.0 / self.market.fx_to_gbp("USD")
         prices_usd = {s: q.price for s, q in quotes.items() if self.run_config.asset(s).currency == "USD"}
         stamp = iso(research.index[-1])
         try:
-            wanted = research.targets(name)
+            # Mirror what the paper sleeve actually holds, so every halt, cooldown and
+            # rebalancing band also applies to the real account.
+            wanted = Sleeve(state["sleeves"][name]).weights()
             # explicit zeros so the broker exits anything the sleeve no longer holds
             targets = {s: wanted.get(s, 0.0) for s in self.run_config.symbols}
             return sync_broker(self.broker, targets, self.run_config, now, prices_usd, gbpusd, stamp)

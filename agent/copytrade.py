@@ -11,6 +11,9 @@ Sources (public and free):
   are always somewhat out of date. Options and bonds are skipped.
 * OpenInsider: SEC Form 4 open-market purchases by company officers and
   directors, filed within two business days of the trade.
+* AI-Trader (ai4trade.ai): live positions of the most profitable AI trading
+  agents on its public leaderboard. No history is published, so this book
+  only builds a track record from the day it starts.
 
 Members of Congress are copied through the NANC ETF instead (see
 config.COPY_ETFS), which do this professionally.
@@ -41,19 +44,23 @@ NEW_YORK = "America/New_York"
 OPENINSIDER = ("https://openinsider.com/screener", "http://openinsider.com/screener")
 OPENFIGI = "https://api.openfigi.com/v3/mapping"
 INSIDER_BOOK = "Copy: Insider buying"
+AI_TRADER_API = "https://ai4trade.ai"
+AI_TRADER_BOOK = "Copy: AI-Trader top agents"
 
 
 class Http:
     """Minimal HTTP client (replaced by a fake in tests)."""
 
-    def __init__(self, user_agent: str, timeout: float = 30.0, pause: float = 0.15):
+    def __init__(self, user_agent: str, timeout: float = 30.0, pause: float = 0.15, tries: int = 3):
         self.user_agent = user_agent
         self.timeout = timeout
         self.pause = pause
+        self.tries = tries
 
     def _open(self, request: urllib.request.Request) -> bytes:
         ipv4 = False
-        for attempt in range(3):
+        last = self.tries - 1
+        for attempt in range(self.tries):
             try:
                 with _ipv4_only() if ipv4 else contextlib.nullcontext():
                     with urllib.request.urlopen(request, timeout=self.timeout) as response:
@@ -64,10 +71,10 @@ class Http:
                 if error.code == 403 and "sec.gov" in request.full_url:
                     raise RuntimeError("SEC refused the request (HTTP 403): set the repository variable "
                                        "SEC_USER_AGENT to 'Your Name your@email.com'") from error
-                if error.code not in (429, 500, 502, 503, 504) or attempt == 2:
+                if error.code not in (429, 500, 502, 503, 504) or attempt == last:
                     raise RuntimeError(f"{request.get_method()} {request.full_url.split('?')[0]}: HTTP {error.code}") from error
             except (urllib.error.URLError, TimeoutError, ConnectionError) as error:
-                if attempt == 2:
+                if attempt == last:
                     raise RuntimeError(f"{request.get_method()} {request.full_url.split('?')[0]}: {error}") from error
                 # "Network is unreachable" usually means an IPv6 address on an IPv4-only host
                 ipv4 = True
@@ -106,6 +113,8 @@ class CopyBook:
     updated_at: str | None = None
     error: str | None = None
     stale: bool = False
+    kind: str = "copy"  # "daily" for the daily-bar sleeves (agent/daily.py)
+    cap: float | None = None  # max weight per name; default risk.max_symbol_weight
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -357,6 +366,75 @@ def insider_schedule(trades: list[dict], now: pd.Timestamp, days: int, window: i
     return schedule
 
 
+# ------------------------------------------------------------------ AI-Trader
+
+def _ai_trader_ticker(symbol: str, market: str) -> str | None:
+    symbol = (symbol or "").strip().upper()
+    if not symbol:
+        return None
+    if market == "us-stock":
+        return yahoo_ticker(symbol)
+    if market == "crypto":
+        for suffix in ("-USD", "/USD", "-USDT", "/USDT", "USDT"):
+            if symbol.endswith(suffix) and len(symbol) > len(suffix):
+                symbol = symbol[: -len(suffix)]
+                break
+        return f"{symbol}-USD"
+    return None  # prediction markets, forex, ... are not tradable here
+
+
+def fetch_ai_trader_targets(config: Config, http: Http) -> tuple[dict[str, float], list[str]]:
+    """Blend the long stock/crypto positions of the top AI-Trader agents.
+
+    Leaders are ranked by open-position profit on the public leaderboard; each
+    leader gets an equal share, split by the value of their positions."""
+    cfg = config.copy
+    board = json.loads(http.get(f"{AI_TRADER_API}/api/leaderboard/position-pnl?limit={cfg.ai_trader_agents * 3}"))
+    leaders = [a for a in board.get("top_agents", []) if (a.get("position_pnl") or 0) > 0][: cfg.ai_trader_agents]
+    blend: dict[str, float] = {}
+    names = []
+    for leader in leaders:
+        data = json.loads(http.get(f"{AI_TRADER_API}/api/agents/{int(leader['agent_id'])}/positions"))
+        book: dict[str, float] = {}
+        for position in data.get("positions", []):
+            if (position.get("side") or "").lower() != "long":
+                continue
+            ticker = _ai_trader_ticker(position.get("symbol"), (position.get("market") or "").lower())
+            price = position.get("current_price") or position.get("entry_price")
+            try:
+                value = abs(float(position.get("quantity") or 0)) * float(price or 0)
+            except (TypeError, ValueError):
+                continue
+            if ticker and value > 0:
+                book[ticker] = book.get(ticker, 0.0) + value
+        total = sum(book.values())
+        if total <= 0:
+            continue
+        names.append(str(leader.get("name") or leader["agent_id"]))
+        for ticker, value in book.items():
+            blend[ticker] = blend.get(ticker, 0.0) + value / total
+    top = dict(sorted(blend.items(), key=lambda kv: -kv[1])[: cfg.top_n])
+    return _normalise(top, config.risk.max_symbol_weight), names
+
+
+def fetch_ai_trader_book(config: Config, http: Http, now: pd.Timestamp, old: dict | None) -> CopyBook:
+    """AI-Trader has no position history, so the schedule is built forward:
+    each refresh appends the leaders' current holdings when they change."""
+    targets, names = fetch_ai_trader_targets(config, http)
+    book = CopyBook.from_dict(old) if old else CopyBook(AI_TRADER_BOOK, "", "")
+    book.name, book.source = AI_TRADER_BOOK, "ai4trade.ai public leaderboard"
+    book.description = ("Long stock/crypto positions of the top AI agents on AI-Trader (ai4trade.ai) by open "
+                        "profit, blended equally: " + (", ".join(names) or "none yet"))
+    book.error = None if targets else "No copyable positions among the leaders"
+    previous = book.schedule[-1][1] if book.schedule else None
+    changed = previous is None or set(previous) != set(targets) or any(
+        abs(previous[t] - targets[t]) > 0.02 for t in targets)
+    if targets and changed:
+        book.schedule = (book.schedule + [[now.ceil("5min").isoformat(), targets]])[-500:]
+    book.as_of = now.date().isoformat()
+    return book
+
+
 # ------------------------------------------------------------------ manager
 
 class CopyManager:
@@ -366,6 +444,8 @@ class CopyManager:
         self.config = config
         # SEC asks automated clients to identify themselves (ideally with a contact email)
         self.http = http or Http(os.environ.get("SEC_USER_AGENT") or config.copy.sec_user_agent)
+        # AI-Trader can be slow from cloud runners: give up quickly instead of stalling a tick
+        self.quick_http = http or Http(self.http.user_agent, timeout=12.0, tries=2)
 
     def refresh(self, state: dict, now: pd.Timestamp) -> list[CopyBook]:
         cfg = self.config.copy
@@ -375,6 +455,9 @@ class CopyManager:
         jobs = [(f"Copy: {name} 13F", cfg.refresh_hours_13f, lambda n=name, c=cik: fetch_13f_book(
                     n, c, self.config, self.http, store["cusips"], now)) for name, cik in cfg.managers.items()]
         jobs.append((INSIDER_BOOK, cfg.refresh_hours_insider, lambda: fetch_insider_book(self.config, self.http, now)))
+        if cfg.ai_trader:
+            jobs.append((AI_TRADER_BOOK, cfg.refresh_hours_ai_trader, lambda: fetch_ai_trader_book(
+                self.config, self.quick_http, now, store["books"].get(AI_TRADER_BOOK))))
         attempts = store.setdefault("attempts", {})
         for key, hours, fetch in jobs:
             old = store["books"].get(key)
@@ -397,8 +480,14 @@ class CopyManager:
     def assets(self, books: list[CopyBook]) -> list[Asset]:
         known = set(self.config.symbols)
         tickers = sorted({t for book in books if not book.stale for t in book.tickers()} - known)
-        return [Asset(t, "us_equity", "USD", t.replace("-", "."), trade_strategies=False,
-                      cost_bps=self.config.copy.cost_bps) for t in tickers]
+        assets = []
+        for t in tickers:
+            if t.endswith("-USD"):  # crypto from AI-Trader agents: 24/7, crypto costs
+                assets.append(Asset(t, "crypto", "USD", t.replace("-", "/"), trade_strategies=False))
+            else:
+                assets.append(Asset(t, "us_equity", "USD", t.replace("-", "."), trade_strategies=False,
+                                    cost_bps=self.config.copy.cost_bps))
+        return assets
 
 
 def book_weights(book: CopyBook, index: pd.DatetimeIndex, symbols: list[str], cap: float):

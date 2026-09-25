@@ -325,11 +325,11 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
             weights = slot_weights(active, risk.slots, risk.max_symbol_weight)
             sleeves[strategy.name] = make_sleeve(strategy.name, "strategy", weights, strategy)
 
-    # ---- copy-trading books (famous investors, insiders)
+    # ---- schedule books: copy trading (famous investors, insiders) and daily-bar sleeves
     for book in copy_books or []:
-        weights = book_weights(book, index, symbols, risk.max_symbol_weight)
-        if weights.any():
-            sleeve = make_sleeve(book.name, "copy", weights)
+        weights = book_weights(book, index, symbols, book.cap or risk.max_symbol_weight)
+        if weights.any() or (book.kind in ("daily", "ai") and book.schedule):  # may sit in cash for weeks
+            sleeve = make_sleeve(book.name, book.kind, weights)
             sleeve.description = book.description
             sleeves[book.name] = sleeve
 
@@ -407,11 +407,11 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
 
 
 def _rotation_sleeve(sleeves: dict[str, SleeveResult], index: pd.DatetimeIndex, meta_cfg) -> np.ndarray | None:
-    """Each UTC day, copy the top-k strategy or copy-trading sleeves by
+    """Each UTC day, copy the top-k strategy, copy-trading or daily sleeves by
     risk-adjusted return over the previous ``rotation_lookback_days`` days
     (whole sleeves, not strategy/symbol pairs, so far fewer candidates and
     less luck-chasing)."""
-    names = [n for n, s in sleeves.items() if s.kind in ("strategy", "copy")]
+    names = [n for n, s in sleeves.items() if s.kind in ("strategy", "copy", "daily", "ai")]
     k, lookback = meta_cfg.rotation_top_k, meta_cfg.rotation_lookback_days
     if len(names) < k or k <= 0:
         return None

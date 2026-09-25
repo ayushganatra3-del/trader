@@ -203,3 +203,48 @@ def test_refresh_retries_failures_hourly_and_successes_on_schedule(monkeypatch):
     n = len(calls)
     manager.refresh(state, t0 + pd.Timedelta(hours=3))
     assert not any("submissions" in url for url in calls[n:])  # good 13F data waits 12 hours
+
+
+class AiTraderHttp:
+    def __init__(self):
+        self.positions = {
+            1: [{"symbol": "AAPL", "market": "us-stock", "side": "long", "quantity": 10, "current_price": 200},
+                {"symbol": "TSLA", "market": "us-stock", "side": "short", "quantity": 5, "current_price": 300},
+                {"symbol": "HYPEUSDT", "market": "crypto", "side": "long", "quantity": 50, "current_price": 40}],
+            2: [{"symbol": "NVDA", "market": "us-stock", "side": "long", "quantity": 1, "current_price": 100},
+                {"symbol": "will-x-happen", "market": "polymarket", "side": "long", "quantity": 99, "current_price": 1}],
+        }
+
+    def get(self, url, headers=None):
+        if "leaderboard" in url:
+            return json.dumps({"top_agents": [
+                {"agent_id": 1, "name": "AlphaBot", "position_pnl": 5000},
+                {"agent_id": 2, "name": "BetaBot", "position_pnl": 100},
+                {"agent_id": 3, "name": "Loser", "position_pnl": -50}]}).encode()
+        agent = int(url.rstrip("/").split("/")[-2])
+        return json.dumps({"positions": self.positions.get(agent, [])}).encode()
+
+
+def test_ai_trader_book_blends_leaders_longs_only():
+    config = Config()
+    http = AiTraderHttp()
+    targets, names = ct.fetch_ai_trader_targets(config, http)
+    assert names == ["AlphaBot", "BetaBot"]  # the losing agent is not copied
+    # AlphaBot: AAPL 2000 + HYPE 2000 -> 0.5 each; BetaBot: NVDA -> 1.0 (polymarket skipped)
+    assert set(targets) == {"AAPL", "HYPE-USD", "NVDA"}
+    assert targets["NVDA"] == pytest.approx(config.risk.max_symbol_weight)
+    assert targets["AAPL"] == pytest.approx(targets["HYPE-USD"])
+
+    now = pd.Timestamp("2026-09-25 10:02", tz="UTC")
+    book = ct.fetch_ai_trader_book(config, http, now, None)
+    assert book.schedule[0][0] == "2026-09-25T10:05:00+00:00"  # next bar, never the past
+    again = ct.fetch_ai_trader_book(config, http, now + pd.Timedelta(hours=1), book.to_dict())
+    assert len(again.schedule) == 1  # unchanged holdings add nothing
+    http.positions[2] = [{"symbol": "SNOW", "market": "us-stock", "side": "long", "quantity": 1, "current_price": 100}]
+    changed = ct.fetch_ai_trader_book(config, http, now + pd.Timedelta(hours=2), again.to_dict())
+    assert len(changed.schedule) == 2 and "SNOW" in changed.schedule[-1][1]
+
+    assets = {a.symbol: a for a in ct.CopyManager(config, http=http).assets([changed])}
+    assert assets["HYPE-USD"].kind == "crypto" and assets["HYPE-USD"].alpaca == "HYPE/USD"
+    assert "BTC-USD" not in assets  # already in the core universe
+    assert assets["SNOW"].kind == "us_equity" and not assets["SNOW"].trade_strategies

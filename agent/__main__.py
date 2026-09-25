@@ -37,11 +37,33 @@ def _copy_books(config, market):
     return config, books
 
 
+def _daily_books(config, cache_dir):
+    """Daily-bar sleeves (market timing, swing setups) and the market regime."""
+    from .daily import DailyData, daily_books, daily_symbols
+
+    daily = DailyData(daily_symbols(config), Path(cache_dir) / "daily" if cache_dir else None,
+                      config.daily.history, config.daily.refresh_hours)
+    error = daily.refresh(pd.Timestamp.now(tz="UTC"))
+    if error:
+        print(f"daily bars: {error}", file=sys.stderr)
+    books, regime = daily_books(daily.bars, config, daily.fetched_at)
+    if regime:
+        print(f"market regime ({regime['index']}, {regime['session']}): {regime['state']} since {regime['since']}, "
+              f"level {regime['level']}, "
+              f"{regime['distribution_days']} distribution days, exposure {regime['exposure']:.0%}, "
+              f"VXN {regime['vxn']}, VIX {regime['vix']}, last follow-through {regime['last_follow_through']}",
+              file=sys.stderr)
+    return books, regime
+
+
 def cmd_backtest(args, config):
     market = _market(args, config)
-    books = []
+    books, regime = [], None
     if config.copy.enabled and not args.synthetic:
         config, books = _copy_books(config, market)
+    if config.daily.enabled and not args.synthetic:
+        daily, regime = _daily_books(config, args.cache_dir)
+        books += daily
     errors = market.refresh()
     for symbol, error in errors.items():
         print(f"! {symbol}: {error}", file=sys.stderr)
@@ -64,7 +86,7 @@ def cmd_backtest(args, config):
     if args.out:
         from . import report
         out = Path(args.out)
-        state = {"created_at": None, "mode": "backtest", "sleeves": {}, "ticks": 0}
+        state = {"created_at": None, "mode": "backtest", "sleeves": {}, "ticks": 0, "regime": regime}
         report.write_all(out, state, research, config, pd.Timestamp.now(tz="UTC"))
         board.to_csv(out / "leaderboard.csv", index=False)
         print(f"\nReport written to {out}/ (README.md, dashboard.html, dashboard.json, leaderboard.csv)")
@@ -94,6 +116,13 @@ def cmd_doctor(args, config):
             print(f"provider {name:<9} {symbol:<8} ok   {len(frame)} bars, last {frame.index[-1] if len(frame) else None}")
         except Exception as error:
             print(f"provider {name:<9} {symbol:<8} FAIL {str(error)[:200]}")
+    if config.daily.enabled:
+        try:
+            books, _ = _daily_books(config, None)
+            for book in books:
+                print(f"daily sleeve {book.name:<30} {len(book.schedule)} changes, now {book.current() or 'flat'}")
+        except Exception as error:
+            print(f"daily sleeves FAIL {str(error)[:200]}")
     market = MarketData(config, None)
     ok = True
     for asset in config.universe:

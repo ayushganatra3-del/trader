@@ -85,6 +85,15 @@ class RiskConfig:
     no_entry_minutes_before_close: int = 30
     no_entry_minutes_after_open: int = 5
     max_bar_age_minutes: int = 20  # older quotes can't drive trades
+    weekly_loss_limit: float | None = None  # halt until next week after this loss
+    monthly_loss_limit: float | None = None  # halt until next month after this loss
+    loss_streak_cooldown: int = 0  # consecutive losing trades that pause new buys (0 = off)
+    cooldown_hours: float = 24.0
+
+
+# Extra circuit breakers for the sleeve that a real broker account copies.
+BROKER_RISK = {"weekly_loss_limit": 0.05, "monthly_loss_limit": 0.08, "loss_streak_cooldown": 2,
+               "cooldown_hours": 24.0}
 
 
 @dataclass
@@ -134,7 +143,36 @@ class CopyConfig:
     cost_bps: float = 15.0  # smaller, less liquid names than the core universe
     refresh_hours_13f: float = 12.0
     refresh_hours_insider: float = 1.0
+    ai_trader: bool = True  # copy the top agents on the AI-Trader platform (ai4trade.ai)
+    ai_trader_agents: int = 5  # leaders copied, by open-position profit
+    refresh_hours_ai_trader: float = 1.0
     sec_user_agent: str = "trader-agent research bot (github.com/ayushganatra3-del/trader)"
+
+
+@dataclass
+class DailyConfig:
+    """Daily-bar sleeves (agent/daily.py): Nasdaq market timing and multi-day setups."""
+    enabled: bool = True
+    history: str = "2y"
+    refresh_hours: float = 3.0
+    index: str = "QQQ"  # Nasdaq proxy for distribution and follow-through days
+    timing_tickers: tuple[str, ...] = ("TQQQ", "QQQ")  # one timing sleeve each
+    vxn_gate: float = 35.0  # no timing exposure while Nasdaq volatility (^VXN) is this high
+    burst_hold_days: int = 4
+    hammer_hold_days: int = 5
+    score_top_n: int = 4
+    score_min: float = 6.0
+
+
+@dataclass
+class AiConfig:
+    """AI analyst sleeve (agent/analyst.py): runs only when ANTHROPIC_API_KEY is set."""
+    enabled: bool = True
+    model: str = "claude-opus-5"
+    effort: str = "medium"  # low | medium | high | xhigh | max: deeper research costs more
+    max_searches: int = 5  # web searches per daily analysis
+    max_positions: int = 4
+    max_weight: float = 0.35
 
 
 @dataclass
@@ -163,6 +201,8 @@ class Config:
     kronos: KronosConfig = field(default_factory=KronosConfig)
     broker: BrokerConfig = field(default_factory=BrokerConfig)
     copy: CopyConfig = field(default_factory=CopyConfig)
+    daily: DailyConfig = field(default_factory=DailyConfig)
+    ai: AiConfig = field(default_factory=AiConfig)
     disabled_strategies: tuple[str, ...] = ()
 
     def cost(self, asset: Asset) -> float:

@@ -77,3 +77,30 @@ def test_summary_is_json_friendly():
     summary = s.summary()
     assert summary["positions"][0]["symbol"] == "AAPL"
     assert summary["return_pct"] < 0  # paid costs
+
+
+def test_weekly_limit_and_loss_streak_cooldown():
+    risk = RiskConfig(weekly_loss_limit=0.05, loss_streak_cooldown=2, cooldown_hours=24,
+                      daily_loss_limit=0.99, max_symbol_weight=1.0)
+    s = sleeve()
+    monday, tuesday = "2026-09-21", "2026-09-22"
+    s.rebalance({"A": 0.5}, {"A": quote("A")}, risk, "2026-09-21T14:00:00+00:00", monday)
+    s.rebalance({}, {"A": quote("A", price=97)}, risk, "2026-09-21T15:00:00+00:00", monday)  # loss 1
+    s.rebalance({"B": 0.5}, {"B": quote("B")}, risk, "2026-09-21T16:00:00+00:00", monday)
+    s.rebalance({}, {"B": quote("B", price=97)}, risk, "2026-09-21T17:00:00+00:00", monday)  # loss 2
+    assert s.data["cooldown_until"].startswith("2026-09-22T17:00")
+    assert s.rebalance({"C": 0.5}, {"C": quote("C")}, risk, "2026-09-22T10:00:00+00:00", tuesday) == []
+    assert "losing trades" in s.data["halt_reason"]
+    # after the cooldown it buys again; a >5% weekly loss then halts until next week
+    trades = s.rebalance({"C": 1.0}, {"C": quote("C")}, risk, "2026-09-22T18:00:00+00:00", tuesday)
+    assert trades and trades[0]["side"] == "buy"
+    s.rebalance({"C": 1.0}, {"C": quote("C", price=90)}, risk, "2026-09-22T19:00:00+00:00", tuesday)
+    assert "Weekly loss limit" in s.data["halt_reason"] and s.data["positions"] == {}
+    assert s.rebalance({"C": 1.0}, {"C": quote("C", price=90)}, risk, "2026-09-24T19:00:00+00:00", "2026-09-24") == []
+    assert s.rebalance({"C": 1.0}, {"C": quote("C", price=90)}, risk, "2026-09-28T14:00:00+00:00", "2026-09-28")
+
+
+def test_weights_reflect_holdings():
+    s = sleeve()
+    s.rebalance({"A": 0.3}, {"A": quote("A")}, RiskConfig(), NOW, DAY)
+    assert s.weights()["A"] == pytest.approx(0.3, abs=0.01)
