@@ -47,12 +47,12 @@ DEFAULT_UNIVERSE: tuple[Asset, ...] = (
 )
 
 # Funds that copy famous traders, held by "Copy" sleeves only:
-# NANC / KRUZ track stock trades disclosed by Democratic / Republican members
-# of Congress, GURU holds top hedge-fund 13F picks, ARKK is Cathie Wood's
-# flagship fund and BRK-B is Warren Buffett's Berkshire Hathaway.
+# NANC tracks stock trades disclosed by Democratic members of Congress (its
+# Republican twin KRUZ has closed), GURU holds top hedge-fund 13F picks, ARKK
+# is Cathie Wood's flagship fund and BRK-B is Warren Buffett's Berkshire.
 COPY_ETFS: tuple[Asset, ...] = tuple(
     Asset(symbol, "us_equity", "USD", alpaca, trade_strategies=False)
-    for symbol, alpaca in (("NANC", "NANC"), ("KRUZ", "KRUZ"), ("GURU", "GURU"), ("ARKK", "ARKK"), ("BRK-B", "BRK.B")))
+    for symbol, alpaca in (("NANC", "NANC"), ("GURU", "GURU"), ("ARKK", "ARKK"), ("BRK-B", "BRK.B")))
 
 DEFAULT_UNIVERSE = DEFAULT_UNIVERSE + COPY_ETFS
 

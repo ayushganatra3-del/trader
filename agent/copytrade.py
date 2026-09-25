@@ -12,7 +12,7 @@ Sources (public and free):
 * OpenInsider: SEC Form 4 open-market purchases by company officers and
   directors, filed within two business days of the trade.
 
-Members of Congress are copied through the NANC/KRUZ ETFs instead (see
+Members of Congress are copied through the NANC ETF instead (see
 config.COPY_ETFS), which do this professionally.
 """
 from __future__ import annotations

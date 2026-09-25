@@ -31,6 +31,7 @@ jobs:
       - name: Check every symbol's data source
         run: python -m agent doctor
       - name: Backtest every strategy and copy-trading book on the last 60 days of real prices
+        if: always()
         env:
           SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
         run: python -m agent backtest --cache-dir .cache/bars

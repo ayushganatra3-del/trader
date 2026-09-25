@@ -302,7 +302,6 @@ BENCHMARKS: tuple[Strategy, ...] = (
     _hold("Hold BTC", "BTC-USD", "Buy and hold Bitcoin"),
     # Copy-trading funds: professionals already copy these people's disclosed trades.
     _hold("Copy: Congress Democrats (NANC)", "NANC", "ETF copying stock trades disclosed by Democratic members of Congress (incl. Pelosi)", "copy"),
-    _hold("Copy: Congress Republicans (KRUZ)", "KRUZ", "ETF copying stock trades disclosed by Republican members of Congress", "copy"),
     _hold("Copy: Hedge-fund gurus (GURU)", "GURU", "ETF holding top picks from hedge funds' 13F filings", "copy"),
     _hold("Copy: Cathie Wood (ARKK)", "ARKK", "Cathie Wood's flagship ARK Innovation fund", "copy"),
     _hold("Copy: Warren Buffett (BRK-B)", "BRK-B", "Berkshire Hathaway, Warren Buffett's company", "copy"),
