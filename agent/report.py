@@ -95,6 +95,9 @@ def _meta_description(name: str, config: Config) -> str:
     if name == "Agent (rotation)":
         return (f"Strategy rotation: each UTC day copies the top {meta.rotation_top_k} strategy sleeves by "
                 f"{meta.rotation_lookback_days}-day risk-adjusted return")
+    if name.startswith("Max aggression"):
+        return (f"All-in momentum: each US morning puts 100% into the high-volatility name (3x ETFs, crypto, COIN, MSTR, "
+                f"...) with the biggest gain over the past {name.split(':')[1].split('-')[0].strip()} day(s); cash if nothing is up")
     if name == "Consensus":
         return f"Long when at least {meta.consensus_threshold:.0%} of strategies agree on a symbol"
     return ""

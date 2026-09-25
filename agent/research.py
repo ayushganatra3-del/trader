@@ -36,6 +36,7 @@ META = "Agent"
 AGGRESSIVE = "Agent (aggressive)"
 CONSENSUS = "Consensus"
 ROTATION = "Agent (rotation)"
+MOMENTUM = "Max aggression: {days}-day momentum"
 
 
 @dataclass
@@ -400,10 +401,46 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
     rotation = _rotation_sleeve(sleeves, index, meta_cfg)
     if rotation is not None:
         sleeves[ROTATION] = make_sleeve(ROTATION, "meta", rotation)
+    for days in meta_cfg.momentum_lookbacks:
+        weights = _momentum_sleeve(close_ff, symbols, meta_cfg.momentum_symbols, days, meta_cfg.momentum_top_k)
+        if weights is not None:
+            sleeves[MOMENTUM.format(days=days)] = make_sleeve(MOMENTUM.format(days=days), "meta", weights)
 
     last_bar = {s: usable[s].index[-1] for s in symbols}
     return Research(index, symbols, close_ff, last_bar, sleeves, columns, pos, last_reason, selection,
                     history.to_frame("picks") if history is not None else None)
+
+
+def _momentum_sleeve(close: pd.DataFrame, symbols: list[str], candidates, days: int, top_k: int) -> np.ndarray | None:
+    """All-in momentum: at 09:35 New York each weekday (the close of the
+    session's first 5-minute bar), hold the ``top_k`` candidates with the
+    biggest gain over the previous ``days`` days (only those that are up;
+    otherwise cash) until the next morning."""
+    cols = [s for s in candidates if s in symbols]
+    if not cols or top_k <= 0:
+        return None
+    index = close.index
+    local = index.tz_convert("America/New_York")
+    minutes = np.asarray(local.hour * 60 + local.minute)
+    # bars are labelled by their start: the 09:30 bar is the one complete at 09:35
+    session = (np.asarray(local.dayofweek) < 5) & (minutes >= 9 * 60 + 30) & (minutes < 16 * 60)
+    day_keys = np.asarray(local.normalize())
+    weights = np.zeros((len(index), len(symbols)))
+    position = {s: j for j, s in enumerate(symbols)}
+    prices = close[cols]
+    starts = []
+    for key in pd.unique(day_keys[session]):
+        starts.append(int(np.flatnonzero(session & (day_keys == key))[0]))
+    for n, t in enumerate(starts):
+        end = starts[n + 1] if n + 1 < len(starts) else len(index)
+        past = prices.asof(index[t] - pd.Timedelta(days=days))
+        if past.isna().all():
+            continue
+        change = (prices.iloc[t] / past - 1).replace([np.inf, -np.inf], np.nan).dropna()
+        winners = change[change > 0].sort_values(ascending=False).head(top_k)
+        for symbol in winners.index:
+            weights[t:end, position[symbol]] = 1.0 / top_k
+    return weights  # all zeros is a real answer (cash): the sleeve must stay so it can sell
 
 
 def _rotation_sleeve(sleeves: dict[str, SleeveResult], index: pd.DatetimeIndex, meta_cfg) -> np.ndarray | None:
