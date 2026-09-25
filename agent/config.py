@@ -185,6 +185,9 @@ class DailyConfig:
     hammer_hold_days: int = 5
     score_top_n: int = 4
     score_min: float = 6.0
+    # Connors RSI(2) dip buying: (signal index, ETF actually bought)
+    rsi2_pairs: tuple = (("SPY", "UPRO"), ("QQQ", "TQQQ"), ("IWM", "TNA"))
+    rsi2_entry: float = 10.0
 
 
 @dataclass

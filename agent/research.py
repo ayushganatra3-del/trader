@@ -430,6 +430,15 @@ def _daytrade_sleeves(bars, index, symbols, config: Config):
                     f"Zarattini & Aziz (2023) opening-range breakout: trades the direction of {signal}'s first 5-minute "
                     f"candle ({long} if up, {short} if down), stop at the other end of that candle, target "
                     f"{cfg.orb_target_r:g}R, flat before the close"))
+        out.append((f"Day trade: Last half hour · {pair}",
+                    daytrade.last_half_hour(bars, index, symbols, signal, long, short),
+                    f"Market intraday momentum (Gao, Han, Li & Zhou 2018): at 15:30 buys {long} if {signal} is up "
+                    f"since yesterday's close by more than half its usual move ({short} if down); sells at 15:55"))
+        out.append((f"Day trade: Open breakout · {pair}",
+                    daytrade.open_breakout(bars, index, symbols, signal, long, short),
+                    f"Volatility breakout (Larry Williams / Crabel): {long} when {signal} closes a 5-minute bar half "
+                    f"of yesterday's range above today's open at a new session high ({short} below); stop at the "
+                    "open; flat before the close"))
         out.append((f"Day trade: Noise-area momentum · {pair}",
                     daytrade.noise_area(bars, index, symbols, signal, long, short, cfg.noise_lookback),
                     f"Zarattini, Aziz & Barbon (2024) intraday momentum: every half hour, {long} if {signal} is above "

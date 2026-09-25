@@ -77,7 +77,7 @@ def test_noise_area_goes_long_on_a_breakout_and_is_flat_overnight():
     assert w.loc[~trend].to_numpy().sum() == 0  # quiet days stay inside the noise area
 
 
-@pytest.mark.parametrize("builder", ["orb", "sip", "noise"])
+@pytest.mark.parametrize("builder", ["orb", "sip", "noise", "last30", "breakout"])
 def test_day_trade_sleeves_never_look_ahead(builder):
     config = Config()
     full = synthetic_bars(config, days=20, end=pd.Timestamp("2026-02-24T21:00Z"))
@@ -93,6 +93,10 @@ def test_day_trade_sleeves_never_look_ahead(builder):
             return index, daytrade.orb_5m(bars, index, symbols, "QQQ", "TQQQ", "SQQQ")
         if builder == "noise":
             return index, daytrade.noise_area(bars, index, symbols, "QQQ", "TQQQ", "SQQQ")
+        if builder == "last30":
+            return index, daytrade.last_half_hour(bars, index, symbols, "QQQ", "TQQQ", "SQQQ")
+        if builder == "breakout":
+            return index, daytrade.open_breakout(bars, index, symbols, "QQQ", "TQQQ", "SQQQ")
         return index, daytrade.stocks_in_play(bars, index, symbols, symbols[3:], top_n=2)
 
     index_full, w_full = run(full)
@@ -128,3 +132,45 @@ def test_rotation_can_pick_day_trade_sleeves():
     names = list(research.sleeves)
     assert any(n.startswith("Day trade") for n in names)
     assert max(i for i, n in enumerate(names) if n.startswith("Day trade")) < names.index(ROTATION)
+
+
+def test_last_half_hour_follows_the_days_move():
+    frames = [session_day(day, 100 + 0.3 * np.sin(np.linspace(0, 3 + i, 78))) for i, day in enumerate(days(15))]
+    frames.append(session_day(days(16)[-1], np.linspace(100, 103, 78)))  # +3% by 15:30
+    qqq = pd.concat(frames)
+    bars = {"QQQ": qqq, "TQQQ": qqq, "SQQQ": qqq}
+    symbols = ["QQQ", "TQQQ", "SQQQ"]
+    w = pd.DataFrame(daytrade.last_half_hour(bars, qqq.index, symbols, "QQQ", "TQQQ", "SQQQ"), index=qqq.index,
+                     columns=symbols)
+    local = w.index.tz_convert("America/New_York")
+    minutes = local.hour * 60 + local.minute
+    last = local.normalize() == pd.Timestamp(days(16)[-1], tz="America/New_York")
+    held = w.loc[last & (w["TQQQ"] == 1.0)].index.tz_convert("America/New_York")
+    assert held.min().strftime("%H:%M") == "15:25" and held.max().strftime("%H:%M") == "15:45"
+    assert w.loc[last & (minutes < 925)].to_numpy().sum() == 0
+
+
+def test_open_breakout_rides_a_range_expansion_and_stops_at_the_open():
+    quiet = [session_day(day, 100 + 0.2 * np.sin(np.linspace(0, 6, 78))) for day in days(3)]
+    trend = session_day(days(4)[-1], np.r_[np.linspace(100, 101.5, 30), np.linspace(101.5, 99.5, 48)])
+    qqq = pd.concat(quiet + [trend])
+    bars = {"QQQ": qqq, "TQQQ": qqq, "SQQQ": qqq}
+    symbols = ["QQQ", "TQQQ", "SQQQ"]
+    w = pd.DataFrame(daytrade.open_breakout(bars, qqq.index, symbols, "QQQ", "TQQQ", "SQQQ"), index=qqq.index,
+                     columns=symbols)
+    held = w.index[w["TQQQ"] == 1.0]
+    assert len(held) and held.min() > trend.index[0]
+    stop_bar = trend.index[(trend["close"] < trend["open"].iloc[0]).to_numpy().argmax()]
+    assert held.max() < stop_bar  # out once QQQ closes back below the open
+    assert w.loc[w.index < trend.index[0]].to_numpy().sum() == 0
+
+
+def test_rsi2_dip_buys_a_pullback_in_an_uptrend_and_sells_the_bounce():
+    from agent.daily import rsi2_dip
+
+    close = np.r_[np.linspace(100, 150, 230), [148, 145, 142], [146, 150, 152]]
+    index = pd.bdate_range("2025-01-01", periods=len(close))
+    bars = pd.DataFrame({"open": close, "high": close, "low": close, "close": close, "volume": 1e6}, index=index)
+    held = rsi2_dip(bars)
+    assert not held.iloc[:230].any()
+    assert held.iloc[232] and not held.iloc[-1]

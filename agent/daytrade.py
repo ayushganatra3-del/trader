@@ -199,3 +199,81 @@ def noise_area(bars: dict[str, pd.DataFrame], index: pd.DatetimeIndex, symbols: 
     frame = pd.DataFrame(weights, index=index)
     frame[~index.isin(session.index)] = np.nan
     return frame.ffill().fillna(0.0).to_numpy()
+
+
+def last_half_hour(bars: dict[str, pd.DataFrame], index: pd.DatetimeIndex, symbols: list[str], signal: str,
+                   long: str | None, short: str | None, k: float = 0.5, lookback: int = 20) -> np.ndarray | None:
+    """Market intraday momentum (Gao, Han, Li & Zhou 2018; Baltussen et al. 2021): the move from the
+    previous close to 15:30 predicts the last half hour. Trade it only when the move is larger than
+    ``k`` times its recent standard deviation; hold 15:30 to 15:55."""
+    if signal not in bars or not any(s in symbols for s in (long, short) if s):
+        return None
+    column = {s: j for j, s in enumerate(symbols)}
+    session = _session(bars[signal])
+    if session.empty:
+        return None
+    prev_close = session.groupby("day")["close"].last().shift(1)
+    marks = session[session["minute"] == 355]  # the 15:25 bar, complete at 15:30
+    move = pd.Series(marks["close"].to_numpy(), index=marks["day"].to_numpy()) / prev_close.reindex(marks["day"]).to_numpy() - 1
+    threshold = k * move.rolling(lookback, min_periods=10).std().shift(1)
+    weights = np.zeros((len(index), len(symbols)))
+    final = session["day"].iloc[-1]
+    for ts, bar in marks.iterrows():
+        day = bar["day"]
+        r, theta = move.get(day, np.nan), threshold.get(day, np.nan)
+        if not (np.isfinite(r) and np.isfinite(theta)) or abs(r) <= theta:
+            continue
+        side = long if r > 0 else short
+        if side not in column:
+            continue
+        start = index.get_loc(ts)
+        later = session[(session["day"] == day) & (session["minute"] >= LAST_MINUTE)]
+        end = index.get_loc(later.index[0]) if len(later) else (len(index) if day == final else start + 1)
+        weights[start:end, column[side]] = 1.0
+    return weights
+
+
+def open_breakout(bars: dict[str, pd.DataFrame], index: pd.DatetimeIndex, symbols: list[str], signal: str,
+                  long: str | None, short: str | None, k: float = 0.5) -> np.ndarray | None:
+    """Volatility breakout from the open (Larry Williams; Crabel; Concretum 2026): go with a 5-minute
+    close beyond open +/- k x the previous day's range that is also a new session extreme. Stop at
+    the open, flat before the close, one trade per day."""
+    if signal not in bars or not any(s in symbols for s in (long, short) if s):
+        return None
+    column = {s: j for j, s in enumerate(symbols)}
+    session = _session(bars[signal])
+    if session.empty:
+        return None
+    daily = session.groupby("day").agg(high=("high", "max"), low=("low", "min"))
+    prior_range = (daily["high"] - daily["low"]).shift(1)
+    weights = np.zeros((len(index), len(symbols)))
+    loc = pd.Series(index.get_indexer(session.index), index=session.index)
+    final = session["day"].iloc[-1]
+    for day_key, day in session.groupby("day"):
+        span = prior_range.get(day_key, np.nan)
+        first = day[day["minute"] == 0]
+        if first.empty or not np.isfinite(span) or span <= 0:
+            continue
+        day_open = float(first["open"].iloc[0])
+        upper, lower = day_open + k * span, day_open - k * span
+        high_so_far, low_so_far = day["high"].cummax().shift(1), day["low"].cummin().shift(1)
+        side = start = end = None
+        for ts, bar in day.iterrows():
+            minute = bar["minute"]
+            if side is None:
+                if minute >= LAST_MINUTE - 30:  # no new trades in the last 40 minutes
+                    break
+                if bar["close"] > upper and bar["close"] >= high_so_far.get(ts, -np.inf) and long in column:
+                    side, start = 1, loc[ts]
+                elif bar["close"] < lower and bar["close"] <= low_so_far.get(ts, np.inf) and short in column:
+                    side, start = -1, loc[ts]
+                continue
+            if minute >= LAST_MINUTE or (side == 1 and bar["close"] < day_open) or (side == -1 and bar["close"] > day_open):
+                end = loc[ts]
+                break
+        if side is None:
+            continue
+        if end is None:
+            end = _open_end(loc[day.index[-1]], index, day_key == final)
+        weights[start:end, column[long if side == 1 else short]] = 1.0
+    return weights

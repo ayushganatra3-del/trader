@@ -316,6 +316,26 @@ def bullish_score(bars: pd.DataFrame) -> pd.Series:
     return score.where(c.rolling(63, min_periods=63).count() >= 63)
 
 
+def rsi2_dip(bars: pd.DataFrame, entry: float = 10.0) -> pd.Series:
+    """Connors RSI(2): after a close with RSI(2) below ``entry`` in a long-term uptrend (close above the
+    200-day average), hold until a close above the 5-day average."""
+    c = bars["close"]
+    delta = c.diff()
+    gain, loss = wilder(delta.clip(lower=0), 2), wilder(-delta.clip(upper=0), 2)
+    rsi = 100 - 100 / (1 + gain / loss.replace(0, np.nan))
+    rsi = rsi.fillna(100.0).where(gain.notna())
+    buy = (rsi < entry) & (c > c.rolling(200, min_periods=200).mean())
+    sell = c > c.rolling(5, min_periods=5).mean()
+    held, out = False, []
+    for b, s in zip(buy.to_numpy(), sell.to_numpy()):
+        if held and s:
+            held = False
+        if not held and b:
+            held = True
+        out.append(held)
+    return pd.Series(out, index=c.index)
+
+
 def top_scores(scores: pd.DataFrame, top_n: int, minimum: float) -> pd.DataFrame:
     """Hold the ``top_n`` best names scoring >= ``minimum``; keep a holding
     until its score falls a point below that, so the sleeve does not churn."""
@@ -398,6 +418,17 @@ def daily_books(daily: dict[str, pd.DataFrame], config: Config, fetched_at: pd.T
             active = pd.DataFrame({s: rule(daily[s], days) for s in stocks}).fillna(False)
             books.append(CopyBook(name, text, "daily bars", schedule(_equal(active, slots)), kind="daily",
                                   as_of=active.index[-1].strftime("%Y-%m-%d"), updated_at=stamp))
+        pairs = [(sig, etf) for sig, etf in cfg.rsi2_pairs
+                 if sig in daily and len(daily[sig]) >= 220 and etf in config.symbols]
+        if pairs:
+            active = pd.DataFrame({etf: rsi2_dip(daily[sig], cfg.rsi2_entry) for sig, etf in pairs}).fillna(False)
+            books.append(CopyBook(
+                "Daily: Connors RSI(2) · 3x ETFs",
+                "Connors RSI(2) dip buying on " + ", ".join(sig for sig, _ in pairs) + ": after a close with RSI(2) under "
+                f"{cfg.rsi2_entry:g} above the 200-day average, buys the 3x ETF (" + ", ".join(etf for _, etf in pairs)
+                + ") at the next open and sells after a close above the 5-day average",
+                "daily bars", schedule(_equal(active, 1)), kind="daily", cap=1.0,
+                as_of=active.index[-1].strftime("%Y-%m-%d"), updated_at=stamp))
         scores = pd.DataFrame({s: bullish_score(daily[s]) for s in stocks})
         held = top_scores(scores, cfg.score_top_n, cfg.score_min)
         books.append(CopyBook(
