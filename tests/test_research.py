@@ -178,6 +178,9 @@ def test_momentum_sleeve_goes_all_in_on_the_morning_leader():
                           "SPY": np.full(len(index), 100.0)}, index=index)
     weights = _momentum_sleeve(close, list(close.columns), ("TQQQ", "SQQQ"), days=1, top_k=1)
     frame = pd.DataFrame(weights, index=index, columns=close.columns)
-    first = pd.Timestamp("2026-02-17T14:35Z")  # Tuesday 09:35 New York: first morning with a full day of history
+    first = pd.Timestamp("2026-02-17T14:30Z")  # Tuesday's 09:30 New York bar, complete at 09:35: first full-lookback morning
     assert (frame.loc[:first - pd.Timedelta(minutes=5)].to_numpy() == 0).all()
     assert frame.loc[first:, "TQQQ"].eq(1.0).all() and frame["SQQQ"].eq(0).all() and frame["SPY"].eq(0).all()
+    # nothing rising: the sleeve still exists and holds cash (so it would sell anything it held)
+    cash = _momentum_sleeve(close, list(close.columns), ("SQQQ",), days=1, top_k=1)
+    assert cash is not None and not cash.any()

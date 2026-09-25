@@ -412,16 +412,18 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
 
 
 def _momentum_sleeve(close: pd.DataFrame, symbols: list[str], candidates, days: int, top_k: int) -> np.ndarray | None:
-    """All-in momentum: at 09:35 New York each weekday, hold the ``top_k``
-    candidates with the biggest gain over the previous ``days`` days (only
-    those that are up; otherwise cash) until the next morning."""
+    """All-in momentum: at 09:35 New York each weekday (the close of the
+    session's first 5-minute bar), hold the ``top_k`` candidates with the
+    biggest gain over the previous ``days`` days (only those that are up;
+    otherwise cash) until the next morning."""
     cols = [s for s in candidates if s in symbols]
     if not cols or top_k <= 0:
         return None
     index = close.index
     local = index.tz_convert("America/New_York")
     minutes = np.asarray(local.hour * 60 + local.minute)
-    session = (np.asarray(local.dayofweek) < 5) & (minutes >= 9 * 60 + 35) & (minutes < 16 * 60)
+    # bars are labelled by their start: the 09:30 bar is the one complete at 09:35
+    session = (np.asarray(local.dayofweek) < 5) & (minutes >= 9 * 60 + 30) & (minutes < 16 * 60)
     day_keys = np.asarray(local.normalize())
     weights = np.zeros((len(index), len(symbols)))
     position = {s: j for j, s in enumerate(symbols)}
@@ -438,7 +440,7 @@ def _momentum_sleeve(close: pd.DataFrame, symbols: list[str], candidates, days: 
         winners = change[change > 0].sort_values(ascending=False).head(top_k)
         for symbol in winners.index:
             weights[t:end, position[symbol]] = 1.0 / top_k
-    return weights if weights.any() else None
+    return weights  # all zeros is a real answer (cash): the sleeve must stay so it can sell
 
 
 def _rotation_sleeve(sleeves: dict[str, SleeveResult], index: pd.DatetimeIndex, meta_cfg) -> np.ndarray | None:
