@@ -22,6 +22,7 @@ import numpy as np
 import pandas as pd
 
 from .config import Config
+from .copytrade import CopyBook, book_weights
 from .indicators import Features
 from .strategies import Strategy
 
@@ -40,11 +41,12 @@ ROTATION = "Agent (rotation)"
 @dataclass
 class SleeveResult:
     name: str
-    kind: str  # "strategy" | "meta" | "benchmark"
+    kind: str  # "strategy" | "meta" | "benchmark" | "copy"
     weights: pd.DataFrame  # T x symbols, fraction of sleeve equity
     returns: pd.Series  # per-bar net return
     strategy: Strategy | None = None
     stats: dict = field(default_factory=dict)
+    description: str = ""
 
 
 @dataclass
@@ -206,7 +208,8 @@ def slot_weights(active: np.ndarray, slots: int, cap: float) -> np.ndarray:
 
 
 def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list[Strategy],
-                 extra: dict[str, dict] | None = None, min_bars: int = 60) -> Research:
+                 extra: dict[str, dict] | None = None, min_bars: int = 60,
+                 copy_books: list[CopyBook] | None = None) -> Research:
     risk, meta_cfg = config.risk, config.meta
     usable = {s: b for s, b in bars.items() if b is not None and len(b) >= min_bars and s in config.symbols}
     symbols = [s for s in config.symbols if s in usable]
@@ -249,6 +252,8 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
             asset = config.asset(s)
             if asset.kind not in strategy.kinds or (wanted and s not in wanted):
                 continue
+            if not strategy.benchmark and not asset.trade_strategies:
+                continue
             try:
                 entry, exit_ = strategy.fn(features[s])
             except Exception as error:  # a broken rule must not stop the others
@@ -287,7 +292,7 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
     # ---- returns and costs
     close_ff = close_raw.ffill()
     ret = close_ff.pct_change().fillna(0.0).to_numpy()
-    cost_sym = np.array([config.cost_bps[config.asset(s).kind] / 1e4 for s in symbols])
+    cost_sym = np.array([config.cost(config.asset(s)) for s in symbols])
     capital = config.starting_capital_gbp
     close_ff_np = close_ff.to_numpy()
 
@@ -319,6 +324,14 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
         else:
             weights = slot_weights(active, risk.slots, risk.max_symbol_weight)
             sleeves[strategy.name] = make_sleeve(strategy.name, "strategy", weights, strategy)
+
+    # ---- copy-trading books (famous investors, insiders)
+    for book in copy_books or []:
+        weights = book_weights(book, index, symbols, risk.max_symbol_weight)
+        if weights.any():
+            sleeve = make_sleeve(book.name, "copy", weights)
+            sleeve.description = book.description
+            sleeves[book.name] = sleeve
 
     # ---- walk-forward meta selection over (strategy, symbol) pairs
     bench_names = {s.name for s in strategies if s.benchmark}
@@ -394,10 +407,11 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
 
 
 def _rotation_sleeve(sleeves: dict[str, SleeveResult], index: pd.DatetimeIndex, meta_cfg) -> np.ndarray | None:
-    """Each UTC day, copy the top-k strategy sleeves by risk-adjusted return
-    over the previous ``rotation_lookback_days`` days (whole sleeves, not
-    strategy/symbol pairs, so far fewer candidates and less luck-chasing)."""
-    names = [n for n, s in sleeves.items() if s.kind == "strategy"]
+    """Each UTC day, copy the top-k strategy or copy-trading sleeves by
+    risk-adjusted return over the previous ``rotation_lookback_days`` days
+    (whole sleeves, not strategy/symbol pairs, so far fewer candidates and
+    less luck-chasing)."""
+    names = [n for n, s in sleeves.items() if s.kind in ("strategy", "copy")]
     k, lookback = meta_cfg.rotation_top_k, meta_cfg.rotation_lookback_days
     if len(names) < k or k <= 0:
         return None

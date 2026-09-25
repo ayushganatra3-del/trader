@@ -195,20 +195,45 @@ class MarketData:
         self.gbpusd: pd.Series = pd.Series(dtype=float)
         self.last_fetch: dict[str, pd.Timestamp] = {}
         self.last_fx: pd.Timestamp | None = None
+        self.live: set[str] | None = None  # symbols needing timely prices (None = all)
+        self._dirty: set[str] = set()
         if self.cache_dir:
             self.cache_dir.mkdir(parents=True, exist_ok=True)
+            log_path = self.cache_dir / "fetch_log.json"
+            if log_path.exists():
+                try:
+                    self.last_fetch = {s: pd.Timestamp(t) for s, t in json.loads(log_path.read_text()).items()}
+                except (ValueError, OSError) as error:
+                    log.warning("Ignoring fetch log: %s", error)
             for asset in config.universe:
-                path = self._path(asset.symbol)
-                if path.exists():
-                    try:
-                        frame = pd.read_csv(path, index_col=0)
-                        frame.index = pd.to_datetime(frame.index, utc=True).as_unit("ns")
-                        self.bars[asset.symbol] = frame[COLUMNS].astype(float)
-                    except Exception as error:  # corrupt cache: refetch
-                        log.warning("Ignoring cache for %s: %s", asset.symbol, error)
+                self._load(asset.symbol)
 
     def _path(self, symbol: str) -> Path:
         return self.cache_dir / f"{symbol.replace('/', '_')}.csv.gz"
+
+    def _load(self, symbol: str) -> None:
+        if not self.cache_dir or symbol in self.bars:
+            return
+        path = self._path(symbol)
+        if path.exists():
+            try:
+                frame = pd.read_csv(path, index_col=0)
+                frame.index = pd.to_datetime(frame.index, utc=True).as_unit("ns")
+                self.bars[symbol] = frame[COLUMNS].astype(float)
+            except Exception as error:  # corrupt cache: refetch
+                log.warning("Ignoring cache for %s: %s", symbol, error)
+                self.last_fetch.pop(symbol, None)
+        else:
+            self.last_fetch.pop(symbol, None)
+
+    def set_universe(self, config: Config, live: set[str] | None = None) -> None:
+        """Switch to a (larger) universe, e.g. with copy-trading tickers added.
+
+        Symbols outside ``live`` only feed backtests and are refreshed rarely."""
+        self.config = config
+        self.live = live
+        for asset in config.universe:
+            self._load(asset.symbol)
 
     def _providers(self, kind: str) -> list[tuple[str, object]]:
         if self.fetcher is not None:
@@ -246,11 +271,16 @@ class MarketData:
         last_fetch = self.last_fetch.get(asset.symbol)
         if old.empty or last_fetch is None:
             return True
+        waited = now - last_fetch
+        if self.live is not None and asset.symbol not in self.live:
+            return waited >= pd.Timedelta(hours=6)
         bar = pd.Timedelta(seconds=INTERVAL_SECONDS[self.config.interval])
         if not is_open(asset.kind, now) and not is_open(asset.kind, now - 2 * bar):
-            return now - last_fetch >= pd.Timedelta(minutes=30)
+            return waited >= pd.Timedelta(minutes=30)
+        if not asset.trade_strategies and waited < pd.Timedelta(minutes=15):
+            return False  # held for weeks: fresher prices add nothing
         next_bar_done = old.index[-1] + 2 * bar
-        return now >= next_bar_done or now - last_fetch >= bar
+        return now >= next_bar_done or waited >= bar
 
     def refresh(self, now: pd.Timestamp | None = None) -> dict[str, str]:
         """Fetch new bars where due. Returns {symbol: error} for failures."""
@@ -287,6 +317,7 @@ class MarketData:
                     continue
                 self.bars[asset.symbol] = merge_bars(self.bars.get(asset.symbol, empty_bars()), new)
                 self.last_fetch[asset.symbol] = now
+                self._dirty.add(asset.symbol)
                 changed = True
         if jobs:
             log.info("Fetched %d/%d symbols in %.1fs", len(jobs) - len([j for j in jobs if j[0].symbol in errors]),
@@ -313,8 +344,12 @@ class MarketData:
     def save(self):
         if not self.cache_dir:
             return
-        for symbol, frame in self.bars.items():
-            frame.to_csv(self._path(symbol), compression="gzip", float_format="%.8g")
+        for symbol in sorted(self._dirty):
+            if symbol in self.bars:
+                self.bars[symbol].to_csv(self._path(symbol), compression="gzip", float_format="%.8g")
+        self._dirty.clear()
+        log_path = self.cache_dir / "fetch_log.json"
+        log_path.write_text(json.dumps({s: t.isoformat() for s, t in self.last_fetch.items()}))
 
     def fx_to_gbp(self, currency: str, at: pd.Timestamp | None = None) -> float:
         """Multiply a price in ``currency`` by this to get GBP."""

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import json
 import logging
 import sys
@@ -22,12 +23,29 @@ def _market(args, config):
     return MarketData(config, args.cache_dir)
 
 
+def _copy_books(config, market):
+    """Fetch copy-trading books and widen the universe to their tickers."""
+    from .copytrade import CopyManager
+
+    manager = CopyManager(config)
+    books = manager.refresh({}, pd.Timestamp.now(tz="UTC"))
+    for book in books:
+        status = book.error or f"{len(book.current())} holdings"
+        print(f"copy book {book.name:<34} as of {book.as_of or '—':<10} {status}", file=sys.stderr)
+    config = dataclasses.replace(config, universe=config.universe + tuple(manager.assets(books)))
+    market.set_universe(config)
+    return config, books
+
+
 def cmd_backtest(args, config):
     market = _market(args, config)
+    books = []
+    if config.copy.enabled and not args.synthetic:
+        config, books = _copy_books(config, market)
     errors = market.refresh()
     for symbol, error in errors.items():
         print(f"! {symbol}: {error}", file=sys.stderr)
-    research = run_research(market.bars, config, all_strategies(disabled=config.disabled_strategies))
+    research = run_research(market.bars, config, all_strategies(disabled=config.disabled_strategies), copy_books=books)
     board = leaderboard(research)
     pd.set_option("display.width", 200)
     pd.set_option("display.max_rows", 200)
@@ -35,6 +53,10 @@ def cmd_backtest(args, config):
     print(f"Backtest {research.index[0]:%Y-%m-%d %H:%M} -> {research.index[-1]:%Y-%m-%d %H:%M} UTC, "
           f"{len(research.symbols)} symbols, {len(research.pair_columns)} strategy/symbol pairs, £{config.starting_capital_gbp:.0f} each\n")
     print(board[cols].to_string(index=False))
+    for book in books:
+        if book.current():
+            holdings = ", ".join(f"{t} {w:.0%}" for t, w in sorted(book.current().items(), key=lambda kv: -kv[1]))
+            print(f"\n{book.name} ({book.source}, as of {book.as_of}): {holdings}")
     if research.selection:
         print("\nAgent's picks for today:")
         for row in research.selection:
