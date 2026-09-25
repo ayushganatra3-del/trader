@@ -147,3 +147,20 @@ def test_rotation_waits_for_its_lookback(small_config, small_bars):
     early = weights[weights.index < first_day + pd.Timedelta(days=min(lookback, 14))]
     assert early.to_numpy().sum() == 0
     assert (weights.sum(axis=1) <= 1 + 1e-9).all()
+
+
+def test_by_day_table_starts_each_day_from_capital():
+    import pandas as pd
+    from agent.__main__ import by_day
+    from agent.config import Config
+    from agent.data import synthetic_bars
+    from agent.research import run_research
+    from agent.strategies import all_strategies
+
+    config = Config()
+    research = run_research(synthetic_bars(config, days=4, end=pd.Timestamp("2026-02-24T15:00Z")), config, all_strategies())
+    table = by_day(research, 100.0, 2)
+    assert list(table.columns)[-1].endswith("(so far)") and len(table.columns) == 2
+    sleeve = research.sleeves["Hold SPY"].returns
+    day = sleeve[sleeve.index.normalize() == pd.Timestamp("2026-02-23", tz="UTC")]
+    assert abs(table.loc["Hold SPY"].iloc[0] - round(100 * (1 + day).prod(), 2)) < 0.011
