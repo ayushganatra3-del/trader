@@ -13,6 +13,7 @@ import pandas as pd
 from . import report
 from .config import BROKER_RISK, Config
 from .copytrade import CopyBook, CopyManager
+from .analyst import Analyst
 from .daily import DailyData, daily_books, daily_symbols
 from .data import INTERVAL_SECONDS, MarketData
 from .portfolio import Quote, Sleeve, new_sleeve
@@ -40,6 +41,7 @@ class Engine:
     forecaster: object | None = None
     copier: object | None = None  # copy-trading sources; built automatically for live market data
     daily: object | None = None  # daily bars (agent/daily.py); built automatically for live market data
+    analyst: object | None = None  # AI analyst (agent/analyst.py); built when ANTHROPIC_API_KEY is set
     research: Research | None = None
     _data_marker: tuple | None = field(default=None, repr=False)
 
@@ -54,6 +56,8 @@ class Engine:
             if self.daily is None and self.config.daily.enabled:
                 self.daily = DailyData(daily_symbols(self.config), Path(self.cache_dir or ".cache/bars") / "daily",
                                        self.config.daily.history, self.config.daily.refresh_hours)
+            if self.analyst is None and self.config.ai.enabled and Analyst.available():
+                self.analyst = Analyst(self.config)
         self._daily_cache: tuple | None = None
         if self.broker is None and self.config.broker.mode != "paper":
             from .live import make_broker
@@ -121,6 +125,10 @@ class Engine:
                 self._daily_cache = (stamp, books, regime)
             _, books, regime = self._daily_cache
             state["regime"] = {**regime, "error": error, "fetched_at": iso(stamp) if stamp is not None else None}
+            if self.analyst is not None and regime:
+                book = self.analyst.run(state.setdefault("analyst", {}), self.daily.bars, regime, now)
+                if book is not None:
+                    books = books + [book]
             return books
         except Exception as error:  # a daily-data problem must not stop the intraday sleeves
             log.warning("Daily sleeves failed: %s", error)

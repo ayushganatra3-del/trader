@@ -40,7 +40,7 @@ def build_dashboard(state: dict, research: Research, config: Config, now: pd.Tim
     for name, result in research.sleeves.items():
         strategy = result.strategy
         data = state["sleeves"].get(name)
-        fallback = result.kind if result.kind in ("copy", "daily") else "meta"
+        fallback = result.kind if result.kind in ("copy", "daily", "ai") else "meta"
         sleeves.append({
             "name": name,
             "kind": result.kind,
@@ -67,6 +67,7 @@ def build_dashboard(state: dict, research: Research, config: Config, now: pd.Tim
         "selection": research.selection,
         "copy_books": _copy_books(state),
         "regime": state.get("regime"),
+        "analyst": {k: v for k, v in ((state.get("analyst") or {}).get("latest") or {}).items() if k != "analysis"} or None,
         "sleeves": sleeves,
         "recent_trades": list(reversed(trades)),
         "broker": state.get("broker"),
@@ -130,13 +131,20 @@ def markdown(dashboard: dict) -> str:
     regime = dashboard.get("regime") or {}
     if regime.get("state"):
         lines += [f"### Market regime ({regime['index']}, {regime['session']})", "",
-                  f"**{regime['state'].capitalize()}** · level {regime['level']} · {regime['distribution_days']} distribution "
+                  f"**{regime['state'].capitalize()}** since {regime.get('since') or '—'} · level {regime['level']} · {regime['distribution_days']} distribution "
                   f"days in 25 sessions · timing exposure {regime['exposure']:.0%} · VXN {_fmt(regime.get('vxn'))} · "
                   f"VIX {_fmt(regime.get('vix'))} · last follow-through day {regime.get('last_follow_through') or '—'}", ""]
         if regime.get("top_scores"):
             lines += ["Best bullish scores: " + ", ".join(f"{k} {v:.1f}" for k, v in regime["top_scores"].items()), ""]
     elif regime.get("error"):
         lines += ["### Market regime", "", f"Daily data unavailable: {regime['error']}", ""]
+    analyst = dashboard.get("analyst") or {}
+    if analyst.get("session"):
+        picks = ", ".join(f"{p['symbol']} {p['weight']:.0%}" for p in analyst.get("positions") or []) or "all cash"
+        lines += [f"### AI analyst ({analyst.get('model')}, after the {analyst['session']} close)", "",
+                  f"{analyst.get('market_view') or ''}", "", f"Holding from {analyst.get('effective', '')[:16]} UTC: {picks}", ""]
+        lines += [f"- **{p['symbol']}**: {p['reason']}" for p in analyst.get("positions") or []]
+        lines.append("")
     if dashboard["selection"]:
         lines += ["### Today's picks (walk-forward)", "", "| Strategy | Symbol | Score | Look-back return | Trades |",
                   "|---|---|---:|---:|---:|"]

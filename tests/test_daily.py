@@ -58,6 +58,16 @@ def test_distribution_days_cut_exposure_and_follow_through_restores_it():
     assert gated["exposure"].iloc[-1] == 0.0 and gated["vxn_gate"].iloc[-1]
 
 
+def test_a_new_high_ends_a_correction_without_a_follow_through_day():
+    close = list(np.linspace(100, 120, 80)) + list(np.linspace(118, 104, 10))  # -13%: correction
+    close += list(np.linspace(104.5, 121, 40))  # slow grind up, never +1.25% in a day
+    regime = market_regime(frame(close))
+    assert not regime["follow_through"].any()
+    state = regime["state"].to_numpy()
+    assert state[89] == "correction" and state[-1] == "uptrend"
+    assert regime["since"].iloc[-1] > regime.index[89]
+
+
 def test_momentum_burst_holds_then_exits_on_trigger_low():
     close = [100.0] * 30 + [105.0, 106, 107, 108, 109, 110]
     volume = [1e6] * 30 + [3e6] + [1e6] * 5

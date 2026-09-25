@@ -405,7 +405,7 @@ def broker_section(b: dict) -> str:
 def regime_section(r: dict) -> str:
     if not r.get("state"):
         return card("Market regime", note(f"Daily data unavailable: {r['error']}" if r.get("error") else "No daily data yet."))
-    facts = [("State", str(r.get("state")).capitalize()), ("Level", str(r.get("level") or "—").capitalize()),
+    facts = [("State", str(r.get("state")).capitalize()), ("Since", r.get("since") or "—"), ("Level", str(r.get("level") or "—").capitalize()),
              ("Distribution days (25 sessions)", fmt(r.get("distribution_days"), 0)),
              ("Timing exposure", weight(r.get("exposure"))), ("VXN", fmt(r.get("vxn"))), ("VIX", fmt(r.get("vix"))),
              ("Last follow-through day", r.get("last_follow_through") or "—"), ("Session", r.get("session") or "—")]
@@ -417,6 +417,15 @@ def regime_section(r: dict) -> str:
         body += f'<p class="alert">\u26a0 {esc(r["error"])}</p>'
     return card("Market regime", body, f"Nasdaq ({esc(r.get('index'))}) daily bars: distribution days, follow-through "
                 "days and volatility set how much the timing sleeves hold.")
+
+
+def analyst_section(a: dict) -> str:
+    rows = [tr([td(esc(p.get("symbol"))), td(weight(p.get("weight")), p.get("weight"), numeric=True),
+                td(esc(p.get("reason") or ""), cls="wrap")]) for p in items(a.get("positions"))]
+    body = f'<p>{esc(a.get("market_view") or "")}</p>'
+    body += table([("Symbol", False), ("Weight", True), ("Why", False)], rows) if rows else note("All cash.")
+    return card("AI analyst", body, f"Claude ({esc(a.get('model'))}) after the {esc(a.get('session'))} close: web news, "
+                "analyst reports and a bull/bear debate. Holds these from the next US open.")
 
 
 def data_problems(errors) -> str:
@@ -465,6 +474,7 @@ def render(dashboard: dict) -> str:
              "The strategy/symbol pairs the Agent trades today, chosen by recent risk-adjusted results."),
         card("Agent holdings", holdings(agent)),
         regime_section(d["regime"]) if isinstance(d.get("regime"), dict) else "",
+        analyst_section(d["analyst"]) if isinstance(d.get("analyst"), dict) else "",
         card("Recent trades", trades_table(agent_trades, False, f"No Agent trades among the latest {len(trades)} trades.")
              + (f'<details><summary>All sleeves ({min(len(trades), 50)} most recent)</summary>{trades_table(trades)}</details>'
                 if trades else ""), "The Agent's latest trades, newest first. Times are UK time."),

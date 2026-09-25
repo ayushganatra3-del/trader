@@ -9,7 +9,8 @@ and backtested exactly like the copy-trading sleeves.
   count distribution days (index down >= 0.2% on higher volume) over the last
   25 sessions and cut exposure as they pile up (100/75/50/25%). After a
   correction, stay out until a follow-through day (day 4-10 of a rally
-  attempt, +1.25% on higher volume). No exposure while ^VXN >= 35.
+  attempt, +1.25% on higher volume) or a new 63-session closing high.
+  No exposure while ^VXN >= 35.
 * Momentum burst (Stockbee): a +4% day on rising volume that closes near its
   high; hold 4 sessions or until the trigger-day low breaks.
 * Exhaustion hammer (Stockbee): a long-lower-wick reversal that undercuts
@@ -218,6 +219,8 @@ def market_regime(bars: pd.DataFrame, vxn: pd.Series | None = None, window: int 
             broken = close[i] <= high63[i] * 0.90 or (count >= 5 and np.isfinite(sma50[i]) and close[i] < sma50[i])
             if broken:
                 state, swing_low, rally_day = "correction", close[i], 0
+        elif close[i] >= high63[i]:  # a new 63-session closing high ends a correction without a textbook FTD
+            state, since, rally_day, count = "uptrend", i + 1, 0, 0
         elif close[i] < swing_low:
             swing_low, rally_day = close[i], 0
         elif rally_day == 0:
@@ -238,9 +241,11 @@ def market_regime(bars: pd.DataFrame, vxn: pd.Series | None = None, window: int 
         gated = np.isfinite(vol_index[i]) and vol_index[i] >= vxn_gate
         if gated:
             exposure = 0.0
-        rows.append((state, level, count, rally_day, ftd, exposure, vol_index[i], gated))
+        if i == 0 or state != rows[-1][0]:
+            changed = bars.index[i]
+        rows.append((state, level, count, rally_day, ftd, exposure, vol_index[i], gated, changed))
     return pd.DataFrame(rows, index=bars.index, columns=["state", "level", "distribution_days", "rally_day",
-                                                         "follow_through", "exposure", "vxn", "vxn_gate"])
+                                                         "follow_through", "exposure", "vxn", "vxn_gate", "since"])
 
 
 # ------------------------------------------------------------------ swing setups
@@ -365,6 +370,7 @@ def daily_books(daily: dict[str, pd.DataFrame], config: Config, fetched_at: pd.T
         last = frame.iloc[-1]
         vix = daily.get(VIX)
         regime = {"index": cfg.index, "session": frame.index[-1].strftime("%Y-%m-%d"), "state": last["state"],
+                  "since": last["since"].strftime("%Y-%m-%d"),
                   "level": last["level"], "distribution_days": int(last["distribution_days"]),
                   "rally_day": int(last["rally_day"]), "exposure": float(last["exposure"]),
                   "vxn": None if pd.isna(last["vxn"]) else round(float(last["vxn"]), 2),

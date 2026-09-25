@@ -165,6 +165,17 @@ class DailyConfig:
 
 
 @dataclass
+class AiConfig:
+    """AI analyst sleeve (agent/analyst.py): runs only when ANTHROPIC_API_KEY is set."""
+    enabled: bool = True
+    model: str = "claude-opus-5"
+    effort: str = "medium"  # low | medium | high | xhigh | max: deeper research costs more
+    max_searches: int = 5  # web searches per daily analysis
+    max_positions: int = 4
+    max_weight: float = 0.35
+
+
+@dataclass
 class BrokerConfig:
     # "paper" = internal simulation only (default, no account needed)
     # "alpaca-paper" = also mirror the Agent sleeve into an Alpaca paper account
@@ -191,6 +202,7 @@ class Config:
     broker: BrokerConfig = field(default_factory=BrokerConfig)
     copy: CopyConfig = field(default_factory=CopyConfig)
     daily: DailyConfig = field(default_factory=DailyConfig)
+    ai: AiConfig = field(default_factory=AiConfig)
     disabled_strategies: tuple[str, ...] = ()
 
     def cost(self, asset: Asset) -> float:

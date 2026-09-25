@@ -14,7 +14,7 @@ On top of the strategies sits the **Agent**: a walk-forward selector. Every day 
 | Momentum | VWAP momentum (the old GPT rule), ROC + volume, RSI momentum, OBV trend, Gap-and-go |
 | Breakout | Donchian 20/10 and 55/20, Opening range 15m/30m, Bollinger, Keltner, Squeeze, Volume breakout |
 | Mean reversion | RSI(14), Connors RSI(2), Bollinger, Z-score, VWAP, Stochastic, Williams %R, CCI, MFI |
-| AI model | Kronos forecast (optional, [shiyu-coder/Kronos](https://github.com/shiyu-coder/Kronos)) |
+| AI model | Kronos forecast (optional, [shiyu-coder/Kronos](https://github.com/shiyu-coder/Kronos)) and the **AI analyst**: Claude researching the news each day (optional, needs an API key) |
 | Meta | **Agent** (top 5 strategy/symbol pairs), **Agent (aggressive)** (top 2, concentrated), **Agent (rotation)** (copies the top 3 whole strategies by 20-day risk-adjusted return), **Consensus** (majority vote) |
 | Benchmarks | Hold SPY, Hold BTC |
 | Copy trading | **Famous investors' 13F holdings** (Buffett, Burry, Ackman, Druckenmiller, Tepper, Cathie Wood), **company insiders' big purchases**, the **top AI agents on AI-Trader**, and a fund that copies **Congress** (NANC: Democrats, including Pelosi), hedge-fund gurus (GURU), ARKK and Berkshire (BRK-B). See below. |
@@ -56,10 +56,21 @@ These trade on completed daily bars, and each signal is acted on at the next US 
 
 | Sleeve | Rule |
 |---|---|
-| `Timing: Nasdaq FTD · TQQQ` / `· QQQ` | Counts **distribution days** (QQQ down ≥0.2% on higher volume) in the last 25 sessions. It holds 100% with 0–2 of them, 75% with 3–4, 50% with 5 and 25% with 6 or more. After a correction (−10% from the high, or 5+ distribution days below the 50-day average) it holds nothing until a **follow-through day** (day 4–10 of a rally attempt, +1.25% on higher volume). It also holds nothing while ^VXN (Nasdaq volatility) is 35 or higher. |
+| `Timing: Nasdaq FTD · TQQQ` / `· QQQ` | Counts **distribution days** (QQQ down ≥0.2% on higher volume) in the last 25 sessions. It holds 100% with 0–2 of them, 75% with 3–4, 50% with 5 and 25% with 6 or more. After a correction (−10% from the high, or 5+ distribution days below the 50-day average) it holds nothing until a **follow-through day** (day 4–10 of a rally attempt, +1.25% on higher volume) or a new 63-day closing high. It also holds nothing while ^VXN (Nasdaq volatility) is 35 or higher. |
 | `Daily: Momentum burst` | +4% day on higher volume, closing near the high. Holds up to 4 days, or exits if the trigger day's low breaks. |
 | `Daily: Exhaustion hammer` | Long-lower-wick reversal that undercuts recent lows during a 5–25% pullback in an uptrend. Holds up to 5 days. |
 | `Daily: Bullish score` | Scores trend and momentum (SMA 20/50, RSI, MACD, EMA 9/21, ADX, 3-month return). Holds the top 4 names scoring 6 or more. |
+
+### AI analyst (optional, uses Claude)
+
+`AI analyst (Claude)` works like the [TradingAgents](https://github.com/TauricResearch/TradingAgents) research desk. After each US close, Claude:
+
+1. reads the daily numbers for every stock in the universe and the market regime;
+2. searches the web for news, earnings dates and macro events;
+3. has technical, news and macro analysts report, then runs a bull-versus-bear debate;
+4. picks up to 4 positions (max 35% each, the rest in cash), which are bought at the next open.
+
+It only works forward in time: a model can't be backtested honestly on dates it may already know about. To switch it on, add the repository secret `ANTHROPIC_API_KEY`. With the defaults it costs roughly **$0.50–1 per trading day** in API fees. That is a lot next to a £100 account, so keep it only if its record beats the cheaper sleeves. Model, effort and number of searches are set under `[ai]` in `config.toml`.
 
 The leaderboard and dashboard show the current **market regime**: uptrend or correction, distribution-day count, timing exposure, VXN, VIX and the latest follow-through day. The rules are adapted from [tradermonty/claude-trading-skills](https://github.com/tradermonty/claude-trading-skills) and [staskh/trading_skills](https://github.com/staskh/trading_skills).
 
@@ -146,6 +157,7 @@ Copy `config.example.toml` to `config.toml`. You can change:
 | `agent/kronos/` | Kronos model (vendored, MIT) and forecaster |
 | `agent/copytrade.py` | copy trading: SEC 13F holdings, insider purchases, disclosure-time schedules |
 | `agent/daily.py` | daily bars, market regime (distribution/follow-through days), daily swing setups |
+| `agent/analyst.py` | the Claude AI analyst sleeve |
 | `tests/` | look-ahead checks, random-walk "no fake edge" check, paper-vs-backtest parity, accounting, broker safety |
 
 Run the tests: `pip install -r requirements-dev.txt && python -m pytest tests -q`

@@ -48,7 +48,8 @@ def _daily_books(config, cache_dir):
         print(f"daily bars: {error}", file=sys.stderr)
     books, regime = daily_books(daily.bars, config, daily.fetched_at)
     if regime:
-        print(f"market regime ({regime['index']}, {regime['session']}): {regime['state']}, level {regime['level']}, "
+        print(f"market regime ({regime['index']}, {regime['session']}): {regime['state']} since {regime['since']}, "
+              f"level {regime['level']}, "
               f"{regime['distribution_days']} distribution days, exposure {regime['exposure']:.0%}, "
               f"VXN {regime['vxn']}, VIX {regime['vix']}, last follow-through {regime['last_follow_through']}",
               file=sys.stderr)

@@ -328,7 +328,7 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
     # ---- schedule books: copy trading (famous investors, insiders) and daily-bar sleeves
     for book in copy_books or []:
         weights = book_weights(book, index, symbols, book.cap or risk.max_symbol_weight)
-        if weights.any() or (book.kind == "daily" and book.schedule):  # a timing sleeve may sit in cash for weeks
+        if weights.any() or (book.kind in ("daily", "ai") and book.schedule):  # may sit in cash for weeks
             sleeve = make_sleeve(book.name, book.kind, weights)
             sleeve.description = book.description
             sleeves[book.name] = sleeve
@@ -411,7 +411,7 @@ def _rotation_sleeve(sleeves: dict[str, SleeveResult], index: pd.DatetimeIndex, 
     risk-adjusted return over the previous ``rotation_lookback_days`` days
     (whole sleeves, not strategy/symbol pairs, so far fewer candidates and
     less luck-chasing)."""
-    names = [n for n, s in sleeves.items() if s.kind in ("strategy", "copy", "daily")]
+    names = [n for n, s in sleeves.items() if s.kind in ("strategy", "copy", "daily", "ai")]
     k, lookback = meta_cfg.rotation_top_k, meta_cfg.rotation_lookback_days
     if len(names) < k or k <= 0:
         return None
