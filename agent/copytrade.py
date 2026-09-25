@@ -38,7 +38,7 @@ from .config import Asset, Config
 log = logging.getLogger(__name__)
 
 NEW_YORK = "America/New_York"
-OPENINSIDER = "https://openinsider.com/screener"
+OPENINSIDER = ("https://openinsider.com/screener", "http://openinsider.com/screener")
 OPENFIGI = "https://api.openfigi.com/v3/mapping"
 INSIDER_BOOK = "Copy: Insider buying"
 
@@ -322,7 +322,15 @@ def fetch_insider_book(config: Config, http: Http, now: pd.Timestamp, days: int 
                     f"{cfg.insider_top_n}, equal weight", "SEC Form 4 via OpenInsider")
     params = {"fd": days, "xp": 1, "vl": cfg.insider_min_value_k, "isofficer": 1, "iscob": 1, "isceo": 1,
               "ispres": 1, "iscoo": 1, "iscfo": 1, "isdirector": 1, "grp": 0, "sortcol": 0, "cnt": 1000, "page": 1}
-    html = http.get(f"{OPENINSIDER}?{urllib.parse.urlencode(params)}").decode("utf-8", "replace")
+    html, errors = None, []
+    for base in OPENINSIDER:  # some hosting networks only reach one of the two
+        try:
+            html = http.get(f"{base}?{urllib.parse.urlencode(params)}").decode("utf-8", "replace")
+            break
+        except RuntimeError as error:
+            errors.append(str(error))
+    if html is None:
+        raise RuntimeError("OpenInsider unreachable: " + " | ".join(errors))
     trades = parse_openinsider(html)
     book.schedule = insider_schedule(trades, now, days, cfg.insider_window_days, cfg.insider_top_n)
     if trades:
