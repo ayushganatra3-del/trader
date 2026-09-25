@@ -134,6 +134,9 @@ class CopyConfig:
     cost_bps: float = 15.0  # smaller, less liquid names than the core universe
     refresh_hours_13f: float = 12.0
     refresh_hours_insider: float = 1.0
+    ai_trader: bool = True  # copy the top agents on the AI-Trader platform (ai4trade.ai)
+    ai_trader_agents: int = 5  # leaders copied, by open-position profit
+    refresh_hours_ai_trader: float = 1.0
     sec_user_agent: str = "trader-agent research bot (github.com/ayushganatra3-del/trader)"
 
 
