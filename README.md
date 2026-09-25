@@ -1,6 +1,6 @@
 # Trading agent
 
-An autonomous, multi-strategy trading agent. It runs **63 strategies** at the same time: 33 well-known intraday rules on 5-minute bars, plus 30 hourly "swing" versions of them (plus the optional Kronos AI forecaster) on US stocks, leveraged/inverse ETFs and crypto. Each strategy trades its own separate **£100 paper account**, so you can see which ones actually make money.
+An autonomous, multi-strategy trading agent. It runs **63 strategies** at the same time: 33 well-known intraday rules on 5-minute bars, 30 hourly "swing" versions of them, and daily market-timing and swing sleeves (plus the optional Kronos AI forecaster) on US stocks, leveraged/inverse ETFs and crypto. Each strategy trades its own separate **£100 paper account**, so you can see which ones actually make money.
 
 On top of the strategies sits the **Agent**: a walk-forward selector. Every day it trades whichever strategy/symbol pairs made the best risk-adjusted returns over the previous 10 days. That is how it "gets better": it keeps moving money toward what is working and away from what isn't.
 
@@ -19,6 +19,7 @@ On top of the strategies sits the **Agent**: a walk-forward selector. Every day 
 | Benchmarks | Hold SPY, Hold BTC |
 | Copy trading | **Famous investors' 13F holdings** (Buffett, Burry, Ackman, Druckenmiller, Tepper, Cathie Wood), **company insiders' big purchases**, the **top AI agents on AI-Trader**, and a fund that copies **Congress** (NANC: Democrats, including Pelosi), hedge-fund gurus (GURU), ARKK and Berkshire (BRK-B). See below. |
 | Hourly swing | Every rule above except opening-range and gap-and-go, re-run on 1-hour bars (named "… · 1h"). They trade far less, so costs eat less, and they may hold stocks overnight. |
+| Daily | **Nasdaq market timing** on TQQQ and QQQ (distribution days and follow-through days, the IBD method), **momentum burst** and **exhaustion hammer** (Stockbee setups), and the **bullish score** (top-scoring trend names). They use 2 years of daily bars and hold for days. See below. |
 
 - **Universe:** 21 symbols by default: SPY, QQQ, IWM, TQQQ, SQQQ, SOXL, NVDA, TSLA, AAPL, MSFT, AMD, META, AMZN, GOOGL, PLTR, COIN, plus BTC, ETH, SOL, XRP and DOGE. Crypto trades 24/7, so the agent is never idle.
 - **Data:** 5-minute bars. Stocks come from Yahoo Finance via `yfinance`; crypto comes from Coinbase. If a source rate-limits the agent, it is skipped for 10 minutes and the next one is used.
@@ -30,6 +31,7 @@ On top of the strategies sits the **Agent**: a walk-forward selector. Every day 
 - Intraday sleeves sell stocks 10 minutes before the US close, so they hold nothing overnight. Hourly swing sleeves may hold overnight.
 - A −6% day pauses the sleeve until the next day.
 - A −50% drawdown shuts the sleeve down for good.
+- The sleeve a real broker account copies gets extra brakes: −5% in a week or −8% in a month pauses it until the next week/month, and 2 losing trades in a row stop new buys for 24 hours. The broker mirrors what that paper sleeve actually holds, so every pause applies to real money too.
 - Costs are modelled on every trade: 5 bps per side for stocks, 30 bps per side for crypto.
 
 ## Copy trading
@@ -47,6 +49,19 @@ Each copy source is its own £100 paper sleeve, so you can see whether copying a
 Every copied position is bought only at the first market open **after** it was made public, including in backtests. You can't copy anyone's trade at the price they got. Research on whether copying beats the market is mixed. The leaderboard shows the honest result, with costs. Managers can be changed under `[copy]` in `config.toml`. A manager whose latest 13F is over 200 days old (for example because the fund closed) is shown but not traded.
 
 The SEC asks automated tools to identify themselves. If EDGAR refuses requests, set the repository variable `SEC_USER_AGENT` to something like `your-name your@email.com`.
+
+## Daily sleeves and the market regime
+
+These trade on completed daily bars, and each signal is acted on at the next US open:
+
+| Sleeve | Rule |
+|---|---|
+| `Timing: Nasdaq FTD · TQQQ` / `· QQQ` | Counts **distribution days** (QQQ down ≥0.2% on higher volume) in the last 25 sessions. It holds 100% with 0–2 of them, 75% with 3–4, 50% with 5 and 25% with 6 or more. After a correction (−10% from the high, or 5+ distribution days below the 50-day average) it holds nothing until a **follow-through day** (day 4–10 of a rally attempt, +1.25% on higher volume). It also holds nothing while ^VXN (Nasdaq volatility) is 35 or higher. |
+| `Daily: Momentum burst` | +4% day on higher volume, closing near the high. Holds up to 4 days, or exits if the trigger day's low breaks. |
+| `Daily: Exhaustion hammer` | Long-lower-wick reversal that undercuts recent lows during a 5–25% pullback in an uptrend. Holds up to 5 days. |
+| `Daily: Bullish score` | Scores trend and momentum (SMA 20/50, RSI, MACD, EMA 9/21, ADX, 3-month return). Holds the top 4 names scoring 6 or more. |
+
+The leaderboard and dashboard show the current **market regime**: uptrend or correction, distribution-day count, timing exposure, VXN, VIX and the latest follow-through day. The rules are adapted from [tradermonty/claude-trading-skills](https://github.com/tradermonty/claude-trading-skills) and [staskh/trading_skills](https://github.com/staskh/trading_skills).
 
 ## Start it (no computer needed)
 
@@ -130,6 +145,7 @@ Copy `config.example.toml` to `config.toml`. You can change:
 | `agent/live.py`, `agent/brokers/alpaca.py` | Alpaca sync with safety rails |
 | `agent/kronos/` | Kronos model (vendored, MIT) and forecaster |
 | `agent/copytrade.py` | copy trading: SEC 13F holdings, insider purchases, disclosure-time schedules |
+| `agent/daily.py` | daily bars, market regime (distribution/follow-through days), daily swing setups |
 | `tests/` | look-ahead checks, random-walk "no fake edge" check, paper-vs-backtest parity, accounting, broker safety |
 
 Run the tests: `pip install -r requirements-dev.txt && python -m pytest tests -q`

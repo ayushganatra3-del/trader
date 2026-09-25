@@ -36,6 +36,14 @@ enabled = true
 top_n = 10
 # managers = { "Buffett (Berkshire)" = "0001067983", "Ackman (Pershing Square)" = "0001336528" }
 
+[daily]             # daily-bar sleeves: Nasdaq market timing, momentum burst, exhaustion hammer, bullish score
+enabled = true
+index = "QQQ"       # Nasdaq proxy for distribution and follow-through days
+timing_tickers = ["TQQQ", "QQQ"]
+vxn_gate = 35.0     # timing sleeves hold nothing while ^VXN is this high
+score_top_n = 4
+score_min = 6.0
+
 [broker]
 mode = "paper"      # "paper" | "alpaca-paper" | "alpaca-live" (real money)
 sleeve = "Agent"    # which sleeve the broker account copies

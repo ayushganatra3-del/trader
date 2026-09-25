@@ -87,3 +87,27 @@ def test_paper_trading_matches_backtest(tmp_path):
         backtest = float(np.prod(1 + returns.iloc[start + 1:]))
         paper = state["sleeves"][name]["equity_gbp"] / 100.0
         assert paper == pytest.approx(backtest, abs=0.02), name
+
+
+def test_broker_mirrors_the_paper_sleeve_with_extra_breakers(tmp_path, small_config, small_bars, monkeypatch):
+    import dataclasses
+
+    from agent import live
+
+    config = dataclasses.replace(small_config, broker=dataclasses.replace(small_config.broker, mode="alpaca-paper"))
+    seen = {}
+
+    def fake_sync(broker, targets, cfg, now, prices_usd, gbpusd, stamp):
+        seen["targets"] = targets
+        return {"ok": True, "orders": []}
+
+    monkeypatch.setattr(live, "sync_broker", fake_sync)
+    engine = Engine(config, tmp_path, market=StaticData(config, small_bars, gbpusd=1.3), broker=object())
+    engine.tick(END + pd.Timedelta(seconds=30))
+    state = json.loads((tmp_path / "state.json").read_text())
+    agent = state["sleeves"]["Agent"]
+    held = {s for s, p in agent["positions"].items()}
+    assert {s for s, w in seen["targets"].items() if w > 0} == held
+    assert set(seen["targets"]) == set(config.symbols)  # explicit zeros for everything else
+    assert engine._risk_for("Agent").weekly_loss_limit == 0.05
+    assert engine._risk_for("EMA 9/21 cross").weekly_loss_limit is None

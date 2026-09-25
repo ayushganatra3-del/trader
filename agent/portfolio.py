@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+import pandas as pd
+
 from .config import RiskConfig
 
 EPS = 1e-9
@@ -99,9 +101,11 @@ class Sleeve:
             if total > 0:
                 self.data["wins"] += 1
                 self.data["gross_win_gbp"] += total
+                self.data["loss_streak"] = 0
             else:
                 self.data["losses"] += 1
                 self.data["gross_loss_gbp"] += -total
+                self.data["loss_streak"] = self.data.get("loss_streak", 0) + 1
             if position["units"] > EPS:  # dust
                 self.data["cash_gbp"] += position["units"] * quote.gbp
             del self.data["positions"][quote.symbol]
@@ -127,6 +131,10 @@ class Sleeve:
             if data["halted_day"] != today:
                 data["halted_day"] = today
             halt_reason = f"Daily loss limit ({risk.daily_loss_limit:.0%}) hit; paused until tomorrow (UTC)"
+        else:
+            halt_reason = self._period_halt(risk, equity, today)
+        now = pd.Timestamp(now_iso)
+        cooling = bool(data.get("cooldown_until")) and now < pd.Timestamp(data["cooldown_until"])
 
         trades = []
         sells, buys = [], []
@@ -153,13 +161,42 @@ class Sleeve:
                     sells.append((quote, -diff / quote.gbp, "rebalance down"))
         for quote, units, why in sells:
             trades.append(self._sell(quote, units, now_iso, why))
-        for quote, notional, why in buys:
+        for quote, notional, why in ([] if cooling else buys):
             notional = min(notional, data["cash_gbp"])
             if notional >= risk.min_trade_gbp:
                 trades.append(self._buy(quote, notional, now_iso, why))
+        if risk.loss_streak_cooldown and data.get("loss_streak", 0) >= risk.loss_streak_cooldown:
+            data["cooldown_until"] = (now + pd.Timedelta(hours=risk.cooldown_hours)).isoformat()
+            data["loss_streak"] = 0
+        if not halt_reason and data.get("cooldown_until") and now < pd.Timestamp(data["cooldown_until"]):
+            halt_reason = f"{risk.loss_streak_cooldown} losing trades in a row: no new buys until {data['cooldown_until'][:16]}"
         data["halt_reason"] = halt_reason
         self.mark(quotes)
         return trades
+
+    def _period_halt(self, risk: RiskConfig, equity: float, today: str) -> str | None:
+        """Week-to-date and month-to-date loss limits (off unless configured)."""
+        data = self.data
+        day = pd.Timestamp(today)
+        week = f"{day.isocalendar().year}-W{day.isocalendar().week:02d}"
+        month = today[:7]
+        if data.get("week") != week:
+            data["week"], data["week_start_equity_gbp"] = week, equity
+        if data.get("month") != month:
+            data["month"], data["month_start_equity_gbp"] = month, equity
+        if risk.weekly_loss_limit and equity <= data["week_start_equity_gbp"] * (1 - risk.weekly_loss_limit):
+            return f"Weekly loss limit ({risk.weekly_loss_limit:.0%}) hit; paused until next week"
+        if risk.monthly_loss_limit and equity <= data["month_start_equity_gbp"] * (1 - risk.monthly_loss_limit):
+            return f"Monthly loss limit ({risk.monthly_loss_limit:.0%}) hit; paused until next month"
+        return None
+
+    def weights(self) -> dict[str, float]:
+        """Current holdings as fractions of equity (what a broker account should mirror)."""
+        equity = self.data["equity_gbp"]
+        if equity <= 0:
+            return {}
+        marks = self.data["last_marks"]
+        return {s: p["units"] * marks.get(s, 0.0) / equity for s, p in self.data["positions"].items()}
 
     def summary(self) -> dict:
         data = self.data

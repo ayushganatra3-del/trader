@@ -51,14 +51,16 @@ AI_TRADER_BOOK = "Copy: AI-Trader top agents"
 class Http:
     """Minimal HTTP client (replaced by a fake in tests)."""
 
-    def __init__(self, user_agent: str, timeout: float = 30.0, pause: float = 0.15):
+    def __init__(self, user_agent: str, timeout: float = 30.0, pause: float = 0.15, tries: int = 3):
         self.user_agent = user_agent
         self.timeout = timeout
         self.pause = pause
+        self.tries = tries
 
     def _open(self, request: urllib.request.Request) -> bytes:
         ipv4 = False
-        for attempt in range(3):
+        last = self.tries - 1
+        for attempt in range(self.tries):
             try:
                 with _ipv4_only() if ipv4 else contextlib.nullcontext():
                     with urllib.request.urlopen(request, timeout=self.timeout) as response:
@@ -69,10 +71,10 @@ class Http:
                 if error.code == 403 and "sec.gov" in request.full_url:
                     raise RuntimeError("SEC refused the request (HTTP 403): set the repository variable "
                                        "SEC_USER_AGENT to 'Your Name your@email.com'") from error
-                if error.code not in (429, 500, 502, 503, 504) or attempt == 2:
+                if error.code not in (429, 500, 502, 503, 504) or attempt == last:
                     raise RuntimeError(f"{request.get_method()} {request.full_url.split('?')[0]}: HTTP {error.code}") from error
             except (urllib.error.URLError, TimeoutError, ConnectionError) as error:
-                if attempt == 2:
+                if attempt == last:
                     raise RuntimeError(f"{request.get_method()} {request.full_url.split('?')[0]}: {error}") from error
                 # "Network is unreachable" usually means an IPv6 address on an IPv4-only host
                 ipv4 = True
@@ -111,6 +113,8 @@ class CopyBook:
     updated_at: str | None = None
     error: str | None = None
     stale: bool = False
+    kind: str = "copy"  # "daily" for the daily-bar sleeves (agent/daily.py)
+    cap: float | None = None  # max weight per name; default risk.max_symbol_weight
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -440,6 +444,8 @@ class CopyManager:
         self.config = config
         # SEC asks automated clients to identify themselves (ideally with a contact email)
         self.http = http or Http(os.environ.get("SEC_USER_AGENT") or config.copy.sec_user_agent)
+        # AI-Trader can be slow from cloud runners: give up quickly instead of stalling a tick
+        self.quick_http = http or Http(self.http.user_agent, timeout=12.0, tries=2)
 
     def refresh(self, state: dict, now: pd.Timestamp) -> list[CopyBook]:
         cfg = self.config.copy
@@ -451,7 +457,7 @@ class CopyManager:
         jobs.append((INSIDER_BOOK, cfg.refresh_hours_insider, lambda: fetch_insider_book(self.config, self.http, now)))
         if cfg.ai_trader:
             jobs.append((AI_TRADER_BOOK, cfg.refresh_hours_ai_trader, lambda: fetch_ai_trader_book(
-                self.config, self.http, now, store["books"].get(AI_TRADER_BOOK))))
+                self.config, self.quick_http, now, store["books"].get(AI_TRADER_BOOK))))
         attempts = store.setdefault("attempts", {})
         for key, hours, fetch in jobs:
             old = store["books"].get(key)

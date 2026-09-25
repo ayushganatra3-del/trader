@@ -40,7 +40,7 @@ def build_dashboard(state: dict, research: Research, config: Config, now: pd.Tim
     for name, result in research.sleeves.items():
         strategy = result.strategy
         data = state["sleeves"].get(name)
-        fallback = "copy" if result.kind == "copy" else "meta"
+        fallback = result.kind if result.kind in ("copy", "daily") else "meta"
         sleeves.append({
             "name": name,
             "kind": result.kind,
@@ -66,6 +66,7 @@ def build_dashboard(state: dict, research: Research, config: Config, now: pd.Tim
                             "bars": len(research.index)},
         "selection": research.selection,
         "copy_books": _copy_books(state),
+        "regime": state.get("regime"),
         "sleeves": sleeves,
         "recent_trades": list(reversed(trades)),
         "broker": state.get("broker"),
@@ -126,6 +127,16 @@ def markdown(dashboard: dict) -> str:
             status = book.get("error") or "ok"
             lines.append(f"| {book['name']} | {book.get('as_of') or '—'} | {holdings} | {status} |")
         lines.append("")
+    regime = dashboard.get("regime") or {}
+    if regime.get("state"):
+        lines += [f"### Market regime ({regime['index']}, {regime['session']})", "",
+                  f"**{regime['state'].capitalize()}** · level {regime['level']} · {regime['distribution_days']} distribution "
+                  f"days in 25 sessions · timing exposure {regime['exposure']:.0%} · VXN {_fmt(regime.get('vxn'))} · "
+                  f"VIX {_fmt(regime.get('vix'))} · last follow-through day {regime.get('last_follow_through') or '—'}", ""]
+        if regime.get("top_scores"):
+            lines += ["Best bullish scores: " + ", ".join(f"{k} {v:.1f}" for k, v in regime["top_scores"].items()), ""]
+    elif regime.get("error"):
+        lines += ["### Market regime", "", f"Daily data unavailable: {regime['error']}", ""]
     if dashboard["selection"]:
         lines += ["### Today's picks (walk-forward)", "", "| Strategy | Symbol | Score | Look-back return | Trades |",
                   "|---|---|---:|---:|---:|"]

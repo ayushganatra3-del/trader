@@ -85,6 +85,15 @@ class RiskConfig:
     no_entry_minutes_before_close: int = 30
     no_entry_minutes_after_open: int = 5
     max_bar_age_minutes: int = 20  # older quotes can't drive trades
+    weekly_loss_limit: float | None = None  # halt until next week after this loss
+    monthly_loss_limit: float | None = None  # halt until next month after this loss
+    loss_streak_cooldown: int = 0  # consecutive losing trades that pause new buys (0 = off)
+    cooldown_hours: float = 24.0
+
+
+# Extra circuit breakers for the sleeve that a real broker account copies.
+BROKER_RISK = {"weekly_loss_limit": 0.05, "monthly_loss_limit": 0.08, "loss_streak_cooldown": 2,
+               "cooldown_hours": 24.0}
 
 
 @dataclass
@@ -141,6 +150,21 @@ class CopyConfig:
 
 
 @dataclass
+class DailyConfig:
+    """Daily-bar sleeves (agent/daily.py): Nasdaq market timing and multi-day setups."""
+    enabled: bool = True
+    history: str = "2y"
+    refresh_hours: float = 3.0
+    index: str = "QQQ"  # Nasdaq proxy for distribution and follow-through days
+    timing_tickers: tuple[str, ...] = ("TQQQ", "QQQ")  # one timing sleeve each
+    vxn_gate: float = 35.0  # no timing exposure while Nasdaq volatility (^VXN) is this high
+    burst_hold_days: int = 4
+    hammer_hold_days: int = 5
+    score_top_n: int = 4
+    score_min: float = 6.0
+
+
+@dataclass
 class BrokerConfig:
     # "paper" = internal simulation only (default, no account needed)
     # "alpaca-paper" = also mirror the Agent sleeve into an Alpaca paper account
@@ -166,6 +190,7 @@ class Config:
     kronos: KronosConfig = field(default_factory=KronosConfig)
     broker: BrokerConfig = field(default_factory=BrokerConfig)
     copy: CopyConfig = field(default_factory=CopyConfig)
+    daily: DailyConfig = field(default_factory=DailyConfig)
     disabled_strategies: tuple[str, ...] = ()
 
     def cost(self, asset: Asset) -> float:
