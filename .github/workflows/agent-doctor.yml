@@ -34,4 +34,4 @@ jobs:
         if: always()
         env:
           SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
-        run: python -m agent backtest --cache-dir .cache/bars
+        run: python -m agent backtest --cache-dir .cache/bars --by-day 5

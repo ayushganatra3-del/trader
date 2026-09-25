@@ -79,6 +79,8 @@ def cmd_backtest(args, config):
         if book.current():
             holdings = ", ".join(f"{t} {w:.0%}" for t, w in sorted(book.current().items(), key=lambda kv: -kv[1]))
             print(f"\n{book.name} ({book.source}, as of {book.as_of}): {holdings}")
+    if args.by_day:
+        print_by_day(research, config.starting_capital_gbp, args.by_day)
     if research.selection:
         print("\nAgent's picks for today:")
         for row in research.selection:
@@ -90,6 +92,25 @@ def cmd_backtest(args, config):
         report.write_all(out, state, research, config, pd.Timestamp.now(tz="UTC"))
         board.to_csv(out / "leaderboard.csv", index=False)
         print(f"\nReport written to {out}/ (README.md, dashboard.html, dashboard.json, leaderboard.csv)")
+
+
+def by_day(research, capital: float, days: int) -> pd.DataFrame:
+    """What ``capital`` in each sleeve ended each of the last ``days`` UTC days at
+    (each day starts afresh from ``capital``; the backtest is causal, so every
+    day is out-of-sample for the Agent's walk-forward picks)."""
+    returns = pd.DataFrame({name: sleeve.returns for name, sleeve in research.sleeves.items()})
+    daily = (1 + returns).groupby(returns.index.normalize()).prod() - 1
+    table = (capital * (1 + daily.tail(days))).T.round(2)
+    table.columns = [f"{day:%a %d %b}" + (" (so far)" if day == research.index[-1].normalize() else "")
+                     for day in table.columns]
+    return table.sort_values(table.columns[-2] if len(table.columns) > 1 else table.columns[-1], ascending=False)
+
+
+def print_by_day(research, capital: float, days: int) -> None:
+    table = by_day(research, capital, days)
+    print(f"\n£{capital:.0f} in each sleeve at the start of each UTC day -> value at the end of that day "
+          "(US stocks trade 13:30-20:00 UTC; crypto all day):")
+    print(table.to_string())
 
 
 def cmd_tick(args, config):
@@ -162,6 +183,8 @@ def main(argv=None):
     p.add_argument("--days", type=int, default=60)
     p.add_argument("--seed", type=int, default=7)
     p.add_argument("--out", default=None, help="Write a report folder here")
+    p.add_argument("--by-day", type=int, default=0, metavar="N",
+                   help="Also show what £100 in each sleeve made on each of the last N days")
     p.set_defaults(fn=cmd_backtest)
 
     p = sub.add_parser("tick", help="Run one trading cycle and exit")
