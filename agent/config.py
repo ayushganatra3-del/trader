@@ -18,6 +18,8 @@ class Asset:
     kind: str  # "us_equity" | "crypto" | "uk_equity"
     currency: str  # quote currency after scaling: "USD" | "GBP"
     broker_symbol: str = ""  # Alpaca symbol, e.g. "AAPL" or "BTC/USD"
+    trade_strategies: bool = True  # False: only held by copy/benchmark sleeves
+    cost_bps: float | None = None  # overrides the per-kind cost
 
     @property
     def alpaca(self) -> str:
@@ -43,6 +45,16 @@ DEFAULT_UNIVERSE: tuple[Asset, ...] = (
     _crypto("BTC-USD"), _crypto("ETH-USD"), _crypto("SOL-USD"),
     _crypto("XRP-USD"), _crypto("DOGE-USD"),
 )
+
+# Funds that copy famous traders, held by "Copy" sleeves only:
+# NANC / KRUZ track stock trades disclosed by Democratic / Republican members
+# of Congress, GURU holds top hedge-fund 13F picks, ARKK is Cathie Wood's
+# flagship fund and BRK-B is Warren Buffett's Berkshire Hathaway.
+COPY_ETFS: tuple[Asset, ...] = tuple(
+    Asset(symbol, "us_equity", "USD", alpaca, trade_strategies=False)
+    for symbol, alpaca in (("NANC", "NANC"), ("KRUZ", "KRUZ"), ("GURU", "GURU"), ("ARKK", "ARKK"), ("BRK-B", "BRK.B")))
+
+DEFAULT_UNIVERSE = DEFAULT_UNIVERSE + COPY_ETFS
 
 UK_ETFS: tuple[Asset, ...] = (
     Asset("ISF.L", "uk_equity", "GBP"), Asset("VUSA.L", "uk_equity", "GBP"),
@@ -102,6 +114,30 @@ class KronosConfig:
 
 
 @dataclass
+class CopyConfig:
+    """Copy-trading sleeves built from public disclosures (see agent/copytrade.py)."""
+    enabled: bool = True
+    # 13F filers: name -> SEC CIK. Holdings are public up to 45 days after quarter end.
+    managers: dict = field(default_factory=lambda: {
+        "Buffett (Berkshire)": "0001067983",
+        "Burry (Scion)": "0001649339",
+        "Ackman (Pershing Square)": "0001336528",
+        "Druckenmiller (Duquesne)": "0001536411",
+        "Tepper (Appaloosa)": "0001656456",
+        "Cathie Wood (ARK)": "0001697748",
+    })
+    top_n: int = 10  # largest holdings copied per manager
+    stale_days: int = 200  # a manager with no 13F this recent is not copied
+    insider_min_value_k: int = 250  # $ thousands: ignore smaller insider purchases
+    insider_window_days: int = 10  # hold names bought by insiders in this window
+    insider_top_n: int = 8
+    cost_bps: float = 15.0  # smaller, less liquid names than the core universe
+    refresh_hours_13f: float = 12.0
+    refresh_hours_insider: float = 1.0
+    sec_user_agent: str = "trader-agent research bot (github.com/ayushganatra3-del/trader)"
+
+
+@dataclass
 class BrokerConfig:
     # "paper" = internal simulation only (default, no account needed)
     # "alpaca-paper" = also mirror the Agent sleeve into an Alpaca paper account
@@ -126,7 +162,13 @@ class Config:
     meta: MetaConfig = field(default_factory=MetaConfig)
     kronos: KronosConfig = field(default_factory=KronosConfig)
     broker: BrokerConfig = field(default_factory=BrokerConfig)
+    copy: CopyConfig = field(default_factory=CopyConfig)
     disabled_strategies: tuple[str, ...] = ()
+
+    def cost(self, asset: Asset) -> float:
+        """Cost per side as a fraction of notional."""
+        bps = asset.cost_bps if asset.cost_bps is not None else self.cost_bps[asset.kind]
+        return bps / 1e4
 
     def asset(self, symbol: str) -> Asset:
         for asset in self.universe:

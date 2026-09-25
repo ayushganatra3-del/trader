@@ -91,7 +91,8 @@ def test_benchmarks_hold_their_symbol(small_config, small_bars):
     spy = research.sleeves["Hold SPY"].weights
     assert spy["SPY"].iloc[-1] == pytest.approx(1.0)
     assert spy.drop(columns="SPY").to_numpy().sum() == 0
-    assert {b.name for b in BENCHMARKS} <= set(research.sleeves)
+    expected = {b.name for b in BENCHMARKS if set(b.params["symbols"]) <= set(small_config.symbols)}
+    assert expected and expected <= set(research.sleeves)
 
 
 def _engine(close, entries, exits=None, stop=np.nan, take=np.nan, trail=np.nan, limit=np.nan, flat=None, noent=None, atr=1.0):

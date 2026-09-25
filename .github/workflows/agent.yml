@@ -104,6 +104,7 @@ jobs:
           APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
           APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
           AGENT_LIVE_CONFIRM: ${{ secrets.AGENT_LIVE_CONFIRM }}
+          SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
           MINUTES: ${{ inputs.minutes || '29' }}
         run: |
           [[ "$MINUTES" =~ ^[0-9]+$ ]] || { echo "minutes must be a whole number"; exit 1; }

@@ -2,6 +2,7 @@
 -> (optionally) mirror the Agent sleeve into a broker -> write reports."""
 from __future__ import annotations
 
+import dataclasses
 import logging
 import time
 from dataclasses import dataclass, field
@@ -11,6 +12,7 @@ import pandas as pd
 
 from . import report
 from .config import Config
+from .copytrade import CopyBook, CopyManager
 from .data import INTERVAL_SECONDS, MarketData
 from .portfolio import Quote, Sleeve, new_sleeve
 from .research import Research, run_research
@@ -35,14 +37,18 @@ class Engine:
     cache_dir: Path | None = None
     broker: object | None = None
     forecaster: object | None = None
+    copier: object | None = None  # copy-trading sources; built automatically for live market data
     research: Research | None = None
     _data_marker: tuple | None = field(default=None, repr=False)
 
     def __post_init__(self):
         self.state_dir = Path(self.state_dir)
         self.store = StateStore(self.state_dir)
+        self.run_config = self.config  # config plus any copy-trading tickers
         if self.market is None:
             self.market = MarketData(self.config, self.cache_dir or Path(".cache/bars"))
+            if self.copier is None and self.config.copy.enabled:
+                self.copier = CopyManager(self.config)
         if self.broker is None and self.config.broker.mode != "paper":
             from .live import make_broker
             self.broker = make_broker(self.config)
@@ -72,7 +78,8 @@ class Engine:
                 log.warning("Kronos enabled but torch/einops/huggingface_hub are not installed")
                 return None
             self.forecaster = KronosForecaster(self.config.kronos)
-        open_symbols = {s for s in self.market.bars if is_open(self.config.asset(s).kind, now)}
+        open_symbols = {s for s in self.market.bars if s in self.run_config.symbols
+                        and is_open(self.run_config.asset(s).kind, now)}
         try:
             update_forecasts(state.setdefault("kronos", {}), self.market.bars, self.config.kronos, now,
                              forecaster=self.forecaster, open_symbols=open_symbols, time_budget_s=40)
@@ -81,19 +88,35 @@ class Engine:
         series = forecasts_as_series(state.get("kronos", {}))
         return {s: {"kronos": v, "kronos_threshold": self.config.kronos.entry_threshold} for s, v in series.items()}
 
+    def _refresh_copy(self, state: dict, now: pd.Timestamp) -> list[CopyBook]:
+        """Update copy-trading books and add their tickers to the universe."""
+        if self.copier is None:
+            return []
+        try:
+            books = self.copier.refresh(state, now)
+        except Exception as error:  # a broken source must not stop trading
+            log.warning("Copy-trading refresh failed: %s", error)
+            books = [CopyBook.from_dict(d) for d in state.get("copy", {}).get("books", {}).values()]
+        extra = self.copier.assets(books)
+        self.run_config = dataclasses.replace(self.config, universe=self.config.universe + tuple(extra))
+        live = set(self.config.symbols) | {t for b in books if not b.stale for t in b.current()}
+        self.market.set_universe(self.run_config, live)
+        return books
+
     def _quotes(self, now: pd.Timestamp) -> dict[str, Quote]:
         quotes = {}
-        max_age = pd.Timedelta(minutes=self.config.risk.max_bar_age_minutes)
-        bar = pd.Timedelta(seconds=INTERVAL_SECONDS[self.config.interval])
+        config = self.run_config
+        max_age = pd.Timedelta(minutes=config.risk.max_bar_age_minutes)
+        bar = pd.Timedelta(seconds=INTERVAL_SECONDS[config.interval])
         for symbol, frame in self.market.bars.items():
-            if frame is None or frame.empty or symbol not in self.config.symbols:
+            if frame is None or frame.empty or symbol not in config.symbols:
                 continue
-            asset = self.config.asset(symbol)
+            asset = config.asset(symbol)
             last_end = frame.index[-1] + bar
             fresh = now - last_end <= max_age
             tradable = fresh and is_open(asset.kind, now)
             quotes[symbol] = Quote(symbol, float(frame["close"].iloc[-1]), self.market.fx_to_gbp(asset.currency),
-                                   self.config.cost_bps[asset.kind] / 1e4, tradable)
+                                   config.cost(asset), tradable)
         return quotes
 
     def _reason_fn(self, name: str, research: Research):
@@ -118,11 +141,14 @@ class Engine:
         started = time.monotonic()
         with self.store.lock():
             state = self._load_state(now)
+            books = self._refresh_copy(state, now)
             errors = self.market.refresh(now)
             marker = tuple((s, f.index[-1]) for s, f in sorted(self.market.bars.items()) if not f.empty)
+            marker += tuple((b.name, b.updated_at) for b in books)
             if marker != self._data_marker or self.research is None:
                 extra = self._kronos_extra(state, now)
-                self.research = run_research(self.market.bars, self.config, self._strategies(), extra)
+                self.research = run_research(self.market.bars, self.run_config, self._strategies(), extra,
+                                             copy_books=books)
                 self._data_marker = marker
             research = self.research
             quotes = self._quotes(now)
@@ -151,7 +177,7 @@ class Engine:
                                   "latest_bar": max((iso(t) for t in research.last_bar.values()), default=None),
                                   "tradable": sorted(s for s, q in quotes.items() if q.tradable)}
             self.store.save(state)
-            report.write_all(self.state_dir, state, research, self.config, now)
+            report.write_all(self.state_dir, state, research, self.run_config, now)
         return {"at": now_iso, "trades": all_trades, "errors": errors,
                 "agent_equity_gbp": round(state["sleeves"].get("Agent", {}).get("equity_gbp", 0.0), 4),
                 "broker": broker_summary}
@@ -164,13 +190,13 @@ class Engine:
         if name not in research.sleeves:
             return {"ok": False, "error": f"Unknown sleeve {name}"}
         gbpusd = 1.0 / self.market.fx_to_gbp("USD")
-        prices_usd = {s: q.price for s, q in quotes.items() if self.config.asset(s).currency == "USD"}
+        prices_usd = {s: q.price for s, q in quotes.items() if self.run_config.asset(s).currency == "USD"}
         stamp = iso(research.index[-1])
         try:
             wanted = research.targets(name)
             # explicit zeros so the broker exits anything the sleeve no longer holds
-            targets = {s: wanted.get(s, 0.0) for s in self.config.symbols}
-            return sync_broker(self.broker, targets, self.config, now, prices_usd, gbpusd, stamp)
+            targets = {s: wanted.get(s, 0.0) for s in self.run_config.symbols}
+            return sync_broker(self.broker, targets, self.run_config, now, prices_usd, gbpusd, stamp)
         except Exception as error:  # the paper ledger must keep going
             log.exception("Broker sync failed")
             return {"ok": False, "error": str(error)[:500]}

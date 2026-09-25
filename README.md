@@ -17,6 +17,7 @@ On top of the strategies sits the **Agent**: a walk-forward selector. Every day 
 | AI model | Kronos forecast (optional, [shiyu-coder/Kronos](https://github.com/shiyu-coder/Kronos)) |
 | Meta | **Agent** (top 5 strategy/symbol pairs), **Agent (aggressive)** (top 2, concentrated), **Agent (rotation)** (copies the top 3 whole strategies by 20-day risk-adjusted return), **Consensus** (majority vote) |
 | Benchmarks | Hold SPY, Hold BTC |
+| Copy trading | **Famous investors' 13F holdings** (Buffett, Burry, Ackman, Druckenmiller, Tepper, Cathie Wood), **company insiders' big purchases**, and funds that copy **Congress** (NANC for Democrats including Pelosi, KRUZ for Republicans), hedge-fund gurus (GURU), ARKK and Berkshire (BRK-B). See below. |
 | Hourly swing | Every rule above except opening-range and gap-and-go, re-run on 1-hour bars (named "… · 1h"). They trade far less, so costs eat less, and they may hold stocks overnight. |
 
 - **Universe:** 21 symbols by default: SPY, QQQ, IWM, TQQQ, SQQQ, SOXL, NVDA, TSLA, AAPL, MSFT, AMD, META, AMZN, GOOGL, PLTR, COIN, plus BTC, ETH, SOL, XRP and DOGE. Crypto trades 24/7, so the agent is never idle.
@@ -30,6 +31,21 @@ On top of the strategies sits the **Agent**: a walk-forward selector. Every day 
 - A −6% day pauses the sleeve until the next day.
 - A −50% drawdown shuts the sleeve down for good.
 - Costs are modelled on every trade: 5 bps per side for stocks, 30 bps per side for crypto.
+
+## Copy trading
+
+Each copy source is its own £100 paper sleeve, so you can see whether copying actually pays:
+
+| Sleeve | What it copies | How out of date |
+|---|---|---|
+| `Copy: <manager> 13F` | Top 10 long stock holdings in the manager's latest SEC 13F filing (EDGAR), weighted by size | Filed up to 45 days after each quarter ends, so the positions can be months old |
+| `Copy: Insider buying` | The 8 stocks where company officers and directors bought the most on the open market (at least $250k) in the last 10 days (SEC Form 4 via OpenInsider) | Filed within 2 business days of the trade |
+| `Copy: Congress Democrats (NANC)` / `Republicans (KRUZ)` | ETFs that copy stock trades disclosed by members of Congress | Congress has up to 45 days to disclose |
+| `Copy: Hedge-fund gurus (GURU)`, `Cathie Wood (ARKK)`, `Warren Buffett (BRK-B)` | Buy-and-hold the fund or company itself | None: these trade live |
+
+Every copied position is bought only at the first market open **after** it was made public, including in backtests. You can't copy anyone's trade at the price they got. Research on whether copying beats the market is mixed. The leaderboard shows the honest result, with costs. Managers can be changed under `[copy]` in `config.toml`. A manager whose latest 13F is over 200 days old (for example because the fund closed) is shown but not traded.
+
+The SEC asks automated tools to identify themselves. If EDGAR refuses requests, set the repository variable `SEC_USER_AGENT` to something like `your-name your@email.com`.
 
 ## Start it (no computer needed)
 
@@ -112,6 +128,7 @@ Copy `config.example.toml` to `config.toml`. You can change:
 | `agent/engine.py` | the tick loop: data → signals → trades → broker → reports |
 | `agent/live.py`, `agent/brokers/alpaca.py` | Alpaca sync with safety rails |
 | `agent/kronos/` | Kronos model (vendored, MIT) and forecaster |
+| `agent/copytrade.py` | copy trading: SEC 13F holdings, insider purchases, disclosure-time schedules |
 | `tests/` | look-ahead checks, random-walk "no fake edge" check, paper-vs-backtest parity, accounting, broker safety |
 
 Run the tests: `pip install -r requirements-dev.txt && python -m pytest tests -q`

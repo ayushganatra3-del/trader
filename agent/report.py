@@ -40,12 +40,13 @@ def build_dashboard(state: dict, research: Research, config: Config, now: pd.Tim
     for name, result in research.sleeves.items():
         strategy = result.strategy
         data = state["sleeves"].get(name)
+        fallback = "copy" if result.kind == "copy" else "meta"
         sleeves.append({
             "name": name,
             "kind": result.kind,
-            "style": strategy.style if strategy else "meta",
-            "family": strategy.family if strategy else "meta",
-            "description": strategy.description if strategy else _meta_description(name, config),
+            "style": strategy.style if strategy else fallback,
+            "family": strategy.family if strategy else fallback,
+            "description": result.description or (strategy.description if strategy else _meta_description(name, config)),
             "live": Sleeve(data).summary() if data else None,
             "backtest": result.stats,
             "targets": {s: round(w, 4) for s, w in research.targets(name).items()},
@@ -64,11 +65,22 @@ def build_dashboard(state: dict, research: Research, config: Config, now: pd.Tim
         "backtest_window": {"from": research.index[0].isoformat(), "to": research.index[-1].isoformat(),
                             "bars": len(research.index)},
         "selection": research.selection,
+        "copy_books": _copy_books(state),
         "sleeves": sleeves,
         "recent_trades": list(reversed(trades)),
         "broker": state.get("broker"),
         "disclaimer": DISCLAIMER,
     }
+
+
+def _copy_books(state: dict) -> list[dict]:
+    books = []
+    for book in (state.get("copy") or {}).get("books", {}).values():
+        current = book.get("schedule", [[None, {}]])[-1] if book.get("schedule") else [None, {}]
+        books.append({"name": book.get("name"), "source": book.get("source"), "as_of": book.get("as_of"),
+                      "updated_at": book.get("updated_at"), "error": book.get("error"), "stale": book.get("stale"),
+                      "effective": current[0], "holdings": dict(sorted(current[1].items(), key=lambda kv: -kv[1]))})
+    return books
 
 
 def _meta_description(name: str, config: Config) -> str:
@@ -106,6 +118,14 @@ def markdown(dashboard: dict) -> str:
             lines += ["| Holding | Value £ | P/L £ |", "|---|---:|---:|"]
             lines += [f"| {p['symbol']} | {p['value_gbp']:.2f} | {p['pnl_gbp']:+.2f} |" for p in live["positions"]]
             lines.append("")
+    if dashboard.get("copy_books"):
+        lines += ["### Copy trading: what famous investors and insiders disclosed", "",
+                  "| Book | Latest disclosure | Holdings copied (weight) | Status |", "|---|---|---|---|"]
+        for book in dashboard["copy_books"]:
+            holdings = ", ".join(f"{t} {w:.0%}" for t, w in list(book["holdings"].items())[:10]) or "—"
+            status = book.get("error") or "ok"
+            lines.append(f"| {book['name']} | {book.get('as_of') or '—'} | {holdings} | {status} |")
+        lines.append("")
     if dashboard["selection"]:
         lines += ["### Today's picks (walk-forward)", "", "| Strategy | Symbol | Score | Look-back return | Trades |",
                   "|---|---|---:|---:|---:|"]

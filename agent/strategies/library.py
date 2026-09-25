@@ -292,11 +292,20 @@ KRONOS_STRATEGY = S("Kronos forecast", "kronos", "model",
                     "Kronos foundation-model forecast of the next hour's return",
                     model_signal("kronos"), stop_atr=2.0, max_bars=24)
 
+def _hold(name: str, symbol: str, description: str, style: str = "benchmark") -> Strategy:
+    return S(name, "benchmark" if style == "benchmark" else "copy_fund", style, description, always_long,
+             stop_atr=None, intraday=False, benchmark=True, params={"symbols": [symbol]})
+
+
 BENCHMARKS: tuple[Strategy, ...] = (
-    S("Hold SPY", "benchmark", "benchmark", "Buy and hold the S&P 500 (not a day trade)", always_long,
-      stop_atr=None, intraday=False, benchmark=True, params={"symbols": ["SPY"]}),
-    S("Hold BTC", "benchmark", "benchmark", "Buy and hold Bitcoin", always_long,
-      stop_atr=None, intraday=False, benchmark=True, params={"symbols": ["BTC-USD"]}),
+    _hold("Hold SPY", "SPY", "Buy and hold the S&P 500 (not a day trade)"),
+    _hold("Hold BTC", "BTC-USD", "Buy and hold Bitcoin"),
+    # Copy-trading funds: professionals already copy these people's disclosed trades.
+    _hold("Copy: Congress Democrats (NANC)", "NANC", "ETF copying stock trades disclosed by Democratic members of Congress (incl. Pelosi)", "copy"),
+    _hold("Copy: Congress Republicans (KRUZ)", "KRUZ", "ETF copying stock trades disclosed by Republican members of Congress", "copy"),
+    _hold("Copy: Hedge-fund gurus (GURU)", "GURU", "ETF holding top picks from hedge funds' 13F filings", "copy"),
+    _hold("Copy: Cathie Wood (ARKK)", "ARKK", "Cathie Wood's flagship ARK Innovation fund", "copy"),
+    _hold("Copy: Warren Buffett (BRK-B)", "BRK-B", "Berkshire Hathaway, Warren Buffett's company", "copy"),
 )
 
 
