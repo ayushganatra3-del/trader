@@ -121,6 +121,18 @@ class MetaConfig:
 
 
 @dataclass
+class DayTradeConfig:
+    """Day-trading sleeves from published research (agent/daytrade.py)."""
+    enabled: bool = True
+    pairs: tuple = (("QQQ", "TQQQ", "SQQQ"),)  # (signal, bought when bullish, bought when bearish)
+    orb_target_r: float = 10.0
+    sip_top_n: int = 4  # "stocks in play" traded each morning
+    sip_min_relvol: float = 1.0  # first 5 minutes' volume vs its 14-day average
+    sip_stop_atr: float = 0.10  # stop below the opening-range high, in daily ATRs
+    noise_lookback: int = 14
+
+
+@dataclass
 class KronosConfig:
     enabled: bool = False
     model: str = "NeoQuasar/Kronos-small"
@@ -173,6 +185,9 @@ class DailyConfig:
     hammer_hold_days: int = 5
     score_top_n: int = 4
     score_min: float = 6.0
+    # Connors RSI(2) dip buying: (signal index, ETF actually bought)
+    rsi2_pairs: tuple = (("SPY", "UPRO"), ("QQQ", "TQQQ"), ("IWM", "TNA"))
+    rsi2_entry: float = 10.0
 
 
 @dataclass
@@ -209,6 +224,7 @@ class Config:
     cost_bps: dict = field(default_factory=lambda: dict(DEFAULT_COST_BPS))
     risk: RiskConfig = field(default_factory=RiskConfig)
     meta: MetaConfig = field(default_factory=MetaConfig)
+    daytrade: DayTradeConfig = field(default_factory=DayTradeConfig)
     kronos: KronosConfig = field(default_factory=KronosConfig)
     broker: BrokerConfig = field(default_factory=BrokerConfig)
     copy: CopyConfig = field(default_factory=CopyConfig)
