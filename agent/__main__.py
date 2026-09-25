@@ -79,6 +79,9 @@ def cmd_backtest(args, config):
         if book.current():
             holdings = ", ".join(f"{t} {w:.0%}" for t, w in sorted(book.current().items(), key=lambda kv: -kv[1]))
             print(f"\n{book.name} ({book.source}, as of {book.as_of}): {holdings}")
+    for sleeve in research.sleeves.values():
+        if "Out of sample:" in (sleeve.description or ""):
+            print(f"\n{sleeve.name}: {sleeve.description.split('Out of sample: ')[1]}")
     if args.by_day:
         print_by_day(research, config.starting_capital_gbp, args.by_day)
     if research.selection:
