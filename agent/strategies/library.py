@@ -134,6 +134,44 @@ def opening_range_breakout(minutes: int):
     return fn
 
 
+# ----------------------------------------------------------------- candlesticks
+
+def _candles(f: Features):
+    body = f.close - f.open
+    span = (f.high - f.low).replace(0, float("nan"))
+    lower = pd.concat([f.open, f.close], axis=1).min(axis=1) - f.low
+    upper = f.high - pd.concat([f.open, f.close], axis=1).max(axis=1)
+    return body, span, lower, upper
+
+
+def bullish_candles(f: Features) -> pd.Series:
+    """Bullish engulfing, hammer or morning star on the latest bar."""
+    body, span, lower, upper = _candles(f)
+    prev = body.shift(1)
+    engulfing = (prev < 0) & (body > 0) & (f.open <= f.close.shift(1)) & (f.close >= f.open.shift(1)) & (body > -prev)
+    hammer = (lower >= 2 * body.abs()) & (upper <= 0.3 * span) & ((f.close - f.low) / span >= 0.6)
+    big = body.abs() > 0.5 * f.atr(14)
+    star = ((body.shift(2) < 0) & big.shift(2, fill_value=False) & (body.shift(1).abs() < 0.3 * body.shift(2).abs())
+            & (body > 0) & (f.close > f.open.shift(2) + body.shift(2) / 2))
+    return engulfing | hammer | star
+
+
+def candlestick_reversal(f: Features):
+    """A bullish reversal candle after a pullback (below EMA20, RSI under 45)."""
+    pullback = (f.close.shift(1) < f.ema(20).shift(1)) & (f.rsi(14).shift(1) < 45)
+    body, _, _, _ = _candles(f)
+    bearish_engulfing = (body.shift(1) > 0) & (body < 0) & (f.open >= f.close.shift(1)) & (f.close <= f.open.shift(1))
+    return bullish_candles(f) & pullback, bearish_engulfing | (f.close > f.bollinger(20, 2.0)[2])
+
+
+def three_white_soldiers(f: Features):
+    body, span, _, upper = _candles(f)
+    green = (body > 0) & (upper <= 0.3 * span) & (body > 0.3 * f.atr(14))
+    rising = (f.close > f.close.shift(1)) & (f.open > f.open.shift(1)) & (f.open <= f.close.shift(1))
+    soldiers = green & green.shift(1, fill_value=False) & green.shift(2, fill_value=False) & rising & rising.shift(1, fill_value=False)
+    return soldiers, f.close < f.ema(9)
+
+
 def bollinger_breakout(f: Features):
     lower, mid, upper = f.bollinger(20, 2.0)
     return crossed_above(f.close, upper), f.close < mid
@@ -266,6 +304,10 @@ INTRADAY: tuple[Strategy, ...] = (
     S("Keltner breakout", "keltner", "breakout", "Close above the upper Keltner channel", keltner_breakout, trail_atr=2.0),
     S("Squeeze breakout", "squeeze", "breakout", "Volatility squeeze releases upward", squeeze_breakout, trail_atr=2.0),
     S("Volume breakout", "volume_breakout", "breakout", "3x volume bar breaks a 20-bar high", volume_breakout, max_bars=24),
+    # candlestick patterns
+    S("Candlestick reversal", "candles", "reversion", "Bullish engulfing, hammer or morning star after a pullback", candlestick_reversal,
+      stop_atr=1.5, take_atr=3.0, max_bars=24),
+    S("Three white soldiers", "candles", "momentum", "Three strong rising green candles", three_white_soldiers, stop_atr=1.5),
     # mean reversion
     S("RSI(14) reversion", "rsi_reversion", "reversion", "RSI climbs back above 30", rsi_reversion, take_atr=3.0),
     S("Connors RSI(2)", "connors_rsi2", "reversion", "RSI(2)<10 above the 200 SMA", connors_rsi2, max_bars=36),

@@ -40,7 +40,7 @@ def build_dashboard(state: dict, research: Research, config: Config, now: pd.Tim
     for name, result in research.sleeves.items():
         strategy = result.strategy
         data = state["sleeves"].get(name)
-        fallback = result.kind if result.kind in ("copy", "daily", "ai") else "meta"
+        fallback = result.kind if result.kind in ("copy", "daily", "ai", "daytrade") else "meta"
         sleeves.append({
             "name": name,
             "kind": result.kind,

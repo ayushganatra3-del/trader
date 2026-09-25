@@ -401,6 +401,11 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
     rotation = _rotation_sleeve(sleeves, index, meta_cfg)
     if rotation is not None:
         sleeves[ROTATION] = make_sleeve(ROTATION, "meta", rotation)
+    for name, weights, text in _daytrade_sleeves(usable, index, symbols, config):
+        if weights is not None:
+            sleeve = make_sleeve(name, "daytrade", weights)
+            sleeve.description = text
+            sleeves[name] = sleeve
     for days in meta_cfg.momentum_lookbacks:
         weights = _momentum_sleeve(close_ff, symbols, meta_cfg.momentum_symbols, days, meta_cfg.momentum_top_k)
         if weights is not None:
@@ -409,6 +414,35 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
     last_bar = {s: usable[s].index[-1] for s in symbols}
     return Research(index, symbols, close_ff, last_bar, sleeves, columns, pos, last_reason, selection,
                     history.to_frame("picks") if history is not None else None)
+
+
+def _daytrade_sleeves(bars, index, symbols, config: Config):
+    from . import daytrade
+
+    cfg = config.daytrade
+    if not cfg.enabled:
+        return []
+    out = []
+    for signal, long, short in cfg.pairs:
+        pair = "/".join(s for s in (long, short) if s)
+        out.append((f"Day trade: ORB 5m · {pair}",
+                    daytrade.orb_5m(bars, index, symbols, signal, long, short, cfg.orb_target_r),
+                    f"Zarattini & Aziz (2023) opening-range breakout: trades the direction of {signal}'s first 5-minute "
+                    f"candle ({long} if up, {short} if down), stop at the other end of that candle, target "
+                    f"{cfg.orb_target_r:g}R, flat before the close"))
+        out.append((f"Day trade: Noise-area momentum · {pair}",
+                    daytrade.noise_area(bars, index, symbols, signal, long, short, cfg.noise_lookback),
+                    f"Zarattini, Aziz & Barbon (2024) intraday momentum: every half hour, {long} if {signal} is above "
+                    f"its {cfg.noise_lookback}-day 'noise area' around the open, {short} if below; exits through the "
+                    "band or VWAP; flat before the close"))
+    candidates = [a.symbol for a in config.universe if a.kind == "us_equity" and a.trade_strategies]
+    out.append(("Day trade: Stocks in Play ORB",
+                daytrade.stocks_in_play(bars, index, symbols, candidates, cfg.sip_top_n, cfg.sip_min_relvol,
+                                        cfg.sip_stop_atr),
+                f"Zarattini, Barbon & Aziz (2024): each morning buys a break of the opening-range high in the "
+                f"{cfg.sip_top_n} stocks with the highest first-5-minute relative volume and a green first candle; "
+                f"stop {cfg.sip_stop_atr:.0%} of the daily ATR below; flat before the close"))
+    return out
 
 
 def _momentum_sleeve(close: pd.DataFrame, symbols: list[str], candidates, days: int, top_k: int) -> np.ndarray | None:
@@ -448,7 +482,7 @@ def _rotation_sleeve(sleeves: dict[str, SleeveResult], index: pd.DatetimeIndex, 
     risk-adjusted return over the previous ``rotation_lookback_days`` days
     (whole sleeves, not strategy/symbol pairs, so far fewer candidates and
     less luck-chasing)."""
-    names = [n for n, s in sleeves.items() if s.kind in ("strategy", "copy", "daily", "ai")]
+    names = [n for n, s in sleeves.items() if s.kind in ("strategy", "copy", "daily", "ai", "daytrade")]
     k, lookback = meta_cfg.rotation_top_k, meta_cfg.rotation_lookback_days
     if len(names) < k or k <= 0:
         return None

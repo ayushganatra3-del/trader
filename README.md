@@ -1,6 +1,6 @@
 # Trading agent
 
-An autonomous, multi-strategy trading agent. It runs **63 strategies** at the same time: 33 well-known intraday rules on 5-minute bars, 30 hourly "swing" versions of them, and daily market-timing and swing sleeves (plus the optional Kronos AI forecaster) on US stocks, leveraged/inverse ETFs and crypto. Each strategy trades its own separate **£100 paper account**, so you can see which ones actually make money.
+An autonomous, multi-strategy trading agent. It runs **70+ strategies** at the same time: 35 well-known intraday rules on 5-minute bars (including candlestick patterns), 32 hourly "swing" versions of them, day-trading rules from published research, and daily market-timing and swing sleeves (plus the optional Kronos AI forecaster) on US stocks, leveraged/inverse ETFs and crypto. Each strategy trades its own separate **£100 paper account**, so you can see which ones actually make money.
 
 On top of the strategies sits the **Agent**: a walk-forward selector. Every day it trades whichever strategy/symbol pairs made the best risk-adjusted returns over the previous 10 days. That is how it "gets better": it keeps moving money toward what is working and away from what isn't.
 
@@ -16,6 +16,8 @@ On top of the strategies sits the **Agent**: a walk-forward selector. Every day 
 | Mean reversion | RSI(14), Connors RSI(2), Bollinger, Z-score, VWAP, Stochastic, Williams %R, CCI, MFI |
 | AI model | Kronos forecast (optional, [shiyu-coder/Kronos](https://github.com/shiyu-coder/Kronos)) and the **AI analyst**: Claude researching the news each day (optional, needs an API key) |
 | Meta | **Agent** (top 5 strategy/symbol pairs), **Agent (aggressive)** (top 2, concentrated), **Agent (rotation)** (copies the top 3 whole strategies by 20-day risk-adjusted return), **Consensus** (majority vote) |
+| Day trading (research) | Three rule sets taken straight from published studies, all flat by the close. **ORB 5m** (Zarattini & Aziz 2023): trades the direction of QQQ's first 5-minute candle through TQQQ (up) or SQQQ (down), with the stop at the other end of that candle. **Stocks in Play ORB** (Zarattini, Barbon & Aziz 2024): buys an opening-range breakout in the 4 stocks trading the most unusual volume that morning. **Noise-area momentum** (Zarattini, Aziz & Barbon 2024): goes with QQQ when it breaks out of its normal intraday range, using TQQQ or SQQQ. |
+| Candlesticks | **Candlestick reversal** (bullish engulfing, hammer or morning star after a pullback) and **Three white soldiers**, on 5-minute and 1-hour bars. |
 | Max aggression | **100% in one name.** Each US morning (09:35 New York), puts everything into the high-volatility name that rose most over the past 1 day or 5 days (two sleeves). Candidates: 3x ETFs, 2x bitcoin/ether ETFs, MSTR, COIN and crypto. It holds cash if nothing is up. This is the setting built for +10% days, and it gets −10% days just as easily. |
 | Benchmarks | Hold SPY, Hold BTC |
 | Copy trading | **Famous investors' 13F holdings** (Buffett, Burry, Ackman, Druckenmiller, Tepper, Cathie Wood), **company insiders' big purchases**, the **top AI agents on AI-Trader**, and a fund that copies **Congress** (NANC: Democrats, including Pelosi), hedge-fund gurus (GURU), ARKK and Berkshire (BRK-B). See below. |
@@ -159,6 +161,7 @@ Copy `config.example.toml` to `config.toml`. You can change:
 | `agent/copytrade.py` | copy trading: SEC 13F holdings, insider purchases, disclosure-time schedules |
 | `agent/daily.py` | daily bars, market regime (distribution/follow-through days), daily swing setups |
 | `agent/analyst.py` | the Claude AI analyst sleeve |
+| `agent/daytrade.py` | day-trading rules from published research (ORB, stocks in play, noise-area momentum) |
 | `tests/` | look-ahead checks, random-walk "no fake edge" check, paper-vs-backtest parity, accounting, broker safety |
 
 Run the tests: `pip install -r requirements-dev.txt && python -m pytest tests -q`
