@@ -42,6 +42,7 @@ def test_meta_label_sleeve_never_looks_ahead():
     common = b.index[:-1]  # the newest row can change once an exit bar exists
     assert np.allclose(a.loc[common].to_numpy(), b.loc[common].to_numpy())
     assert a.to_numpy().sum() > 0
+    assert a.to_numpy().max() <= 0.25 + 1e-9 and a.sum(axis=1).max() <= 1 + 1e-9  # per-position and total caps
 
 
 def test_meta_label_finds_no_edge_in_a_random_walk():

@@ -119,8 +119,11 @@ def meta_label(pos: np.ndarray, columns: list[tuple[str, str]], col_sym: np.ndar
     stamps = index[events["entry"].to_numpy()]
     events["hour"], events["weekday"] = stamps.hour, stamps.dayofweek
     market = {}
-    for key, symbol, bars in (("mkt_qqq", "QQQ", 78), ("mkt_btc", "BTC-USD", 288)):
-        series = close_ff[symbol] / close_ff[symbol].shift(bars) - 1 if symbol in close_ff else pd.Series(np.nan, index=index)
+    for key, symbol, bars in (("mkt_qqq", "QQQ", 78), ("mkt_btc", "BTC-USD", 288)):  # one day of each one's own bars
+        if symbol in features:
+            series = features[symbol].roc(bars).reindex(index).ffill()  # on its own bars, then aligned
+        else:
+            series = pd.Series(np.nan, index=index)
         market[key] = series.to_numpy()[events["entry"].to_numpy()]
     events = events.assign(**market)
     events["day"] = stamps.normalize()
@@ -150,6 +153,7 @@ def meta_label(pos: np.ndarray, columns: list[tuple[str, str]], col_sym: np.ndar
                 continue
             t0, t1 = int(row["entry"]), int(row["exit"])
             weights[t0:(t1 if t1 >= 0 else len(index)), col_sym[int(row["col"])]] += size
+    weights = np.minimum(weights, cap)  # overlapping signals on one symbol still make one capped position
     total = weights.sum(axis=1, keepdims=True)
     weights = np.where(total > 1.0, weights / np.maximum(total, 1e-12), weights)
     stats = {}
