@@ -112,6 +112,9 @@ class MetaConfig:
     consensus_threshold: float = 0.34
     rotation_lookback_days: int = 20  # "Agent (rotation)": ranks whole strategy sleeves
     rotation_top_k: int = 3
+    # Meta-labeling: ML filter (gradient-boosted trees) on the hourly strategies' signals
+    meta_label: bool = True
+    meta_label_days: int = 60  # walk-forward days scored (each retrains on trades closed before it)
     # "Max aggression": 100% in the strongest mover each US morning (0 = off)
     momentum_lookbacks: tuple[int, ...] = (1, 5)  # days of past return ranked; one sleeve each
     momentum_top_k: int = 1

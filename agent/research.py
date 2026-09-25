@@ -36,6 +36,7 @@ META = "Agent"
 AGGRESSIVE = "Agent (aggressive)"
 CONSENSUS = "Consensus"
 ROTATION = "Agent (rotation)"
+META_LABEL = "Agent (ML meta-label)"
 MOMENTUM = "Max aggression: {days}-day momentum"
 
 
@@ -397,6 +398,27 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
         votes = (p_pos @ one_hot) / np.maximum(one_hot.sum(axis=0), 1)
         agree = votes >= meta_cfg.consensus_threshold
         sleeves[CONSENSUS] = make_sleeve(CONSENSUS, "meta", slot_weights(agree, risk.slots, risk.max_symbol_weight))
+
+        # meta-labeling: an ML filter deciding which hourly-strategy signals to take, and how big
+        if meta_cfg.meta_label:
+            from .metalabel import meta_label
+
+            by_name = {s.name: s for s in strategies}
+            primary = [j for j, (name, _) in enumerate(columns)
+                       if by_name[name].timeframe >= 60 and not by_name[name].benchmark]
+            labelled = meta_label(pos, columns, col_sym_arr, primary, close_ff, cost_sym, features,
+                                  {s: config.asset(s).kind for s in symbols}, days=meta_cfg.meta_label_days)
+            if labelled is not None:
+                weights, stats = labelled
+                sleeve = make_sleeve(META_LABEL, "meta", weights)
+                sleeve.description = (
+                    "Meta-labeling (Lopez de Prado): a gradient-boosted tree model, retrained daily on past trades "
+                    "only, decides which hourly-strategy signals to take and sizes them at half-Kelly (max 2% of "
+                    "equity at risk, 25% per position)."
+                    + (f" Out of sample: took {stats['taken']} of {stats['signals']} signals; win rate "
+                       f"{stats['win_rate_taken']}% vs {stats['win_rate_all']}% for all; average trade "
+                       f"{stats['avg_ret_taken_pct']}% vs {stats['avg_ret_all_pct']}%." if stats else ""))
+                sleeves[META_LABEL] = sleeve
 
     for name, weights, text in _daytrade_sleeves(usable, index, symbols, config):
         if weights is not None:
