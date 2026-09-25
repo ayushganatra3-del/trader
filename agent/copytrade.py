@@ -44,7 +44,7 @@ NEW_YORK = "America/New_York"
 OPENINSIDER = ("https://openinsider.com/screener", "http://openinsider.com/screener")
 OPENFIGI = "https://api.openfigi.com/v3/mapping"
 INSIDER_BOOK = "Copy: Insider buying"
-AI_TRADER_API = "https://api.ai4trade.ai"
+AI_TRADER_API = "https://ai4trade.ai"
 AI_TRADER_BOOK = "Copy: AI-Trader top agents"
 
 
