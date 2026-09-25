@@ -17,10 +17,12 @@ config.COPY_ETFS), which do this professionally.
 """
 from __future__ import annotations
 
+import contextlib
 import json
 import logging
 import os
 import re
+import socket
 import time
 import urllib.error
 import urllib.parse
@@ -50,18 +52,25 @@ class Http:
         self.pause = pause
 
     def _open(self, request: urllib.request.Request) -> bytes:
+        ipv4 = False
         for attempt in range(3):
             try:
-                with urllib.request.urlopen(request, timeout=self.timeout) as response:
-                    data = response.read(50_000_000)
+                with _ipv4_only() if ipv4 else contextlib.nullcontext():
+                    with urllib.request.urlopen(request, timeout=self.timeout) as response:
+                        data = response.read(50_000_000)
                 time.sleep(self.pause)  # stay well under SEC's 10 requests/second
                 return data
             except urllib.error.HTTPError as error:
+                if error.code == 403 and "sec.gov" in request.full_url:
+                    raise RuntimeError("SEC refused the request (HTTP 403): set the repository variable "
+                                       "SEC_USER_AGENT to 'Your Name your@email.com'") from error
                 if error.code not in (429, 500, 502, 503, 504) or attempt == 2:
                     raise RuntimeError(f"{request.get_method()} {request.full_url.split('?')[0]}: HTTP {error.code}") from error
             except (urllib.error.URLError, TimeoutError, ConnectionError) as error:
                 if attempt == 2:
                     raise RuntimeError(f"{request.get_method()} {request.full_url.split('?')[0]}: {error}") from error
+                # "Network is unreachable" usually means an IPv6 address on an IPv4-only host
+                ipv4 = True
             time.sleep(2.0 * (attempt + 1))
         raise RuntimeError("unreachable")
 
@@ -71,6 +80,20 @@ class Http:
     def post_json(self, url: str, body) -> bytes:
         return self._open(urllib.request.Request(url, data=json.dumps(body).encode(), method="POST", headers={
             "User-Agent": self.user_agent, "Content-Type": "application/json"}))
+
+
+@contextlib.contextmanager
+def _ipv4_only():
+    original = socket.getaddrinfo
+
+    def ipv4(host, port, family=0, *args, **kwargs):
+        return original(host, port, socket.AF_INET, *args, **kwargs)
+
+    socket.getaddrinfo = ipv4
+    try:
+        yield
+    finally:
+        socket.getaddrinfo = original
 
 
 @dataclass
@@ -344,15 +367,20 @@ class CopyManager:
         jobs = [(f"Copy: {name} 13F", cfg.refresh_hours_13f, lambda n=name, c=cik: fetch_13f_book(
                     n, c, self.config, self.http, store["cusips"], now)) for name, cik in cfg.managers.items()]
         jobs.append((INSIDER_BOOK, cfg.refresh_hours_insider, lambda: fetch_insider_book(self.config, self.http, now)))
+        attempts = store.setdefault("attempts", {})
         for key, hours, fetch in jobs:
             old = store["books"].get(key)
-            if old and old.get("updated_at") and now - pd.Timestamp(old["updated_at"]) < pd.Timedelta(hours=hours):
+            fresh = old and old.get("updated_at") and not (old.get("error") or "").startswith("Refresh failed")
+            wait = pd.Timedelta(hours=hours) if fresh else pd.Timedelta(hours=1)  # retry failures sooner
+            last = attempts.get(key)
+            if last and now - pd.Timestamp(last) < wait:
                 continue
+            attempts[key] = now.isoformat()
             try:
                 book = fetch()
             except Exception as error:  # keep the last good schedule
                 log.warning("Copy source %s failed: %s", key, error)
-                book = CopyBook.from_dict(old) if old else CopyBook(key, "", "", error=None)
+                book = CopyBook.from_dict(old) if old else CopyBook(key, "", "")
                 book.error = f"Refresh failed: {str(error)[:300]}"
             book.updated_at = now.isoformat()
             store["books"][key] = book.to_dict()

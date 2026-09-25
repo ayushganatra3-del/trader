@@ -171,3 +171,35 @@ def test_engine_trades_a_copy_book(tmp_path):
     research = engine.research
     assert not any(symbol == "AAPL" for _, symbol in research.pair_columns)
     assert np.isclose(research.sleeves["Copy: Test 13F"].weights["AAPL"].iloc[-1], 0.35)
+
+
+def test_refresh_retries_failures_hourly_and_successes_on_schedule(monkeypatch):
+    monkeypatch.setattr(ct.time, "sleep", lambda s: None)
+    config = Config()
+    config.copy.managers = {"Buffett": "1067983"}
+    calls = []
+
+    class Flaky(FakeHttp):
+        fail = True
+
+        def get(self, url, headers=None):
+            calls.append(url)
+            if self.fail and "submissions" in url:
+                raise RuntimeError("SEC refused the request (HTTP 403)")
+            return super().get(url, headers)
+
+    http = Flaky()
+    manager = ct.CopyManager(config, http=http)
+    state, t0 = {}, pd.Timestamp("2026-09-24 12:00", tz="UTC")
+    books = {b.name: b for b in manager.refresh(state, t0)}
+    assert books["Copy: Buffett 13F"].error.startswith("Refresh failed")
+    assert books[ct.INSIDER_BOOK].error is None
+    n = len(calls)
+    manager.refresh(state, t0 + pd.Timedelta(minutes=30))
+    assert len(calls) == n  # nothing is due yet
+    http.fail = False
+    books = {b.name: b for b in manager.refresh(state, t0 + pd.Timedelta(minutes=61))}
+    assert books["Copy: Buffett 13F"].error is None and books["Copy: Buffett 13F"].schedule
+    n = len(calls)
+    manager.refresh(state, t0 + pd.Timedelta(hours=3))
+    assert not any("submissions" in url for url in calls[n:])  # good 13F data waits 12 hours
