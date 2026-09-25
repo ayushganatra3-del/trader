@@ -164,3 +164,20 @@ def test_by_day_table_starts_each_day_from_capital():
     sleeve = research.sleeves["Hold SPY"].returns
     day = sleeve[sleeve.index.normalize() == pd.Timestamp("2026-02-23", tz="UTC")]
     assert abs(table.loc["Hold SPY"].iloc[0] - round(100 * (1 + day).prod(), 2)) < 0.011
+
+
+def test_momentum_sleeve_goes_all_in_on_the_morning_leader():
+    import numpy as np
+    import pandas as pd
+    from agent.research import _momentum_sleeve
+
+    index = pd.date_range("2026-02-16T00:00Z", "2026-02-20T23:55Z", freq="5min")
+    minutes = np.arange(len(index))
+    close = pd.DataFrame({"TQQQ": 100 + 0.01 * minutes,  # steady riser
+                          "SQQQ": 100 - 0.01 * minutes,  # steady faller: never picked
+                          "SPY": np.full(len(index), 100.0)}, index=index)
+    weights = _momentum_sleeve(close, list(close.columns), ("TQQQ", "SQQQ"), days=1, top_k=1)
+    frame = pd.DataFrame(weights, index=index, columns=close.columns)
+    first = pd.Timestamp("2026-02-17T14:35Z")  # Tuesday 09:35 New York: first morning with a full day of history
+    assert (frame.loc[:first - pd.Timedelta(minutes=5)].to_numpy() == 0).all()
+    assert frame.loc[first:, "TQQQ"].eq(1.0).all() and frame["SQQQ"].eq(0).all() and frame["SPY"].eq(0).all()

@@ -54,7 +54,12 @@ COPY_ETFS: tuple[Asset, ...] = tuple(
     Asset(symbol, "us_equity", "USD", alpaca, trade_strategies=False)
     for symbol, alpaca in (("NANC", "NANC"), ("GURU", "GURU"), ("ARKK", "ARKK"), ("BRK-B", "BRK.B")))
 
-DEFAULT_UNIVERSE = DEFAULT_UNIVERSE + COPY_ETFS
+# Extra high-volatility names for the "Max aggression" sleeves (and every
+# strategy): 3x S&P 500, small caps, tech and biotech ETFs, 2x bitcoin and
+# ether ETFs, and MicroStrategy (a leveraged bitcoin proxy).
+HIGH_BETA: tuple[Asset, ...] = tuple(_us(s) for s in ("UPRO", "TNA", "TECL", "LABU", "BITX", "ETHU", "MSTR"))
+
+DEFAULT_UNIVERSE = DEFAULT_UNIVERSE + HIGH_BETA + COPY_ETFS
 
 UK_ETFS: tuple[Asset, ...] = (
     Asset("ISF.L", "uk_equity", "GBP"), Asset("VUSA.L", "uk_equity", "GBP"),
@@ -107,6 +112,12 @@ class MetaConfig:
     consensus_threshold: float = 0.34
     rotation_lookback_days: int = 20  # "Agent (rotation)": ranks whole strategy sleeves
     rotation_top_k: int = 3
+    # "Max aggression": 100% in the strongest mover each US morning (0 = off)
+    momentum_lookbacks: tuple[int, ...] = (1, 5)  # days of past return ranked; one sleeve each
+    momentum_top_k: int = 1
+    momentum_symbols: tuple[str, ...] = (
+        "TQQQ", "SQQQ", "SOXL", "UPRO", "TNA", "TECL", "LABU", "BITX", "ETHU", "MSTR", "COIN", "PLTR", "TSLA",
+        "NVDA", "AMD", "BTC-USD", "ETH-USD", "SOL-USD", "XRP-USD", "DOGE-USD")
 
 
 @dataclass

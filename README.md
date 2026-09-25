@@ -4,7 +4,7 @@ An autonomous, multi-strategy trading agent. It runs **63 strategies** at the sa
 
 On top of the strategies sits the **Agent**: a walk-forward selector. Every day it trades whichever strategy/symbol pairs made the best risk-adjusted returns over the previous 10 days. That is how it "gets better": it keeps moving money toward what is working and away from what isn't.
 
-> **Reality check.** Nothing here guarantees profit. Most day-trading strategies lose money once costs are counted, and a strategy that worked last week often stops working. The leaderboard shows this honestly, costs included. Run it on paper first and only consider real money after weeks of paper results that beat simply holding SPY/BTC.
+> **Reality check.** Nothing here guarantees profit. A steady 10% a day is not possible: compounded over a year it would turn £100 into about £2.6 trillion. Good traders average well under 1% a day. Most day-trading strategies lose money once costs are counted, and a strategy that worked last week often stops working. The leaderboard shows this honestly, costs included. Run it on paper first and only consider real money after weeks of paper results that beat simply holding SPY/BTC.
 
 ## What trades
 
@@ -16,12 +16,13 @@ On top of the strategies sits the **Agent**: a walk-forward selector. Every day 
 | Mean reversion | RSI(14), Connors RSI(2), Bollinger, Z-score, VWAP, Stochastic, Williams %R, CCI, MFI |
 | AI model | Kronos forecast (optional, [shiyu-coder/Kronos](https://github.com/shiyu-coder/Kronos)) and the **AI analyst**: Claude researching the news each day (optional, needs an API key) |
 | Meta | **Agent** (top 5 strategy/symbol pairs), **Agent (aggressive)** (top 2, concentrated), **Agent (rotation)** (copies the top 3 whole strategies by 20-day risk-adjusted return), **Consensus** (majority vote) |
+| Max aggression | **100% in one name.** Each US morning (09:35 New York), puts everything into the high-volatility name that rose most over the past 1 day or 5 days (two sleeves). Candidates: 3x ETFs, 2x bitcoin/ether ETFs, MSTR, COIN and crypto. It holds cash if nothing is up. This is the setting built for +10% days, and it gets −10% days just as easily. |
 | Benchmarks | Hold SPY, Hold BTC |
 | Copy trading | **Famous investors' 13F holdings** (Buffett, Burry, Ackman, Druckenmiller, Tepper, Cathie Wood), **company insiders' big purchases**, the **top AI agents on AI-Trader**, and a fund that copies **Congress** (NANC: Democrats, including Pelosi), hedge-fund gurus (GURU), ARKK and Berkshire (BRK-B). See below. |
 | Hourly swing | Every rule above except opening-range and gap-and-go, re-run on 1-hour bars (named "… · 1h"). They trade far less, so costs eat less, and they may hold stocks overnight. |
 | Daily | **Nasdaq market timing** on TQQQ and QQQ (distribution days and follow-through days, the IBD method), **momentum burst** and **exhaustion hammer** (Stockbee setups), and the **bullish score** (top-scoring trend names). They use 2 years of daily bars and hold for days. See below. |
 
-- **Universe:** 21 symbols by default: SPY, QQQ, IWM, TQQQ, SQQQ, SOXL, NVDA, TSLA, AAPL, MSFT, AMD, META, AMZN, GOOGL, PLTR, COIN, plus BTC, ETH, SOL, XRP and DOGE. Crypto trades 24/7, so the agent is never idle.
+- **Universe:** 28 symbols by default: SPY, QQQ, IWM, TQQQ, SQQQ, SOXL, NVDA, TSLA, AAPL, MSFT, AMD, META, AMZN, GOOGL, PLTR, COIN, plus BTC, ETH, SOL, XRP and DOGE. There are also 7 high-volatility names: UPRO, TNA, TECL and LABU (3x ETFs), BITX and ETHU (2x bitcoin/ether ETFs) and MSTR. Crypto trades 24/7, so the agent is never idle.
 - **Data:** 5-minute bars. Stocks come from Yahoo Finance via `yfinance`; crypto comes from Coinbase. If a source rate-limits the agent, it is skipped for 10 minutes and the next one is used.
 - **Execution:** a signal on a bar's close is executed on the next tick.
 
