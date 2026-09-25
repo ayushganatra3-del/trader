@@ -398,14 +398,14 @@ def run_research(bars: dict[str, pd.DataFrame], config: Config, strategies: list
         agree = votes >= meta_cfg.consensus_threshold
         sleeves[CONSENSUS] = make_sleeve(CONSENSUS, "meta", slot_weights(agree, risk.slots, risk.max_symbol_weight))
 
-    rotation = _rotation_sleeve(sleeves, index, meta_cfg)
-    if rotation is not None:
-        sleeves[ROTATION] = make_sleeve(ROTATION, "meta", rotation)
     for name, weights, text in _daytrade_sleeves(usable, index, symbols, config):
         if weights is not None:
             sleeve = make_sleeve(name, "daytrade", weights)
             sleeve.description = text
             sleeves[name] = sleeve
+    rotation = _rotation_sleeve(sleeves, index, meta_cfg)
+    if rotation is not None:
+        sleeves[ROTATION] = make_sleeve(ROTATION, "meta", rotation)
     for days in meta_cfg.momentum_lookbacks:
         weights = _momentum_sleeve(close_ff, symbols, meta_cfg.momentum_symbols, days, meta_cfg.momentum_top_k)
         if weights is not None:

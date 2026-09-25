@@ -29,6 +29,13 @@ NEW_YORK = "America/New_York"
 LAST_MINUTE = 380  # bars starting 15:50 or later: be flat (exit at the 15:50 bar's close)
 
 
+def _open_end(last_loc: int, index: pd.DatetimeIndex, final_day: bool) -> int:
+    """Where a position with no exit yet stops: the end of the research index
+    on the day still trading (so the latest target holds it), else just after
+    the day's last bar (e.g. an early-close half day)."""
+    return len(index) if final_day else last_loc + 1
+
+
 def _session(bars: pd.DataFrame) -> pd.DataFrame:
     """Regular-session bars with their New York day and minutes since 09:30."""
     local = bars.index.tz_convert(NEW_YORK)
@@ -53,7 +60,8 @@ def orb_5m(bars: dict[str, pd.DataFrame], index: pd.DatetimeIndex, symbols: list
     weights = np.zeros((len(index), len(symbols)))
     session = _session(bars[signal])
     loc = pd.Series(index.get_indexer(session.index), index=session.index)
-    for _, day in session.groupby("day"):
+    final = session["day"].iloc[-1] if len(session) else None
+    for day_key, day in session.groupby("day"):
         first = day[day["minute"] == 0]
         if first.empty:
             continue
@@ -79,7 +87,7 @@ def orb_5m(bars: dict[str, pd.DataFrame], index: pd.DatetimeIndex, symbols: list
                 end = loc[ts]
                 break
         if end is None:
-            end = loc[day.index[-1]]
+            end = _open_end(loc[day.index[-1]], index, day_key == final)
         if start >= 0 and end > start:
             weights[start:end, side] = 1.0
     return weights
@@ -104,6 +112,7 @@ def stocks_in_play(bars: dict[str, pd.DataFrame], index: pd.DatetimeIndex, symbo
         firsts[s] = first
         atrs[s] = _daily_atr(session)
     days = sorted({d for f in firsts.values() for d in f.index})
+    final = days[-1] if days else None
     for day in days:
         ranked = []
         for s, first in firsts.items():
@@ -136,7 +145,7 @@ def stocks_in_play(bars: dict[str, pd.DataFrame], index: pd.DatetimeIndex, symbo
             if start is None:
                 continue
             if end is None:
-                end = loc[-1]
+                end = _open_end(loc[-1], index, day == final)
             if end > start:
                 weights[start:end, column[s]] += 1.0 / top_n
     return weights

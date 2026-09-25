@@ -99,3 +99,32 @@ def test_day_trade_sleeves_never_look_ahead(builder):
     index_part, w_part = run(part)
     known = len(index_part) - 1  # the last bar's weight may change once a stop/exit bar exists
     assert np.allclose(w_full[:known], w_part[:known])
+
+
+def test_open_positions_stay_in_the_latest_target_during_the_session():
+    """Live: no exit bar exists yet, so the newest row must still hold the trade."""
+    qqq = session_day("2026-02-02", np.linspace(100, 103, 78)).iloc[:20]  # 11:10 New York, still trading
+    bars = {"QQQ": qqq, "TQQQ": qqq, "SQQQ": qqq}
+    orb = daytrade.orb_5m(bars, qqq.index, ["QQQ", "TQQQ", "SQQQ"], "QQQ", "TQQQ", "SQQQ")
+    assert orb[-1, 1] == 1.0
+
+    frames = {"A": [], "B": []}
+    for i, day in enumerate(days(16)):
+        last = i == 15
+        frames["A"].append(session_day(day, np.r_[[100.2], [100.25], np.linspace(100.5, 102, 76)],
+                                       first_volume=5e5 if last else 1e5))
+        frames["B"].append(session_day(day, np.r_[[100.2], np.linspace(100.3, 101, 77)], first_volume=1e5))
+    bars = {s: pd.concat(f).iloc[:-60] for s, f in frames.items()}  # last day cut at 11:00
+    sip = daytrade.stocks_in_play(bars, bars["A"].index, ["A", "B"], ["A", "B"], top_n=1, min_relvol=1.5)
+    assert sip[-1, 0] == 1.0
+
+
+def test_rotation_can_pick_day_trade_sleeves():
+    from agent.research import ROTATION, run_research
+    from agent.strategies import all_strategies
+
+    config = Config()
+    research = run_research(synthetic_bars(config, days=6, end=pd.Timestamp("2026-02-24T20:00Z")), config, all_strategies())
+    names = list(research.sleeves)
+    assert any(n.startswith("Day trade") for n in names)
+    assert max(i for i, n in enumerate(names) if n.startswith("Day trade")) < names.index(ROTATION)
