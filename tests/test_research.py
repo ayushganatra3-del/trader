@@ -5,7 +5,7 @@ import pytest
 from agent.config import Config
 from agent.data import synthetic_bars
 from agent.indicators import Features
-from agent.research import AGGRESSIVE, CONSENSUS, META, ROTATION, leaderboard, run_positions, run_research
+from agent.research import AGGRESSIVE, CONSENSUS, META, META_LABEL, ROTATION, leaderboard, run_positions, run_research
 from agent.sessions import session_frame
 from agent.strategies import BENCHMARKS, STRATEGIES, all_strategies
 
@@ -43,7 +43,7 @@ def test_no_edge_on_a_pure_random_walk():
     config = Config()
     bars = synthetic_bars(config, days=40, seed=1, end=END, random_walk=True)
     board = leaderboard(run_research(bars, config, all_strategies())).set_index("sleeve")
-    for name in (META, AGGRESSIVE, CONSENSUS, ROTATION):
+    for name in (META, AGGRESSIVE, CONSENSUS, ROTATION, META_LABEL):
         assert board.loc[name, "return_pct"] < 10, name
     strategies = board[board["kind"] == "strategy"]
     assert (strategies["return_pct"] < 15).all()
