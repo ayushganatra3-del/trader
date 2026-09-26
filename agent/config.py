@@ -191,6 +191,10 @@ class DailyConfig:
     # Connors RSI(2) dip buying: (signal index, ETF actually bought)
     rsi2_pairs: tuple = (("SPY", "UPRO"), ("QQQ", "TQQQ"), ("IWM", "TNA"))
     rsi2_entry: float = 10.0
+    # Ray Fu's beginner bot: 20/50-day moving-average crossover (buy on the cross up, sell on the cross down)
+    sma_cross_symbols: tuple[str, ...] = ("AAPL",)
+    sma_fast: int = 20
+    sma_slow: int = 50
 
 
 @dataclass
@@ -202,6 +206,9 @@ class AiConfig:
     max_searches: int = 5  # web searches per daily analysis
     max_positions: int = 4
     max_weight: float = 0.35
+    # Extra competing AI personas (the "bees" from Creator Magic's video), each its own £100 sleeve.
+    # Each adds one daily Claude analysis, so roughly $0.50-1 a day more in API fees.
+    bees: bool = False
 
 
 @dataclass
