@@ -125,3 +125,38 @@ def test_engine_reports_the_analyst(tmp_path):
     readme = (tmp_path / "README.md").read_text()
     assert "AI analyst" in readme and "Holding support" in readme
     assert "Choppy tape." in (tmp_path / "dashboard.html").read_text()
+
+
+def test_bees_trade_as_separate_personas():
+    from agent.analyst import BEES
+
+    config = Config()
+    daily = {s: walk(i) for i, s in enumerate(["QQQ", "NVDA", "TQQQ"])}
+    now = pd.Timestamp(DAYS[-1].strftime("%Y-%m-%d") + "T21:00Z")
+    books = []
+    for persona in BEES:
+        client = FakeClient({"market_view": "x", "positions": [{"symbol": "TQQQ", "weight": 0.3, "reason": "r"}]})
+        analyst = Analyst(config, client, persona=persona)
+        books.append(analyst.run({}, daily, {"state": "uptrend"}, now))
+        assert persona[1] in client.calls[0][1]["system"]  # its personality reaches the model
+        assert analyst.store_key == f"analyst:{persona[0]}"
+    assert [b.name for b in books] == ["AI bee: Bizzy", "AI bee: Breezy", "AI bee: Boozy"]
+    assert all(b.current() == {"TQQQ": 0.3} for b in books)
+
+
+def test_engine_runs_the_bees_alongside_the_analyst(tmp_path):
+    from agent.analyst import BEES
+    from agent.daily import DailyData
+    from agent.data import StaticData
+    from agent.engine import Engine
+
+    config = Config()
+    end = pd.Timestamp(DAYS[-1].strftime("%Y-%m-%d") + "T20:30Z")
+    fetcher = lambda symbols, period, now: {s: walk(i) for i, s in enumerate(symbols)}  # noqa: E731
+    decision = {"market_view": "ok", "positions": [{"symbol": "AAPL", "weight": 0.2, "reason": "r"}]}
+    engine = Engine(config, tmp_path, market=StaticData(config, synthetic_bars(config, days=5, end=end), gbpusd=1.3),
+                    daily=DailyData(["QQQ", "AAPL"], fetcher=fetcher), analyst=Analyst(config, FakeClient(decision)),
+                    bees=[Analyst(config, FakeClient(decision), persona=bee) for bee in BEES])
+    engine.tick(end)
+    sleeves = engine.store.load()["sleeves"]
+    assert BOOK in sleeves and all(f"AI bee: {name}" in sleeves for name, _ in BEES)

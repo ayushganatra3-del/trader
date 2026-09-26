@@ -63,6 +63,7 @@ These trade on completed daily bars, and each signal is acted on at the next US 
 | `Timing: Nasdaq FTD · TQQQ` / `· QQQ` | Counts **distribution days** (QQQ down ≥0.2% on higher volume) in the last 25 sessions. It holds 100% with 0–2 of them, 75% with 3–4, 50% with 5 and 25% with 6 or more. After a correction (−10% from the high, or 5+ distribution days below the 50-day average) it holds nothing until a **follow-through day** (day 4–10 of a rally attempt, +1.25% on higher volume) or a new 63-day closing high. It also holds nothing while ^VXN (Nasdaq volatility) is 35 or higher. |
 | `Daily: Momentum burst` | +4% day on higher volume, closing near the high. Holds up to 4 days, or exits if the trigger day's low breaks. |
 | `Daily: Exhaustion hammer` | Long-lower-wick reversal that undercuts recent lows during a 5–25% pullback in an uptrend. Holds up to 5 days. |
+| `Daily: SMA 20/50 cross · AAPL` | Ray Fu's beginner bot: buys Apple at the next open after its 20-day average crosses above the 50-day average, and sells after it crosses back below. The symbols are set by `sma_cross_symbols` under `[daily]`. |
 | `Daily: Connors RSI(2) · 3x ETFs` | After SPY, QQQ or IWM closes with RSI(2) under 10 while above its 200-day average (a sharp dip in an uptrend), buys UPRO, TQQQ or TNA at the next open. Sells after a close above the 5-day average. The research found this the best balance of edge against trading costs. |
 | `Daily: Bullish score` | Scores trend and momentum (SMA 20/50, RSI, MACD, EMA 9/21, ADX, 3-month return). Holds the top 4 names scoring 6 or more. |
 
@@ -74,6 +75,8 @@ These trade on completed daily bars, and each signal is acted on at the next US 
 2. searches the web for news, earnings dates and macro events;
 3. has technical, news and macro analysts report, then runs a bull-versus-bear debate;
 4. picks up to 4 positions (max 35% each, the rest in cash), which are bought at the next open.
+
+**AI bees (optional).** Set `bees = true` under `[ai]` to race three more Claude traders with their own personalities, as in Creator Magic's "3 AI trading bots" video. Bizzy is a busy momentum trader, Breezy a calm and cautious investor, and Boozy a reckless speculator in 3x ETFs and crypto stocks. Each gets its own £100 sleeve on the leaderboard and decides once a day, not hundreds of times a minute, because trading costs and AI fees would eat a small account. Each bee adds roughly $0.50–1 a day in API fees.
 
 It only works forward in time: a model can't be backtested honestly on dates it may already know about. To switch it on, add the repository secret `ANTHROPIC_API_KEY`. With the defaults it costs roughly **$0.50–1 per trading day** in API fees. That is a lot next to a £100 account, so keep it only if its record beats the cheaper sleeves. Model, effort and number of searches are set under `[ai]` in `config.toml`.
 

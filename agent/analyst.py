@@ -34,6 +34,17 @@ open and reviewed after every close, so the horizon is roughly one to five sessi
 Transaction costs are about 0.05% per side. Be concrete and sceptical; prefer no trade to a weak one."""
 
 
+# Creator Magic's "bees": competing AI traders with their own personalities (each its own £100 sleeve)
+BEES = (
+    ("Bizzy", "You are Bizzy, a busy momentum trader: favour the names with the strongest recent momentum and "
+              "rising volume, and rotate whenever the leaders change."),
+    ("Breezy", "You are Breezy, a calm, cautious investor: prefer broad index ETFs and large caps in clear "
+               "uptrends, keep plenty of cash, and trade rarely."),
+    ("Boozy", "You are Boozy, a reckless speculator: concentrate in the most volatile names (3x ETFs, COIN, MSTR, "
+              "BITX, ETHU) up to the position limit, chasing the biggest possible moves."),
+)
+
+
 def _num(value, digits=2):
     return None if value is None or not np.isfinite(value) else round(float(value), digits)
 
@@ -103,10 +114,14 @@ class Analyst:
     """Calls Claude once per session. ``client`` is an ``anthropic.Anthropic``
     (a fake in tests)."""
 
-    def __init__(self, config: Config, client=None):
+    def __init__(self, config: Config, client=None, persona: tuple[str, str] | None = None):
         self.config = config
         self.cfg = config.ai
         self._client = client
+        self.persona = persona  # (name, personality) for a "bee"; None for the main analyst
+        self.book_name = f"AI bee: {persona[0]}" if persona else BOOK
+        self.store_key = f"analyst:{persona[0]}" if persona else "analyst"
+        self.system = SYSTEM + (f"\n\n{persona[1]}" if persona else "")
 
     @staticmethod
     def available() -> bool:
@@ -127,7 +142,7 @@ class Analyst:
         response = None
         for _ in range(4):  # the server pauses long web-search turns; resume a few times
             response = self.client.beta.messages.create(
-                model=self.cfg.model, max_tokens=16000, system=SYSTEM,
+                model=self.cfg.model, max_tokens=16000, system=self.system,
                 thinking={"type": "adaptive"}, output_config={"effort": self.cfg.effort},
                 tools=[{"type": "web_search_20260209", "name": "web_search", "max_uses": self.cfg.max_searches}],
                 betas=["server-side-fallback-2026-07-01"], fallbacks="default",
@@ -184,10 +199,12 @@ class Analyst:
             session = index.index[-1].strftime("%Y-%m-%d")
             if self.due(store, session, now):
                 store["last_attempt"] = now.isoformat()
+                style = f" Personality: {self.persona[1]}" if self.persona else ""
                 book = CopyBook.from_dict(store["book"]) if store.get("book") else CopyBook(
-                    BOOK, f"Claude ({self.cfg.model}) as a TradingAgents-style desk: web news, analyst reports, "
-                          "bull/bear debate and a risk-managed pick of up to "
-                          f"{self.cfg.max_positions} names after each US close. Forward-only: no backtest.",
+                    self.book_name, f"Claude ({self.cfg.model}) as a TradingAgents-style desk: web news, analyst "
+                                    "reports, bull/bear debate and a risk-managed pick of up to "
+                                    f"{self.cfg.max_positions} names after each US close. Forward-only: no backtest."
+                                    + style,
                     "Claude API with web search", kind="ai", cap=self.cfg.max_weight)
                 try:
                     analysis = self.research(self.prompt(daily, regime, symbols, session, book.current()))
@@ -205,7 +222,7 @@ class Analyst:
                                                      for r in decision.get("positions") or [] if r.get("symbol") in weights],
                                        "analysis": analysis[:6000]}
                 except Exception as error:  # an API problem must not stop trading
-                    log.warning("AI analyst failed: %s", error)
+                    log.warning("%s failed: %s", self.book_name, error)
                     book.error = f"Analysis failed: {str(error)[:300]}"
                 book.updated_at = now.isoformat()
                 store["book"] = book.to_dict()

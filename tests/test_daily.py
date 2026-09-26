@@ -157,3 +157,25 @@ def test_engine_trades_daily_sleeves_and_reports_the_regime(tmp_path):
     assert f"{TIMING} · TQQQ" in state["sleeves"]
     readme = (tmp_path / "README.md").read_text()
     assert "Market regime" in readme and "Market regime" in (tmp_path / "dashboard.html").read_text()
+
+
+def test_sma_cross_needs_a_real_cross_and_exits_on_the_cross_down():
+    from agent.daily import sma_cross
+
+    # already above at the start: no entry until a fresh cross up
+    close = np.r_[np.linspace(100, 140, 80), np.linspace(140, 110, 40), np.linspace(110, 150, 60)]
+    held = sma_cross(frame(close), 20, 50)
+    fast, slow = pd.Series(close).rolling(20).mean(), pd.Series(close).rolling(50).mean()
+    assert not held.iloc[:80].any()  # the first cross happened before both averages existed
+    down = int(np.flatnonzero((fast < slow).to_numpy() & (fast.shift(1) >= slow.shift(1)).to_numpy())[0])
+    up = int(np.flatnonzero((fast > slow).to_numpy() & (fast.shift(1) <= slow.shift(1)).to_numpy() & (np.arange(len(close)) > down))[0])
+    assert not held.iloc[down:up].any() and held.iloc[up:].all()
+
+
+def test_daily_books_include_the_aapl_crossover():
+    config = Config()
+    daily = {a.symbol: walk(i) for i, a in enumerate(config.universe) if a.kind == "us_equity"}
+    books, _ = daily_books(daily, config, pd.Timestamp("2026-02-24T22:00Z"))
+    book = next(b for b in books if b.name.startswith("Daily: SMA 20/50 cross"))
+    assert book.name.endswith("AAPL") and book.cap == 1.0
+    assert all(set(w) <= {"AAPL"} and all(v == 1.0 for v in w.values()) for _, w in book.schedule)

@@ -336,6 +336,23 @@ def rsi2_dip(bars: pd.DataFrame, entry: float = 10.0) -> pd.Series:
     return pd.Series(out, index=c.index)
 
 
+def sma_cross(bars: pd.DataFrame, fast: int = 20, slow: int = 50) -> pd.Series:
+    """Moving-average crossover: in after the fast average crosses above the slow one between two
+    consecutive days, out after it crosses back below (a real cross, not just "above")."""
+    c = bars["close"]
+    f, s = c.rolling(fast, min_periods=fast).mean(), c.rolling(slow, min_periods=slow).mean()
+    up = ((f > s) & (f.shift(1) <= s.shift(1))).to_numpy()
+    down = ((f < s) & (f.shift(1) >= s.shift(1))).to_numpy()
+    held, out = False, []
+    for u, d in zip(up, down):
+        if held and d:
+            held = False
+        elif not held and u:
+            held = True
+        out.append(held)
+    return pd.Series(out, index=c.index)
+
+
 def top_scores(scores: pd.DataFrame, top_n: int, minimum: float) -> pd.DataFrame:
     """Hold the ``top_n`` best names scoring >= ``minimum``; keep a holding
     until its score falls a point below that, so the sleeve does not churn."""
@@ -427,6 +444,16 @@ def daily_books(daily: dict[str, pd.DataFrame], config: Config, fetched_at: pd.T
                 "Connors RSI(2) dip buying on " + ", ".join(sig for sig, _ in pairs) + ": after a close with RSI(2) under "
                 f"{cfg.rsi2_entry:g} above the 200-day average, buys the 3x ETF (" + ", ".join(etf for _, etf in pairs)
                 + ") at the next open and sells after a close above the 5-day average",
+                "daily bars", schedule(_equal(active, 1)), kind="daily", cap=1.0,
+                as_of=active.index[-1].strftime("%Y-%m-%d"), updated_at=stamp))
+        crossers = [s for s in cfg.sma_cross_symbols if s in daily and len(daily[s]) >= cfg.sma_slow + 2
+                    and s in config.symbols]
+        if crossers:
+            active = pd.DataFrame({s: sma_cross(daily[s], cfg.sma_fast, cfg.sma_slow) for s in crossers}).fillna(False)
+            books.append(CopyBook(
+                f"Daily: SMA {cfg.sma_fast}/{cfg.sma_slow} cross · " + "/".join(crossers),
+                f"Ray Fu's beginner bot: buys {', '.join(crossers)} at the next open after the {cfg.sma_fast}-day "
+                f"average crosses above the {cfg.sma_slow}-day average, sells after it crosses back below",
                 "daily bars", schedule(_equal(active, 1)), kind="daily", cap=1.0,
                 as_of=active.index[-1].strftime("%Y-%m-%d"), updated_at=stamp))
         scores = pd.DataFrame({s: bullish_score(daily[s]) for s in stocks})
