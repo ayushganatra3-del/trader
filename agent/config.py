@@ -206,9 +206,16 @@ class AiConfig:
     max_searches: int = 5  # web searches per daily analysis
     max_positions: int = 4
     max_weight: float = 0.35
-    # Extra competing AI personas (the "bees" from Creator Magic's video), each its own £100 sleeve.
-    # Each adds one daily Claude analysis, so roughly $0.50-1 a day more in API fees.
-    bees: bool = False
+
+
+@dataclass
+class BeesConfig:
+    """AI bees (agent/bees.py): Jev via OpenRouter, deciding every minute; runs only when OPENROUTER_API_KEY is set."""
+    enabled: bool = True
+    model: str = "typesafe/jev-1.13"
+    daily_budget_usd: float = 5.0  # no more Jev calls today once this is spent (the bees then hold)
+    symbols: tuple[str, ...] = ()  # empty = every stock and coin in the universe
+    max_quote_age_minutes: int = 3
 
 
 @dataclass
@@ -240,6 +247,7 @@ class Config:
     copy: CopyConfig = field(default_factory=CopyConfig)
     daily: DailyConfig = field(default_factory=DailyConfig)
     ai: AiConfig = field(default_factory=AiConfig)
+    bees: BeesConfig = field(default_factory=BeesConfig)
     disabled_strategies: tuple[str, ...] = ()
 
     def cost(self, asset: Asset) -> float:
@@ -287,12 +295,24 @@ def _parse_asset(item) -> Asset:
     return Asset(**item)
 
 
+def _upgrade(data: dict) -> dict:
+    """Accept keys from older example configs."""
+    ai = data.get("ai")
+    if isinstance(ai, dict) and "bees" in ai:  # the bees used to be a switch under [ai]; they now have [bees]
+        ai = dict(ai)
+        enabled = bool(ai.pop("bees"))
+        bees = dict(data.get("bees") or {})
+        bees.setdefault("enabled", enabled)
+        data = {**data, "ai": ai, "bees": bees}
+    return data
+
+
 def load_config(path: str | os.PathLike | None = None) -> Config:
     config = Config()
     candidate = Path(path) if path else Path(os.environ.get("AGENT_CONFIG", "config.toml"))
     if candidate.exists():
         with candidate.open("rb") as handle:
-            config = _merge(config, tomllib.load(handle))
+            config = _merge(config, _upgrade(tomllib.load(handle)))
     mode = os.environ.get("AGENT_MODE")
     if mode:
         config = dataclasses.replace(config, broker=dataclasses.replace(config.broker, mode=mode))

@@ -18,6 +18,7 @@ name: Trading agent
 #   secrets:   APCA_API_KEY_ID, APCA_API_SECRET_KEY (Alpaca keys)
 #              AGENT_LIVE_CONFIRM = I-ACCEPT-REAL-MONEY-RISK (only for alpaca-live)
 #              ANTHROPIC_API_KEY (optional: turns on the Claude "AI analyst" sleeve)
+#              OPENROUTER_API_KEY (optional: turns on the Jev "AI bees", deciding every minute)
 
 on:
   schedule:
@@ -107,6 +108,7 @@ jobs:
           AGENT_LIVE_CONFIRM: ${{ secrets.AGENT_LIVE_CONFIRM }}
           SEC_USER_AGENT: ${{ vars.SEC_USER_AGENT }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           MINUTES: ${{ inputs.minutes || '29' }}
         run: |
           [[ "$MINUTES" =~ ^[0-9]+$ ]] || { echo "minutes must be a whole number"; exit 1; }

@@ -32,9 +32,12 @@ def build_dashboard(state: dict, research: Research, config: Config, now: pd.Tim
                     store: StateStore | None = None) -> dict:
     history = store.read_jsonl("history.jsonl") if store else []
     trades = store.read_jsonl("trades.jsonl", tail=150) if store else []
-    names = list(research.sleeves)
-    live_curves = _live_curves(history, names)
+    from .bees import BEES
     from .portfolio import Sleeve
+
+    bees = [b for b in BEES if b.sleeve in state["sleeves"] and b.sleeve not in research.sleeves]
+    names = list(research.sleeves) + [b.sleeve for b in bees]
+    live_curves = _live_curves(history, names)
 
     sleeves = []
     for name, result in research.sleeves.items():
@@ -53,6 +56,14 @@ def build_dashboard(state: dict, research: Research, config: Config, now: pd.Tim
             "live_curve": live_curves.get(name, []),
             "backtest_curve": curve(result.returns, config.starting_capital_gbp),
         })
+    bee_state = state.get("bees") or {}
+    for bee in bees:  # forward-only: no backtest
+        sleeves.append({"name": bee.sleeve, "kind": "ai", "style": "ai", "family": "ai",
+                        "description": f"Jev ({bee_state.get('model')}) decides buy/hold/sell for every open symbol each "
+                                       f"minute as {bee.strategy} Forward-only: no backtest.",
+                        "live": Sleeve(state["sleeves"][bee.sleeve]).summary(), "backtest": None,
+                        "targets": (bee_state.get(bee.name) or {}).get("targets") or {},
+                        "live_curve": live_curves.get(bee.sleeve, []), "backtest_curve": []})
     sleeves.sort(key=lambda row: (-(row["live"] or {}).get("return_pct", 0.0), -(row["backtest"] or {}).get("return_pct", 0.0)))
     return {
         "generated_at": now.isoformat(),
@@ -68,6 +79,7 @@ def build_dashboard(state: dict, research: Research, config: Config, now: pd.Tim
         "copy_books": _copy_books(state),
         "regime": state.get("regime"),
         "analyst": {k: v for k, v in ((state.get("analyst") or {}).get("latest") or {}).items() if k != "analysis"} or None,
+        "bees": _bees(bee_state, bees),
         "sleeves": sleeves,
         "recent_trades": list(reversed(trades)),
         "broker": state.get("broker"),
@@ -83,6 +95,18 @@ def _copy_books(state: dict) -> list[dict]:
                       "updated_at": book.get("updated_at"), "error": book.get("error"), "stale": book.get("stale"),
                       "effective": current[0], "holdings": dict(sorted(current[1].items(), key=lambda kv: -kv[1]))})
     return books
+
+
+def _bees(store: dict, bees) -> dict | None:
+    if not bees:
+        return None
+    rows = []
+    for bee in bees:
+        info = store.get(bee.name) or {}
+        rows.append({"name": bee.name, "at": info.get("at"), "counts": info.get("counts") or {},
+                     "targets": info.get("targets") or {}, "error": info.get("error")})
+    return {"model": store.get("model"), "spend": store.get("spend") or {}, "budget_spent": store.get("budget_spent"),
+            "bees": rows}
 
 
 def _meta_description(name: str, config: Config) -> str:
@@ -147,6 +171,19 @@ def markdown(dashboard: dict) -> str:
         lines += [f"### AI analyst ({analyst.get('model')}, after the {analyst['session']} close)", "",
                   f"{analyst.get('market_view') or ''}", "", f"Holding from {analyst.get('effective', '')[:16]} UTC: {picks}", ""]
         lines += [f"- **{p['symbol']}**: {p['reason']}" for p in analyst.get("positions") or []]
+        lines.append("")
+    bees = dashboard.get("bees") or {}
+    if bees.get("bees"):
+        spend = bees.get("spend") or {}
+        lines += [f"### AI bees (Jev: {bees.get('model')})", "",
+                  f"Today: {spend.get('decisions', 0)} decisions in {spend.get('calls', 0)} calls, "
+                  f"${spend.get('usd', 0.0):.4f} spent" + (" (daily budget used up: holding)" if bees.get("budget_spent") else "") + ".", "",
+                  "| Bee | Last decided (UTC) | Buy / hold / sell | Holding | Problem |", "|---|---|---|---|---|"]
+        for bee in bees["bees"]:
+            counts = bee.get("counts") or {}
+            holding = ", ".join(f"{s} {w:.0%}" for s, w in (bee.get("targets") or {}).items()) or "cash"
+            lines.append(f"| {bee['name']} | {(bee.get('at') or '—')[:16]} | {counts.get('buy', 0)} / "
+                         f"{counts.get('hold', 0)} / {counts.get('sell', 0)} | {holding} | {bee.get('error') or ''} |")
         lines.append("")
     if dashboard["selection"]:
         lines += ["### Today's picks (walk-forward)", "", "| Strategy | Symbol | Score | Look-back return | Trades |",

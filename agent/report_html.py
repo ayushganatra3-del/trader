@@ -428,6 +428,24 @@ def analyst_section(a: dict) -> str:
                 "analyst reports and a bull/bear debate. Holds these from the next US open.")
 
 
+def bees_section(b: dict) -> str:
+    spend = b.get("spend") if isinstance(b.get("spend"), dict) else {}
+    rows = []
+    for bee in items(b.get("bees")):
+        counts = bee.get("counts") if isinstance(bee.get("counts"), dict) else {}
+        targets = bee.get("targets") if isinstance(bee.get("targets"), dict) else {}
+        holding = ", ".join(f"{s} {weight(w)}" for s, w in targets.items()) or "Cash"
+        rows.append(tr([td(esc(bee.get("name"))), td(esc(when(bee.get("at")))),
+                        td(esc(f"{counts.get('buy', 0)} / {counts.get('hold', 0)} / {counts.get('sell', 0)}")),
+                        td(esc(holding), cls="wrap"), td(esc(bee.get("error") or ""), cls="wrap")]))
+    body = table([("Bee", False), ("Last decided", False), ("Buy / hold / sell", False), ("Holding", False),
+                  ("Problem", False)], rows) if rows else note("No decisions yet.")
+    used = " The daily budget is used up, so the bees hold until tomorrow (UTC)." if b.get("budget_spent") else ""
+    return card("AI bees", body, f"Jev ({esc(b.get('model'))}) via OpenRouter decides buy, hold or sell for every open "
+                f"symbol each minute. Today: {esc(spend.get('decisions', 0))} decisions, "
+                f"${num(spend.get('usd')) or 0:.4f} spent.{used} Times are UK time.")
+
+
 def data_problems(errors) -> str:
     items = errors.items() if isinstance(errors, dict) else enumerate(errors or [])
     lis = "".join(f"<li><b>{esc(k)}</b>: {esc(v)}</li>" for k, v in items)
@@ -475,6 +493,7 @@ def render(dashboard: dict) -> str:
         card("Agent holdings", holdings(agent)),
         regime_section(d["regime"]) if isinstance(d.get("regime"), dict) else "",
         analyst_section(d["analyst"]) if isinstance(d.get("analyst"), dict) else "",
+        bees_section(d["bees"]) if isinstance(d.get("bees"), dict) else "",
         card("Recent trades", trades_table(agent_trades, False, f"No Agent trades among the latest {len(trades)} trades.")
              + (f'<details><summary>All sleeves ({min(len(trades), 50)} most recent)</summary>{trades_table(trades)}</details>'
                 if trades else ""), "The Agent's latest trades, newest first. Times are UK time."),

@@ -13,7 +13,8 @@ import pandas as pd
 from . import report
 from .config import BROKER_RISK, Config
 from .copytrade import CopyBook, CopyManager
-from .analyst import BEES, Analyst
+from .analyst import Analyst
+from .bees import Hive
 from .daily import DailyData, daily_books, daily_symbols
 from .data import INTERVAL_SECONDS, MarketData
 from .portfolio import Quote, Sleeve, new_sleeve
@@ -42,7 +43,7 @@ class Engine:
     copier: object | None = None  # copy-trading sources; built automatically for live market data
     daily: object | None = None  # daily bars (agent/daily.py); built automatically for live market data
     analyst: object | None = None  # AI analyst (agent/analyst.py); built when ANTHROPIC_API_KEY is set
-    bees: list = field(default_factory=list)  # optional competing AI personas (config.ai.bees)
+    hive: object | None = None  # AI bees (agent/bees.py); built when OPENROUTER_API_KEY is set
     research: Research | None = None
     _data_marker: tuple | None = field(default=None, repr=False)
 
@@ -59,8 +60,8 @@ class Engine:
                                        self.config.daily.history, self.config.daily.refresh_hours)
             if self.analyst is None and self.config.ai.enabled and Analyst.available():
                 self.analyst = Analyst(self.config)
-                if self.config.ai.bees and not self.bees:
-                    self.bees = [Analyst(self.config, persona=bee) for bee in BEES]
+            if self.hive is None and self.config.bees.enabled and Hive.available():
+                self.hive = Hive(self.config)
         self._daily_cache: tuple | None = None
         if self.broker is None and self.config.broker.mode != "paper":
             from .live import make_broker
@@ -128,10 +129,8 @@ class Engine:
                 self._daily_cache = (stamp, books, regime)
             _, books, regime = self._daily_cache
             state["regime"] = {**regime, "error": error, "fetched_at": iso(stamp) if stamp is not None else None}
-            for analyst in ([self.analyst] if self.analyst is not None else []) + list(self.bees):
-                if not regime:
-                    break
-                book = analyst.run(state.setdefault(analyst.store_key, {}), self.daily.bars, regime, now)
+            if self.analyst is not None and regime:
+                book = self.analyst.run(state.setdefault("analyst", {}), self.daily.bars, regime, now)
                 if book is not None:
                     books = books + [book]
             return books
@@ -197,6 +196,11 @@ class Engine:
                                           self._reason_fn(name, research))
                 state["sleeves"][name] = sleeve.data
                 all_trades.extend(trades)
+            if self.hive is not None:
+                try:
+                    all_trades.extend(self.hive.run(state, now, self.market.fx_to_gbp, self._risk_for))
+                except Exception:  # the bees must never stop the other sleeves
+                    log.exception("AI bees failed")
             broker_summary = self._sync_broker(research, quotes, now, state)
             if broker_summary is not None:
                 state["broker"] = broker_summary

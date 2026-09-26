@@ -10,6 +10,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from .bees import Hive
 from .config import load_config
 from .data import MarketData, StaticData, synthetic_bars
 from .engine import Engine
@@ -157,6 +158,18 @@ def cmd_doctor(args, config):
         except Exception as error:
             ok = False
             print(f"FAIL {asset.symbol:<9} {error}")
+    if config.bees.enabled:
+        for name, provider, symbol in (("yfinance", data.fetch_yfinance, "SPY"),
+                                       ("coinbase", data.fetch_coinbase_range, "BTC-USD")):
+            try:
+                frame = provider(symbol, "1m", "1d", now=now)
+                print(f"1-minute {name:<9} {symbol:<8} ok   {len(frame)} bars, last {frame.index[-1] if len(frame) else None}")
+            except Exception as error:
+                print(f"1-minute {name:<9} {symbol:<8} FAIL {str(error)[:200]}")
+        if Hive.available():
+            ok = _check_bees(config) and ok
+        else:
+            print("AI bees off: set the OPENROUTER_API_KEY secret to turn them on")
     if config.broker.mode != "paper":
         from .live import make_broker
         try:
@@ -167,6 +180,36 @@ def cmd_doctor(args, config):
             ok = False
             print(f"broker FAIL: {error}")
     sys.exit(0 if ok else 1)
+
+
+def _check_bees(config) -> bool:
+    """One real Jev call for one bee on live data, without trading."""
+    from .bees import BEES
+    from .portfolio import Sleeve, new_sleeve
+    from .sessions import is_open
+
+    now = pd.Timestamp.now(tz="UTC")
+    try:
+        hive = Hive(config)
+        quotes, market, errors = hive.refresh(now, lambda currency: 1 / config.gbpusd_fallback)
+        if not market:
+            if any(is_open(a.kind, now) for a in hive.assets):  # crypto always trades, so this means broken feeds
+                print(f"jev FAIL: no fresh 1-minute data to ask about ({list(errors.items())[:3]})")
+                return False
+            print("jev skipped: nothing the bees trade is open right now")
+            return True
+        sleeve = Sleeve(new_sleeve("check", config.starting_capital_gbp, now.isoformat()))
+        sleeve.mark(quotes)
+        usage = {"usd": 0.0, "calls": 0}
+        targets, decisions = hive.ask(BEES[0], market, sleeve, usage)
+        counts = {c: sum(1 for d in decisions.values() if d[0] == c) for c in ("buy", "hold", "sell")}
+        print(f"jev ok: {config.bees.model}, {len(decisions)}/{len(market)} decisions {counts}, "
+              f"${usage['usd']:.5f} in {usage['calls']} call(s); "
+              f"{BEES[0].name} would hold {targets or 'cash'}")
+        return len(decisions) == len(market)
+    except Exception as error:
+        print(f"jev FAIL: {str(error)[:300]}")
+        return False
 
 
 def main(argv=None):
