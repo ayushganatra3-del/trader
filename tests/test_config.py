@@ -15,6 +15,16 @@ def test_example_config_loads(monkeypatch):
     assert config.cost_bps["crypto"] == 30.0 and "uk_equity" in config.cost_bps
 
 
+def test_old_ai_bees_switch_still_loads(tmp_path, monkeypatch):
+    monkeypatch.delenv("AGENT_MODE", raising=False)
+    path = tmp_path / "c.toml"
+    path.write_text('[ai]\nmodel = "claude-opus-5"\nbees = false\n')
+    config = load_config(path)
+    assert config.ai.model == "claude-opus-5" and config.bees.enabled is False
+    path.write_text('[ai]\nbees = true\n[bees]\nenabled = false\n')  # the new section wins
+    assert load_config(path).bees.enabled is False
+
+
 def test_env_overrides_and_validation(tmp_path, monkeypatch):
     path = tmp_path / "c.toml"
     path.write_text('universe = ["AAPL", "BTC-USD", "VUSA.L"]\n[meta]\ntop_k = 3\n')

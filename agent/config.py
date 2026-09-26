@@ -295,12 +295,24 @@ def _parse_asset(item) -> Asset:
     return Asset(**item)
 
 
+def _upgrade(data: dict) -> dict:
+    """Accept keys from older example configs."""
+    ai = data.get("ai")
+    if isinstance(ai, dict) and "bees" in ai:  # the bees used to be a switch under [ai]; they now have [bees]
+        ai = dict(ai)
+        enabled = bool(ai.pop("bees"))
+        bees = dict(data.get("bees") or {})
+        bees.setdefault("enabled", enabled)
+        data = {**data, "ai": ai, "bees": bees}
+    return data
+
+
 def load_config(path: str | os.PathLike | None = None) -> Config:
     config = Config()
     candidate = Path(path) if path else Path(os.environ.get("AGENT_CONFIG", "config.toml"))
     if candidate.exists():
         with candidate.open("rb") as handle:
-            config = _merge(config, tomllib.load(handle))
+            config = _merge(config, _upgrade(tomllib.load(handle)))
     mode = os.environ.get("AGENT_MODE")
     if mode:
         config = dataclasses.replace(config, broker=dataclasses.replace(config.broker, mode=mode))

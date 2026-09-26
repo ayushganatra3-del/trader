@@ -198,8 +198,10 @@ class Hive:
                   and (n := live_numbers(self.data.bars.get(s))) is not None}
         return quotes, market, errors
 
-    def ask(self, bee: Bee, market: dict[str, dict], sleeve: Sleeve) -> tuple[dict, float, dict, int]:
-        """One bee's decisions -> (target weights, cost in USD, {symbol: [choice, buy probability]}, API calls)."""
+    def ask(self, bee: Bee, market: dict[str, dict], sleeve: Sleeve, usage: dict) -> tuple[dict, dict]:
+        """One bee's decisions -> (target weights, {symbol: [choice, buy probability]}).
+
+        ``usage`` ({"usd", "calls"}) is updated after every request, so paid batches count even if a later one fails."""
         held = sleeve.weights()
         positions = sleeve.data["positions"]
         state = {"trader": bee.strategy, "cash_pct": round(100 * sleeve.data["cash_gbp"] / max(sleeve.data["equity_gbp"], 1e-9), 1),
@@ -217,14 +219,14 @@ class Hive:
                            "instructions": f"You are the trader described in `trader`. From the live 1-minute numbers "
                                            f"and your holding in `market.{key}`, what do you do with {symbol} right now?"}
                      for key, symbol in keys.items()}
-        answers, cost, calls = {}, 0.0, 0
+        answers = {}
         batch = list(questions.items())
         for start in range(0, len(batch), QUESTIONS_PER_CALL):
-            part, part_cost = self.client.decide(state, dict(batch[start:start + QUESTIONS_PER_CALL]))
+            part, cost = self.client.decide(state, dict(batch[start:start + QUESTIONS_PER_CALL]))
+            usage["usd"] += cost
+            usage["calls"] += 1
             answers.update(part)
-            cost, calls = cost + part_cost, calls + 1
-        targets, decisions = to_weights(bee, answers, keys, held)
-        return targets, cost, decisions, calls
+        return to_weights(bee, answers, keys, held)
 
     def run(self, state: dict, now: pd.Timestamp, fx_to_gbp, risk_for) -> list[dict]:
         """One round: fresh 1-minute bars, one Jev call per bee, then each bee's sleeve trades."""
@@ -246,9 +248,11 @@ class Hive:
             sleeve.mark(quotes)
             sleeves[bee.name] = sleeve
 
+        usage = {bee.name: {"usd": 0.0, "calls": 0} for bee in BEES}
+
         def ask(bee):
             try:
-                return self.ask(bee, market, sleeves[bee.name]), None
+                return self.ask(bee, market, sleeves[bee.name], usage[bee.name]), None
             except Exception as error:  # an API problem must not stop trading
                 return None, error
 
@@ -262,10 +266,10 @@ class Hive:
             sleeve = sleeves[bee.name]
             info = store.get(bee.name) or {}
             result, error = results.get(bee.name, (None, None))
+            spend["usd"] = round(spend["usd"] + usage[bee.name]["usd"], 6)
+            spend["calls"] += usage[bee.name]["calls"]
             if result is not None:
-                targets, cost, decisions, calls = result
-                spend["usd"] = round(spend["usd"] + cost, 6)
-                spend["calls"] += calls
+                targets, decisions = result
                 spend["decisions"] += len(decisions)
                 counts = {c: sum(1 for d in decisions.values() if d[0] == c) for c in MENU}
                 info = {"at": now_iso, "decisions": decisions, "counts": counts, "targets": targets, "error": None}

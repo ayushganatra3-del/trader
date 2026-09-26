@@ -203,6 +203,26 @@ def test_big_universes_are_split_into_calls_of_32_questions(monkeypatch):
     assert all("BTC-USD" in state["sleeves"][b.sleeve]["positions"] for b in BEES)
 
 
+def test_paid_batches_count_when_a_later_batch_fails(monkeypatch):
+    monkeypatch.setattr(bees, "QUESTIONS_PER_CALL", 2)
+    config = hive_config()
+
+    class SecondBatchFails(FakeJev):
+        def decide(self, state, questions):
+            if len(questions) == 1:
+                self.calls.append((state, questions))
+                raise JevError("HTTP 500: upstream error")
+            return super().decide(state, questions)
+
+    client = SecondBatchFails({"SPY": ("buy", 0.9)})
+    state = {"sleeves": {}}
+    make_hive(config, client, END).run(state, END + pd.Timedelta(seconds=30), lambda c: 1 / 1.3, lambda n: config.risk)
+    spend = state["bees"]["spend"]
+    assert spend["calls"] == 3 and spend["usd"] == pytest.approx(0.003) and spend["decisions"] == 0
+    assert all("upstream error" in state["bees"][b.name]["error"] for b in BEES)
+    assert all(not state["sleeves"][b.sleeve]["positions"] for b in BEES)  # no half-made decisions acted on
+
+
 def test_bees_need_an_openrouter_key(monkeypatch):
     monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
     assert not Hive.available()
@@ -211,3 +231,12 @@ def test_bees_need_an_openrouter_key(monkeypatch):
     assert Hive.available() and hive.client.api_key == "sk-test"
     assert len(hive.assets) * len(BEES) == 96  # ~100 decisions a minute while US markets are open
     assert all(a.trade_strategies for a in hive.data.config.universe)  # every symbol refreshed each minute
+
+
+def test_doctor_fails_when_there_is_nothing_to_ask_jev(monkeypatch, capsys):
+    from agent import __main__ as cli
+
+    monkeypatch.setenv("OPENROUTER_API_KEY", "sk-test")
+    monkeypatch.setattr(Hive, "refresh", lambda self, now, fx: ({}, {}, {"BTC-USD": "timed out"}))
+    assert cli._check_bees(Config()) is False  # crypto always trades, so no data means broken feeds
+    assert "jev FAIL" in capsys.readouterr().out

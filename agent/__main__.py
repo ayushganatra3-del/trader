@@ -186,19 +186,25 @@ def _check_bees(config) -> bool:
     """One real Jev call for one bee on live data, without trading."""
     from .bees import BEES
     from .portfolio import Sleeve, new_sleeve
+    from .sessions import is_open
 
     now = pd.Timestamp.now(tz="UTC")
     try:
         hive = Hive(config)
         quotes, market, errors = hive.refresh(now, lambda currency: 1 / config.gbpusd_fallback)
         if not market:
-            print(f"jev skipped: no fresh 1-minute data ({list(errors.items())[:3]})")
+            if any(is_open(a.kind, now) for a in hive.assets):  # crypto always trades, so this means broken feeds
+                print(f"jev FAIL: no fresh 1-minute data to ask about ({list(errors.items())[:3]})")
+                return False
+            print("jev skipped: nothing the bees trade is open right now")
             return True
         sleeve = Sleeve(new_sleeve("check", config.starting_capital_gbp, now.isoformat()))
         sleeve.mark(quotes)
-        targets, cost, decisions, _ = hive.ask(BEES[0], market, sleeve)
+        usage = {"usd": 0.0, "calls": 0}
+        targets, decisions = hive.ask(BEES[0], market, sleeve, usage)
         counts = {c: sum(1 for d in decisions.values() if d[0] == c) for c in ("buy", "hold", "sell")}
-        print(f"jev ok: {config.bees.model}, {len(decisions)}/{len(market)} decisions {counts}, ${cost:.5f}; "
+        print(f"jev ok: {config.bees.model}, {len(decisions)}/{len(market)} decisions {counts}, "
+              f"${usage['usd']:.5f} in {usage['calls']} call(s); "
               f"{BEES[0].name} would hold {targets or 'cash'}")
         return len(decisions) == len(market)
     except Exception as error:
