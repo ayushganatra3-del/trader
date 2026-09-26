@@ -14,7 +14,7 @@ On top of the strategies sits the **Agent**: a walk-forward selector. Every day 
 | Momentum | VWAP momentum (the old GPT rule), ROC + volume, RSI momentum, OBV trend, Gap-and-go |
 | Breakout | Donchian 20/10 and 55/20, Opening range 15m/30m, Bollinger, Keltner, Squeeze, Volume breakout |
 | Mean reversion | RSI(14), Connors RSI(2), Bollinger, Z-score, VWAP, Stochastic, Williams %R, CCI, MFI |
-| AI model | Kronos forecast (optional, [shiyu-coder/Kronos](https://github.com/shiyu-coder/Kronos)) and the **AI analyst**: Claude researching the news each day (optional, needs an API key) |
+| AI model | Kronos forecast (optional, [shiyu-coder/Kronos](https://github.com/shiyu-coder/Kronos)) the **AI analyst**: Claude researching the news each day, and the **AI bees**: three Jev traders deciding every minute (both optional, each needs an API key) |
 | Meta | **Agent** (top 5 strategy/symbol pairs), **Agent (aggressive)** (top 2, concentrated), **Agent (rotation)** (copies the top 3 whole strategies by 20-day risk-adjusted return), **Consensus** (majority vote) |
 | Day trading (research) | Rules from published studies, all flat by the close, using TQQQ for up moves and SQQQ for down moves. **ORB 5m** (Zarattini & Aziz 2023): trades the direction of QQQ's first 5-minute candle. **Stocks in Play ORB** (Zarattini, Barbon & Aziz 2024): buys an opening-range breakout in the 4 stocks trading the most unusual volume that morning. **Noise-area momentum** (Zarattini, Aziz & Barbon 2024): goes with QQQ when it breaks out of its normal intraday range. **Last half hour** (Gao et al. 2018): if QQQ has moved a lot since yesterday's close, rides that direction from 15:30 to 15:55. **Open breakout** (Larry Williams / Toby Crabel): buys when QQQ gets half of yesterday's range away from today's open. Independent tests say most of these barely survive trading costs, which is why each has its own £100 to prove itself. |
 | Candlesticks | **Candlestick reversal** (bullish engulfing, hammer or morning star after a pullback) and **Three white soldiers**, on 5-minute and 1-hour bars. Studies of 5-minute candles found no edge after costs (Duvinage et al. 2013), so treat these as an experiment. |
@@ -76,11 +76,38 @@ These trade on completed daily bars, and each signal is acted on at the next US 
 3. has technical, news and macro analysts report, then runs a bull-versus-bear debate;
 4. picks up to 4 positions (max 35% each, the rest in cash), which are bought at the next open.
 
-**AI bees (optional).** Set `bees = true` under `[ai]` to race three more Claude traders with their own personalities, as in Creator Magic's "3 AI trading bots" video. Bizzy is a busy momentum trader, Breezy a calm and cautious investor, and Boozy a reckless speculator in 3x ETFs and crypto stocks. Each gets its own £100 sleeve on the leaderboard and decides once a day, not hundreds of times a minute, because trading costs and AI fees would eat a small account. Each bee adds roughly $0.50–1 a day in API fees.
-
 It only works forward in time: a model can't be backtested honestly on dates it may already know about. To switch it on, add the repository secret `ANTHROPIC_API_KEY`. With the defaults it costs roughly **$0.50–1 per trading day** in API fees. That is a lot next to a £100 account, so keep it only if its record beats the cheaper sleeves. Model, effort and number of searches are set under `[ai]` in `config.toml`.
 
 The leaderboard and dashboard show the current **market regime**: uptrend or correction, distribution-day count, timing exposure, VXN, VIX and the latest follow-through day. The rules are adapted from [tradermonty/claude-trading-skills](https://github.com/tradermonty/claude-trading-skills) and [staskh/trading_skills](https://github.com/staskh/trading_skills).
+
+### AI bees (optional, uses Jev on OpenRouter)
+
+Three AI traders race each other, as in Creator Magic's "3 AI trading bots" video:
+
+- **Bizzy** is a busy momentum trader.
+- **Breezy** is a calm, cautious investor.
+- **Boozy** is a reckless speculator in 3x ETFs, crypto stocks and coins.
+
+Each one works like this:
+
+- **Every minute** it sends [Jev](https://openrouter.ai/typesafe/jev-1.13), TypeSafe's fast decision model, the live 1-minute numbers for every symbol trading right now, plus its own holdings.
+- Jev picks **buy, hold or sell** for each symbol, with probabilities. That is about **100 decisions a minute** while US markets are open (3 bees × 32 symbols). Overnight it is 15 a minute, because only crypto trades.
+- Each bee gets its own £100 paper sleeve on the leaderboard, trading at the latest 1-minute prices.
+
+A buy is sized by Jev's probability, within each bee's limits:
+
+| Bee | Largest position | Most positions | Most invested |
+|---|---:|---:|---:|
+| Bizzy | 25% | 4 | 100% |
+| Breezy | 20% | 3 | 60% |
+| Boozy | 50% | 2 | 100% |
+
+To switch the bees on, add the repository secret `OPENROUTER_API_KEY` (a key from [openrouter.ai](https://openrouter.ai) with credit).
+
+- **Check the key:** run **Actions → Agent data check → Run workflow**. It makes one real Jev call and prints the decisions and the cost.
+- **Cost:** expect a few dollars a day. `daily_budget_usd` under `[bees]` stops the calls, and the bees hold, once that day's budget is spent (default $5).
+- **Real money:** the bees are paper only for now.
+- **Warning:** trading every minute pays costs on every trade. Watch whether the bees beat the cheaper sleeves before trusting them.
 
 ## Start it (no computer needed)
 
@@ -166,6 +193,7 @@ Copy `config.example.toml` to `config.toml`. You can change:
 | `agent/copytrade.py` | copy trading: SEC 13F holdings, insider purchases, disclosure-time schedules |
 | `agent/daily.py` | daily bars, market regime (distribution/follow-through days), daily swing setups |
 | `agent/analyst.py` | the Claude AI analyst sleeve |
+| `agent/bees.py` | the AI bees: Jev (via OpenRouter) deciding buy/hold/sell every minute |
 | `agent/metalabel.py` | meta-labeling: an ML filter on the hourly signals, with half-Kelly sizing |
 | `agent/daytrade.py` | day-trading rules from published research (ORB, stocks in play, noise-area momentum) |
 | `tests/` | look-ahead checks, random-walk "no fake edge" check, paper-vs-backtest parity, accounting, broker safety |

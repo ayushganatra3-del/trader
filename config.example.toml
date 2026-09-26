@@ -49,7 +49,12 @@ enabled = true
 model = "claude-opus-5"
 effort = "medium"   # low | medium | high | xhigh | max: deeper research costs more
 max_searches = 5    # web searches per daily analysis
-bees = false        # true: also race three AI personas (Bizzy, Breezy, Boozy), each ~$0.50-1/day
+
+[bees]              # Jev "AI bees" (Bizzy, Breezy, Boozy): only run when the OPENROUTER_API_KEY secret is set
+enabled = true
+model = "typesafe/jev-1.13"
+daily_budget_usd = 5.0  # no more Jev calls that day (UTC) once this is spent; the bees then hold
+symbols = []        # empty = every stock and coin in the universe (~100 decisions a minute in US hours)
 
 [broker]
 mode = "paper"      # "paper" | "alpaca-paper" | "alpaca-live" (real money)

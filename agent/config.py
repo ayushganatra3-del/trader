@@ -206,9 +206,16 @@ class AiConfig:
     max_searches: int = 5  # web searches per daily analysis
     max_positions: int = 4
     max_weight: float = 0.35
-    # Extra competing AI personas (the "bees" from Creator Magic's video), each its own £100 sleeve.
-    # Each adds one daily Claude analysis, so roughly $0.50-1 a day more in API fees.
-    bees: bool = False
+
+
+@dataclass
+class BeesConfig:
+    """AI bees (agent/bees.py): Jev via OpenRouter, deciding every minute; runs only when OPENROUTER_API_KEY is set."""
+    enabled: bool = True
+    model: str = "typesafe/jev-1.13"
+    daily_budget_usd: float = 5.0  # no more Jev calls today once this is spent (the bees then hold)
+    symbols: tuple[str, ...] = ()  # empty = every stock and coin in the universe
+    max_quote_age_minutes: int = 3
 
 
 @dataclass
@@ -240,6 +247,7 @@ class Config:
     copy: CopyConfig = field(default_factory=CopyConfig)
     daily: DailyConfig = field(default_factory=DailyConfig)
     ai: AiConfig = field(default_factory=AiConfig)
+    bees: BeesConfig = field(default_factory=BeesConfig)
     disabled_strategies: tuple[str, ...] = ()
 
     def cost(self, asset: Asset) -> float:
