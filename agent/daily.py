@@ -446,13 +446,14 @@ def daily_books(daily: dict[str, pd.DataFrame], config: Config, fetched_at: pd.T
                 + ") at the next open and sells after a close above the 5-day average",
                 "daily bars", schedule(_equal(active, 1)), kind="daily", cap=1.0,
                 as_of=active.index[-1].strftime("%Y-%m-%d"), updated_at=stamp))
-        crossers = [s for s in cfg.sma_cross_symbols if s in daily and len(daily[s]) >= cfg.sma_slow + 2
-                    and s in config.symbols]
+        # the sleeve's name comes from the configured symbols, so it stays the same when one lacks data today
+        configured = [s for s in cfg.sma_cross_symbols if s in config.symbols]
+        crossers = [s for s in configured if s in daily and len(daily[s]) >= cfg.sma_slow + 2]
         if crossers:
             active = pd.DataFrame({s: sma_cross(daily[s], cfg.sma_fast, cfg.sma_slow) for s in crossers}).fillna(False)
             books.append(CopyBook(
-                f"Daily: SMA {cfg.sma_fast}/{cfg.sma_slow} cross · " + "/".join(crossers),
-                f"Ray Fu's beginner bot: buys {', '.join(crossers)} at the next open after the {cfg.sma_fast}-day "
+                f"Daily: SMA {cfg.sma_fast}/{cfg.sma_slow} cross · " + "/".join(configured),
+                f"Ray Fu's beginner bot: buys {', '.join(configured)} at the next open after the {cfg.sma_fast}-day "
                 f"average crosses above the {cfg.sma_slow}-day average, sells after it crosses back below",
                 "daily bars", schedule(_equal(active, 1)), kind="daily", cap=1.0,
                 as_of=active.index[-1].strftime("%Y-%m-%d"), updated_at=stamp))

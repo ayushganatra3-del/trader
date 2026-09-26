@@ -179,3 +179,16 @@ def test_daily_books_include_the_aapl_crossover():
     book = next(b for b in books if b.name.startswith("Daily: SMA 20/50 cross"))
     assert book.name.endswith("AAPL") and book.cap == 1.0
     assert all(set(w) <= {"AAPL"} and all(v == 1.0 for v in w.values()) for _, w in book.schedule)
+
+
+def test_crossover_sleeve_keeps_its_name_when_a_symbol_lacks_data():
+    import dataclasses
+
+    config = Config()
+    config = dataclasses.replace(config, daily=dataclasses.replace(config.daily, sma_cross_symbols=("AAPL", "MSFT")))
+    daily = {a.symbol: walk(i) for i, a in enumerate(config.universe) if a.kind == "us_equity"}
+    daily["MSFT"] = daily["MSFT"].tail(10)  # not enough history yet
+    books, _ = daily_books(daily, config, pd.Timestamp("2026-02-24T22:00Z"))
+    book = next(b for b in books if b.name.startswith("Daily: SMA 20/50 cross"))
+    assert book.name == "Daily: SMA 20/50 cross · AAPL/MSFT"
+    assert all(set(w) <= {"AAPL"} for _, w in book.schedule)
