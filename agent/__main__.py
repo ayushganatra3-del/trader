@@ -162,7 +162,7 @@ def cmd_doctor(args, config):
         for name, provider, symbol in (("yfinance", data.fetch_yfinance, "SPY"),
                                        ("coinbase", data.fetch_coinbase_range, "BTC-USD")):
             try:
-                frame = provider(symbol, "1m", "1d", now=now)
+                frame = provider(symbol, "1m", "5d", now=now)  # 5 days, so weekends still show the last session
                 print(f"1-minute {name:<9} {symbol:<8} ok   {len(frame)} bars, last {frame.index[-1] if len(frame) else None}")
             except Exception as error:
                 print(f"1-minute {name:<9} {symbol:<8} FAIL {str(error)[:200]}")
