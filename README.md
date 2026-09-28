@@ -116,6 +116,14 @@ To switch the bees on, add the repository secret `OPENROUTER_API_KEY` (a key fro
 3. To stop it, set the repository variable `AGENT_ENABLED` to `false` (**Settings → Secrets and variables → Actions → Variables**), or disable the workflow in Actions.
 4. Watch results at **`https://github.com/ayushganatra3-del/trader/tree/agent-state`**. Its README is the live leaderboard. `dashboard.html` has charts and `trades.jsonl` lists every trade.
 
+### Holdings website
+
+`docs/index.html` is a tracker for phone or desktop. It shows what the bot holds: each stock or coin, the amount put in, what it's worth now, and the gain or loss, for all sleeves added up or for one sleeve at a time. It also shows each sleeve's cash and value, the AI bees and the latest trades.
+
+The page reads the bot's latest save straight from the `agent-state` branch and checks for new data every 5 minutes.
+
+To publish it, go to **Settings → Pages**. Under **Build and deployment**, set **Source** to **Deploy from a branch** and **Branch** to `main` with the folder `/docs`, then click **Save**. After a minute it's live at **https://ayushganatra3-del.github.io/trader/**.
+
 The first run downloads 60 days of history, so the backtest leaderboard and today's picks appear straight away. The paper results then build up from that moment on.
 
 Notes:
@@ -194,6 +202,7 @@ Copy `config.example.toml` to `config.toml`. You can change:
 | `agent/daily.py` | daily bars, market regime (distribution/follow-through days), daily swing setups |
 | `agent/analyst.py` | the Claude AI analyst sleeve |
 | `agent/bees.py` | the AI bees: Jev (via OpenRouter) deciding buy/hold/sell every minute |
+| `docs/index.html` | the holdings website (GitHub Pages), reading the bot's `dashboard.json` |
 | `agent/metalabel.py` | meta-labeling: an ML filter on the hourly signals, with half-Kelly sizing |
 | `agent/daytrade.py` | day-trading rules from published research (ORB, stocks in play, noise-area momentum) |
 | `tests/` | look-ahead checks, random-walk "no fake edge" check, paper-vs-backtest parity, accounting, broker safety |

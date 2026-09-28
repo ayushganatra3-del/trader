@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Trader Holdings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f3f6f5;--surface:#ffffff;--sunk:#eaefed;--ink:#111816;--ink2:#46524f;--muted:#76827f;--line:#dbe2e0;
+  --accent:#0b6e63;--accent-soft:#d7ece8;--pos:#11803a;--neg:#bf352b;--warn:#a86a12;--warn-soft:#fbefd9;
+  --sans:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b100f;--surface:#131a19;--sunk:#0f1514;--ink:#e7eeec;--ink2:#b1bdba;--muted:#7c8986;--line:#243130;
+    --accent:#44b8a8;--accent-soft:#16312d;--pos:#43c26f;--neg:#f07469;--warn:#e2a64a;--warn-soft:#2e2514;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0b100f;--surface:#131a19;--sunk:#0f1514;--ink:#e7eeec;--ink2:#b1bdba;--muted:#7c8986;--line:#243130;
+  --accent:#44b8a8;--accent-soft:#16312d;--pos:#43c26f;--neg:#f07469;--warn:#e2a64a;--warn-soft:#2e2514;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--sans)}
+main{max-width:1180px;margin:0 auto;padding:0 16px;padding-block:0 48px;display:grid;gap:20px}
+h1,h2{margin:0;text-wrap:balance}
+h2{font-size:17px;font-weight:600}
+.num,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.pos{color:var(--pos)}.neg{color:var(--neg)}.muted{color:var(--muted)}
+button,select,input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* top bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1180px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:8px;margin-right:auto}
+.brand h1{font-size:18px;font-weight:700;letter-spacing:-.01em}
+.brand span{font-size:13px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:600;
+  letter-spacing:.03em;text-transform:uppercase;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.live{background:#fde5e2;color:#a3261d}
+.dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+.updated{font-size:13px;color:var(--ink2)}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:14px}
+.btn:hover{border-color:var(--accent)}
+
+/* scope + summary */
+.scope{display:flex;flex-wrap:wrap;align-items:end;gap:12px;padding-top:20px}
+.scope label{display:grid;gap:4px;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.scope select{min-width:0;max-width:100%;width:340px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);
+  text-transform:none;letter-spacing:0;font-weight:500;font-size:15px;color:var(--ink)}
+.scope .note{font-size:13px;color:var(--ink2);flex:1 1 260px}
+.figures{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.fig{background:var(--surface);padding:14px 16px;display:grid;gap:2px}
+.fig .k{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.fig .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:24px;font-weight:500;letter-spacing:-.02em}
+.fig .s{font-size:13px;color:var(--ink2)}
+
+/* sections */
+section.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:12px;min-width:0;align-content:start}
+.head{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px}
+.head p{margin:0;font-size:13px;color:var(--ink2)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:900px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);text-align:left;
+  padding:6px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.sym{font-family:var(--mono);font-weight:500;white-space:nowrap}
+.share{height:4px;border-radius:2px;background:var(--sunk);margin-top:6px;overflow:hidden}
+.share i{display:block;height:100%;background:var(--accent)}
+details summary{cursor:pointer;color:var(--ink2);font-size:13px}
+details ul{margin:6px 0 0;padding-left:18px;font-size:13px;color:var(--ink2)}
+tr.pick{cursor:pointer}
+tr.pick:hover td{background:var(--sunk)}
+tr.sel td{background:var(--accent-soft)}
+.side{display:inline-block;min-width:38px;text-align:center;border-radius:4px;padding:0 6px;font-size:12px;font-weight:600;text-transform:uppercase}
+.side.buy{background:var(--accent-soft);color:var(--accent)}
+.side.sell{background:var(--sunk);color:var(--ink2)}
+.flag{font-size:12px;font-weight:600;color:var(--warn)}
+.why{color:var(--ink2);font-size:13px}
+.search{padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);min-width:0;width:220px;max-width:100%}
+.empty{padding:14px;border:1px dashed var(--line);border-radius:8px;color:var(--ink2);font-size:14px}
+.alert{border:1px solid var(--warn);background:var(--warn-soft);color:var(--ink);border-radius:10px;padding:12px 14px;font-size:14px}
+
+/* chart */
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:160px}
+.chart .axis{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px}
+.bees{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.bee{border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:6px}
+.bee b{font-size:15px}
+.bee .row{display:flex;justify-content:space-between;gap:8px;font-size:13px}
+footer{font-size:13px;color:var(--muted);max-width:75ch}
+@media (prefers-reduced-motion:no-preference){.fig .v,.panel{transition:opacity .2s}}
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="bar-in">
+    <div class="brand"><h1>Trader Holdings</h1><span id="sleeveCount"></span></div>
+    <span id="mode" class="pill"><span class="dot"></span>Paper</span>
+    <span id="updated" class="updated">Loading…</span>
+    <button id="refresh" class="btn" type="button">Refresh</button>
+  </div>
+</header>
+<main>
+  <div class="scope">
+    <label for="scopeSel">Showing
+      <select id="scopeSel"><option value="">All sleeves combined</option></select>
+    </label>
+    <p class="note" id="scopeNote">Every sleeve is a separate paper portfolio that started with £100.</p>
+  </div>
+
+  <div id="alert" class="alert" hidden></div>
+
+  <div class="figures" id="figures" aria-live="polite">
+    <div class="fig"><span class="k">In stocks &amp; coins</span><span class="v" id="fInvested">—</span><span class="s" id="fInvestedSub">&nbsp;</span></div>
+    <div class="fig"><span class="k">Cash</span><span class="v" id="fCash">—</span><span class="s" id="fCashSub">&nbsp;</span></div>
+    <div class="fig"><span class="k">Total value</span><span class="v" id="fTotal">—</span><span class="s" id="fTotalSub">&nbsp;</span></div>
+    <div class="fig"><span class="k">Profit / loss</span><span class="v" id="fPnl">—</span><span class="s" id="fPnlSub">&nbsp;</span></div>
+  </div>
+
+  <div class="grid2">
+    <section class="panel" aria-labelledby="hHold">
+      <div class="head"><h2 id="hHold">What it holds</h2><p id="holdNote">Amount put in, what it is worth now, and the gain or loss on each position.</p></div>
+      <div class="scroll"><table id="holdings"></table></div>
+    </section>
+    <section class="panel" aria-labelledby="hChart">
+      <div class="head"><h2 id="hChart">Value over time</h2><p id="chartNote"></p></div>
+      <div class="chart" id="chart"></div>
+    </section>
+  </div>
+
+  <section class="panel" id="beesPanel" aria-labelledby="hBees" hidden>
+    <div class="head"><h2 id="hBees">AI bees</h2><p id="beesNote"></p></div>
+    <div class="bees" id="bees"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="hSleeves">
+    <div class="head"><h2 id="hSleeves">Every sleeve</h2><p>Tap a row to see what that sleeve holds.</p>
+      <input id="filter" class="search" type="search" placeholder="Find a sleeve or stock" aria-label="Find a sleeve or stock"></div>
+    <div class="scroll"><table id="sleeves"></table></div>
+  </section>
+
+  <section class="panel" aria-labelledby="hTrades">
+    <div class="head"><h2 id="hTrades">Latest trades</h2><p>Newest first. Times are UK time.</p></div>
+    <div class="scroll"><table id="trades"></table></div>
+  </section>
+
+  <footer id="footer">Paper money: no real orders are placed. Data comes from the bot's latest save on the
+    <span class="mono">agent-state</span> branch, about every 30 minutes, and this page checks for new data every 5 minutes.</footer>
+</main>
+
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const params = new URLSearchParams(location.search);
+  const host = location.hostname.endsWith(".github.io") ? location.hostname.split(".")[0] : "ayushganatra3-del";
+  const repo = location.hostname.endsWith(".github.io") && location.pathname.split("/")[1] ? location.pathname.split("/")[1] : "trader";
+  const DATA_URL = params.get("data") || `https://raw.githubusercontent.com/${host}/${repo}/agent-state/dashboard.json`;
+  const REFRESH_MS = 5 * 60 * 1000;
+  const STALE_MIN = 45;
+
+  const gbp = new Intl.NumberFormat("en-GB", {style: "currency", currency: "GBP", minimumFractionDigits: 2, maximumFractionDigits: 2});
+  const ukTime = new Intl.DateTimeFormat("en-GB", {timeZone: "Europe/London", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit"});
+  const money = (v) => (Number.isFinite(v) ? gbp.format(v) : "—");
+  const signed = (v) => (Number.isFinite(v) ? (v > 0 ? "+" : v < 0 ? "−" : "") + gbp.format(Math.abs(v)) : "—");
+  const pct = (v) => (Number.isFinite(v) ? (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v).toFixed(2) + "%" : "—");
+  const tone = (v) => (v > 0.004 ? "pos" : v < -0.004 ? "neg" : "");
+  const when = (t) => { const d = new Date(t); return isNaN(d) ? "—" : ukTime.format(d); };
+  const ago = (t) => {
+    const m = Math.round((Date.now() - new Date(t).getTime()) / 60000);
+    if (!Number.isFinite(m)) return "";
+    if (m < 1) return "just now";
+    if (m < 60) return `${m} min ago`;
+    const h = Math.floor(m / 60);
+    return h < 48 ? `${h} h ${m % 60} min ago` : `${Math.floor(h / 24)} days ago`;
+  };
+  const el = (tag, attrs = {}, ...kids) => {
+    const node = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === "class") node.className = v;
+      else if (k === "text") node.textContent = v;
+      else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
+      else node.setAttribute(k, v);
+    }
+    for (const kid of kids) if (kid != null) node.append(kid);
+    return node;
+  };
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch { /* private mode */ } },
+  };
+
+  let data = null;
+  let scope = decodeURIComponent(location.hash.slice(1)) || store.get("scope") || "";
+
+  // ------------------------------------------------------------ figures for a scope
+  function sleevesIn(scopeName) {
+    const all = (data.sleeves || []).filter((s) => s && s.live);
+    return scopeName ? all.filter((s) => s.name === scopeName) : all;
+  }
+
+  function holdingsOf(list) {
+    const rows = new Map();
+    for (const s of list) {
+      for (const p of s.live.positions || []) {
+        const r = rows.get(p.symbol) || {symbol: p.symbol, cost: 0, value: 0, units: 0, sleeves: [], opened: p.opened_at};
+        r.cost += p.cost_gbp; r.value += p.value_gbp; r.units += p.units;
+        r.sleeves.push({name: s.name, value: p.value_gbp, pnl: p.pnl_gbp});
+        if (p.opened_at < r.opened) r.opened = p.opened_at;
+        rows.set(p.symbol, r);
+      }
+    }
+    return [...rows.values()].sort((a, b) => b.value - a.value);
+  }
+
+  function renderFigures(list, rows) {
+    const start = (data.starting_capital_gbp || 100) * list.length;
+    const invested = rows.reduce((t, r) => t + r.value, 0);
+    const cost = rows.reduce((t, r) => t + r.cost, 0);
+    const cash = list.reduce((t, s) => t + (s.live.cash_gbp || 0), 0);
+    const total = list.reduce((t, s) => t + (s.live.equity_gbp || 0), 0);
+    const pnl = total - start;
+    $("fInvested").textContent = money(invested);
+    $("fInvestedSub").textContent = rows.length ? `${rows.length} ${rows.length === 1 ? "position" : "positions"} · put in ${money(cost)}` : "Nothing held";
+    $("fCash").textContent = money(cash);
+    $("fCashSub").textContent = total > 0 ? `${Math.round((100 * cash) / total)}% of the total` : " ";
+    $("fTotal").textContent = money(total);
+    $("fTotalSub").textContent = `started with ${money(start)}`;
+    const f = $("fPnl");
+    f.textContent = signed(pnl);
+    f.className = "v " + tone(pnl);
+    $("fPnlSub").textContent = start ? `${pct((100 * pnl) / start)} · open positions ${signed(invested - cost)}` : " ";
+  }
+
+  function renderHoldings(rows, single) {
+    const t = $("holdings");
+    t.replaceChildren();
+    if (!rows.length) {
+      t.append(el("tbody", {}, el("tr", {}, el("td", {class: "empty", text: "No open positions: all cash right now."}))));
+      return;
+    }
+    const top = rows[0].value || 1;
+    t.append(el("thead", {}, el("tr", {},
+      el("th", {text: "Stock"}), el("th", {class: "n", text: "Put in"}), el("th", {class: "n", text: "Worth now"}),
+      el("th", {class: "n", text: "Gain / loss"}), el("th", {text: single ? "Bought" : "Held by"}))));
+    const body = el("tbody");
+    for (const r of rows) {
+      const pnl = r.value - r.cost;
+      const who = single
+        ? el("span", {class: "muted", text: when(r.opened)})
+        : el("details", {}, el("summary", {text: `${r.sleeves.length} ${r.sleeves.length === 1 ? "sleeve" : "sleeves"}`}),
+            el("ul", {}, ...r.sleeves.sort((a, b) => b.value - a.value).map((s) => el("li", {text: `${s.name}: ${money(s.value)}`}))));
+      body.append(el("tr", {},
+        el("td", {}, el("span", {class: "sym", text: r.symbol}),
+          el("div", {class: "share", title: `${Math.round((100 * r.value) / top)}% of the largest holding`}, el("i", {style: `width:${Math.max(2, (100 * r.value) / top)}%`}))),
+        el("td", {class: "n", text: money(r.cost)}),
+        el("td", {class: "n", text: money(r.value)}),
+        el("td", {class: "n " + tone(pnl), text: `${signed(pnl)} (${pct(r.cost ? (100 * pnl) / r.cost : NaN)})`}),
+        el("td", {}, who)));
+    }
+    t.append(body);
+  }
+
+  function curveOf(list) {
+    // add the sleeves up at each saved time; a sleeve with no point yet counts at its starting balance
+    const start = data.starting_capital_gbp || 100;
+    const maps = list.map((s) => new Map((s.live_curve || []).map(([t, e]) => [t, e])));
+    const times = [...new Set(list.flatMap((s) => (s.live_curve || []).map(([t]) => t)))].sort();
+    const last = list.map(() => start);
+    return times.map((t) => {
+      let sum = 0;
+      maps.forEach((m, i) => { if (m.has(t)) last[i] = m.get(t); sum += last[i]; });
+      return [t, sum];
+    });
+  }
+
+  function renderChart(list) {
+    const box = $("chart");
+    box.replaceChildren();
+    const pts = curveOf(list);
+    if (pts.length < 2) {
+      box.append(el("div", {class: "empty", text: "The chart appears after two saves of live results."}));
+      $("chartNote").textContent = "";
+      return;
+    }
+    const start = (data.starting_capital_gbp || 100) * list.length;
+    const vals = pts.map((p) => p[1]);
+    const lo = Math.min(start, ...vals), hi = Math.max(start, ...vals), pad = (hi - lo) * 0.08 || 1;
+    const W = 600, H = 160, y = (v) => H - ((v - (lo - pad)) / (hi - lo + 2 * pad)) * H, x = (i) => (i / (pts.length - 1)) * W;
+    const line = pts.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p[1]).toFixed(1)}`).join("");
+    const end = vals[vals.length - 1];
+    const colour = end >= start ? "var(--pos)" : "var(--neg)";
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", `Value went from ${money(vals[0])} to ${money(end)}`);
+    const add = (tag, attrs, style) => {
+      const n = document.createElementNS(ns, tag);
+      for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, v);
+      n.setAttribute("style", style);  // colours as CSS so the theme tokens apply
+      svg.append(n);
+    };
+    const thin = {"stroke-width": 1, "vector-effect": "non-scaling-stroke"};
+    for (let g = 1; g < 4; g++) add("line", {x1: 0, x2: W, y1: (g * H) / 4, y2: (g * H) / 4, ...thin}, "stroke:var(--line)");
+    add("line", {x1: 0, x2: W, y1: y(start), y2: y(start), "stroke-dasharray": "4 4", ...thin}, "stroke:var(--muted)");
+    add("path", {d: `${line}L${W},${H}L0,${H}Z`}, `fill:${colour};fill-opacity:.12;stroke:none`);
+    add("path", {d: line, "stroke-width": 2, "vector-effect": "non-scaling-stroke", "stroke-linejoin": "round"}, `fill:none;stroke:${colour}`);
+    box.append(svg, el("div", {class: "axis"}, el("span", {text: when(pts[0][0])}), el("span", {text: `dashed line = ${money(start)} start`}), el("span", {text: when(pts[pts.length - 1][0])})));
+    $("chartNote").textContent = `Low ${money(Math.min(...vals))} · high ${money(Math.max(...vals))} · now ${money(end)}`;
+  }
+
+  function renderBees() {
+    const b = data.bees;
+    const panel = $("beesPanel");
+    panel.hidden = !(b && b.bees && b.bees.length);
+    if (panel.hidden) return;
+    const spend = b.spend || {};
+    $("beesNote").textContent = `Jev (${b.model || "?"}) decides buy, hold or sell for every open symbol each minute. Today: ` +
+      `${(spend.decisions || 0).toLocaleString("en-GB")} decisions, $${Number(spend.usd || 0).toFixed(4)} spent` +
+      (b.budget_spent ? ". Daily budget used up, so the bees hold until tomorrow." : ".");
+    const bySleeve = new Map((data.sleeves || []).map((s) => [s.name, s]));
+    $("bees").replaceChildren(...b.bees.map((bee) => {
+      const s = bySleeve.get(`AI bee: ${bee.name}`);
+      const live = (s && s.live) || {};
+      const c = bee.counts || {};
+      const holding = Object.entries(bee.targets || {}).map(([k, w]) => `${k} ${Math.round(w * 100)}%`).join(", ") || "Cash";
+      return el("div", {class: "bee"},
+        el("div", {class: "row"}, el("b", {text: bee.name}), el("span", {class: "num " + tone(live.return_pct), text: live.equity_gbp != null ? `${money(live.equity_gbp)} (${pct(live.return_pct)})` : "—"})),
+        el("div", {class: "row"}, el("span", {class: "muted", text: "Last decided"}), el("span", {text: bee.at ? when(bee.at) : "—"})),
+        el("div", {class: "row"}, el("span", {class: "muted", text: "Buy / hold / sell"}), el("span", {class: "num", text: `${c.buy || 0} / ${c.hold || 0} / ${c.sell || 0}`})),
+        el("div", {class: "row"}, el("span", {class: "muted", text: "Holding"}), el("span", {text: holding})),
+        bee.error ? el("div", {class: "flag", text: bee.error}) : null);
+    }));
+  }
+
+  function renderSleeves() {
+    const q = $("filter").value.trim().toLowerCase();
+    const t = $("sleeves");
+    t.replaceChildren(el("thead", {}, el("tr", {},
+      el("th", {text: "Sleeve"}), el("th", {class: "n", text: "Value"}), el("th", {class: "n", text: "Return"}),
+      el("th", {class: "n", text: "In stocks"}), el("th", {class: "n", text: "Cash"}), el("th", {text: "Holding"}), el("th", {class: "n", text: "Trades"}))));
+    const body = el("tbody");
+    const list = sleevesIn("").filter((s) => !q || s.name.toLowerCase().includes(q) ||
+      (s.live.positions || []).some((p) => p.symbol.toLowerCase().includes(q)));
+    for (const s of list) {
+      const L = s.live;
+      const inStocks = (L.positions || []).reduce((t, p) => t + p.value_gbp, 0);
+      const flag = L.disabled ? "Stopped" : L.halted ? "Paused" : "";
+      const tr = el("tr", {class: "pick" + (s.name === scope ? " sel" : ""), tabindex: "0", title: L.halt_reason || s.description || "",
+        onclick: () => select(s.name), onkeydown: (e) => { if (e.key === "Enter") select(s.name); }},
+        el("td", {}, el("div", {text: s.name}), flag ? el("span", {class: "flag", text: flag}) : null),
+        el("td", {class: "n", text: money(L.equity_gbp)}),
+        el("td", {class: "n " + tone(L.return_pct), text: pct(L.return_pct)}),
+        el("td", {class: "n", text: money(inStocks)}),
+        el("td", {class: "n", text: money(L.cash_gbp)}),
+        el("td", {class: "mono", text: (L.positions || []).map((p) => p.symbol).join(" ") || "—"}),
+        el("td", {class: "n", text: String(L.closed_trades ?? "—")}));
+      body.append(tr);
+    }
+    if (!list.length) body.append(el("tr", {}, el("td", {colspan: "7", class: "muted", text: "No sleeve matches that search."})));
+    t.append(body);
+  }
+
+  function renderTrades() {
+    const rows = (data.recent_trades || []).filter((t) => !scope || t.sleeve === scope).slice(0, 40);
+    const t = $("trades");
+    t.replaceChildren();
+    if (!rows.length) {
+      t.append(el("tbody", {}, el("tr", {}, el("td", {class: "muted", text: "No recent trades for this selection."}))));
+      return;
+    }
+    t.append(el("thead", {}, el("tr", {}, el("th", {text: "Time"}), scope ? null : el("th", {text: "Sleeve"}),
+      el("th", {text: "Side"}), el("th", {text: "Stock"}), el("th", {class: "n", text: "Amount"}), el("th", {class: "n", text: "Gain / loss"}), el("th", {text: "Why"}))));
+    t.append(el("tbody", {}, ...rows.map((r) => el("tr", {},
+      el("td", {class: "num", text: when(r.t)}), scope ? null : el("td", {text: r.sleeve}),
+      el("td", {}, el("span", {class: "side " + (r.side === "buy" ? "buy" : "sell"), text: r.side})),
+      el("td", {class: "sym", text: r.symbol}),
+      el("td", {class: "n", text: money(r.value_gbp)}),
+      el("td", {class: "n " + tone(r.pnl_gbp), text: r.pnl_gbp == null ? "" : signed(r.pnl_gbp)}),
+      el("td", {class: "why", text: r.reason || ""})))));
+  }
+
+  function renderScopeOptions() {
+    const sel = $("scopeSel");
+    const names = sleevesIn("").map((s) => s.name);
+    if (scope && !names.includes(scope)) scope = "";
+    sel.replaceChildren(el("option", {value: "", text: `All ${names.length} sleeves combined`}),
+      ...names.map((n) => el("option", {value: n, text: n})));
+    sel.value = scope;
+  }
+
+  function render() {
+    if (!data) return;
+    const list = sleevesIn(scope);
+    const rows = holdingsOf(list);
+    $("sleeveCount").textContent = `${sleevesIn("").length} paper sleeves`;
+    const s = scope && list[0];
+    $("scopeNote").textContent = s
+      ? (s.description || "") + (s.live.halt_reason ? ` Paused: ${s.live.halt_reason}` : "")
+      : "Every sleeve is a separate paper portfolio that started with £100. Pick one to see only its holdings.";
+    $("holdNote").textContent = scope ? "Amount put in, what it is worth now, and the gain or loss on each position."
+      : "Added up across every sleeve: amount put in, what it is worth now, and which sleeves hold it.";
+    renderFigures(list, rows);
+    renderHoldings(rows, Boolean(scope));
+    renderChart(list);
+    renderBees();
+    renderSleeves();
+    renderTrades();
+  }
+
+  function select(name) {
+    scope = name || "";
+    store.set("scope", scope);
+    history.replaceState(null, "", scope ? "#" + encodeURIComponent(scope) : location.pathname + location.search);
+    $("scopeSel").value = scope;
+    render();
+    window.scrollTo({top: 0, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+  }
+
+  function renderStatus() {
+    if (!data) return;
+    const saved = data.generated_at;
+    const mins = (Date.now() - new Date(saved).getTime()) / 60000;
+    $("updated").textContent = `Updated ${when(saved)} (${ago(saved)})`;
+    const mode = String(data.mode || "paper");
+    const pill = $("mode");
+    pill.className = "pill" + (mode === "alpaca-live" ? " live" : "");
+    pill.lastChild.textContent = mode === "alpaca-live" ? "Real money" : mode === "alpaca-paper" ? "Alpaca paper" : "Paper";
+    const alert = $("alert");
+    if (mins > STALE_MIN) {
+      alert.hidden = false;
+      alert.textContent = `The bot has not saved new results for ${ago(saved).replace(" ago", "")}. It normally saves about every 30 minutes, so check the Trading agent workflow in GitHub Actions.`;
+    } else {
+      alert.hidden = true;
+    }
+  }
+
+  async function load() {
+    $("refresh").disabled = true;
+    try {
+      const bust = Math.floor(Date.now() / REFRESH_MS);
+      const url = DATA_URL + (DATA_URL.includes("?") ? "&" : "?") + "v=" + bust;
+      const res = await fetch(url, {cache: "no-cache"});
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      data = await res.json();
+      renderScopeOptions();
+      render();
+      renderStatus();
+    } catch (err) {
+      const alert = $("alert");
+      alert.hidden = false;
+      alert.textContent = `Could not load the bot's data (${err.message}). Check your connection, then press Refresh.`;
+      if (!data) $("updated").textContent = "No data yet";
+    } finally {
+      $("refresh").disabled = false;
+    }
+  }
+
+  $("scopeSel").addEventListener("change", (e) => select(e.target.value));
+  $("refresh").addEventListener("click", load);
+  $("filter").addEventListener("input", renderSleeves);
+  addEventListener("hashchange", () => { const h = decodeURIComponent(location.hash.slice(1)); if (h !== scope) select(h); });
+  setInterval(load, REFRESH_MS);
+  setInterval(renderStatus, 60 * 1000);
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
+  load();
+})();
+</script>
+</body>
+</html>

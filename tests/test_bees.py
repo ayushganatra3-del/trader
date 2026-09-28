@@ -240,3 +240,42 @@ def test_doctor_fails_when_there_is_nothing_to_ask_jev(monkeypatch, capsys):
     monkeypatch.setattr(Hive, "refresh", lambda self, now, fx: ({}, {}, {"BTC-USD": "timed out"}))
     assert cli._check_bees(Config()) is False  # crypto always trades, so no data means broken feeds
     assert "jev FAIL" in capsys.readouterr().out
+
+
+def test_only_symbols_trading_now_are_fetched():
+    from agent.data import MarketData
+
+    config = hive_config()
+    fetched, broken = [], set()
+
+    def fetcher(symbol, interval, range_, now=None):
+        if symbol == "GBPUSD=X":  # the feed's half-hourly FX refresh
+            return minute_bars([symbol], now.floor("min"))[symbol]
+        fetched.append(symbol)
+        if symbol in broken:
+            raise RuntimeError("rate limited")
+        return minute_bars([symbol], now.floor("min"))[symbol]
+
+    feed = MarketData(dataclasses.replace(config, interval="1m", history_range="1d"), None, fetcher=fetcher)
+    hive = Hive(config, client=FakeJev(), data=feed)
+    session = END + pd.Timedelta(seconds=30)
+    hive.run({"sleeves": {}}, session, lambda c: 1 / 1.3, lambda n: config.risk)
+    assert sorted(fetched) == ["BTC-USD", "NVDA", "SPY"]
+    broken.add("NVDA")  # NVDA fails once while the market is open...
+    hive.run({"sleeves": {}}, session + pd.Timedelta(minutes=2), lambda c: 1 / 1.3, lambda n: config.risk)
+    fetched.clear()
+    broken.clear()
+    close = pd.Timestamp("2026-09-24 20:00:30", tz="UTC")  # the US close: one last fetch for the closing bar
+    hive.run({"sleeves": {}}, close, lambda c: 1 / 1.3, lambda n: config.risk)
+    assert {"SPY", "NVDA"} <= set(fetched)
+    assert hive.data.bars["SPY"].index[-1] == pd.Timestamp("2026-09-24 19:59", tz="UTC")
+    broken.add("NVDA")
+    hive.run({"sleeves": {}}, close + pd.Timedelta(minutes=2), lambda c: 1 / 1.3, lambda n: config.risk)
+    fetched.clear()
+    night = pd.Timestamp("2026-09-24 23:00:30", tz="UTC")  # ...then the market is shut: its stale error is dropped
+    state = {"sleeves": {}}
+    hive.run(state, night, lambda c: 1 / 1.3, lambda n: config.risk)
+    assert fetched == ["BTC-USD"] and "Bizzy" in state["bees"]  # stocks are not asked for all night
+    fetched.clear()
+    hive.run(state, END + pd.Timedelta(days=1, seconds=30), lambda c: 1 / 1.3, lambda n: config.risk)
+    assert {"SPY", "NVDA"} <= set(fetched)  # and come back at the next session
