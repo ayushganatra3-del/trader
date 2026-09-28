@@ -264,7 +264,15 @@ def test_only_symbols_trading_now_are_fetched():
     broken.add("NVDA")  # NVDA fails once while the market is open...
     hive.run({"sleeves": {}}, session + pd.Timedelta(minutes=2), lambda c: 1 / 1.3, lambda n: config.risk)
     fetched.clear()
-    night = pd.Timestamp("2026-09-24 23:00:30", tz="UTC")  # ...then the market closes: its stale error is dropped
+    broken.clear()
+    close = pd.Timestamp("2026-09-24 20:00:30", tz="UTC")  # the US close: one last fetch for the closing bar
+    hive.run({"sleeves": {}}, close, lambda c: 1 / 1.3, lambda n: config.risk)
+    assert {"SPY", "NVDA"} <= set(fetched)
+    assert hive.data.bars["SPY"].index[-1] == pd.Timestamp("2026-09-24 19:59", tz="UTC")
+    broken.add("NVDA")
+    hive.run({"sleeves": {}}, close + pd.Timedelta(minutes=2), lambda c: 1 / 1.3, lambda n: config.risk)
+    fetched.clear()
+    night = pd.Timestamp("2026-09-24 23:00:30", tz="UTC")  # ...then the market is shut: its stale error is dropped
     state = {"sleeves": {}}
     hive.run(state, night, lambda c: 1 / 1.3, lambda n: config.risk)
     assert fetched == ["BTC-USD"] and "Bizzy" in state["bees"]  # stocks are not asked for all night

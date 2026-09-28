@@ -192,12 +192,14 @@ class Hive:
     def refresh(self, now: pd.Timestamp, fx_to_gbp) -> tuple[dict[str, Quote], dict[str, dict], dict[str, str]]:
         """Fresh 1-minute bars for the symbols trading now -> (quotes, per-symbol numbers for Jev, data errors)."""
         open_now = {a.symbol for a in self.assets if is_open(a.kind, now)}
-        # fetch only what trades now: closed stocks have no fresh bars, so asking every minute (all weekend) would
-        # only burn Yahoo's rate limit, which the main 5-minute feed shares
+        # fetch only what trades now, plus a few minutes after the close for the closing bar: closed stocks have no
+        # fresh bars, so asking every minute (all weekend) would only burn Yahoo's rate limit, which the main
+        # 5-minute feed shares
+        fetch = open_now | {a.symbol for a in self.assets if is_open(a.kind, now - pd.Timedelta(minutes=5))}
         feed = self.feed_config
-        self.data.set_universe(dataclasses.replace(feed, universe=tuple(a for a in feed.universe if a.symbol in open_now)),
-                               open_now)
-        self.data.errors = {s: e for s, e in self.data.errors.items() if s in open_now}  # closed symbols' old errors
+        self.data.set_universe(dataclasses.replace(feed, universe=tuple(a for a in feed.universe if a.symbol in fetch)),
+                               fetch)
+        self.data.errors = {s: e for s, e in self.data.errors.items() if s in fetch}  # closed symbols' old errors
         errors = self.data.refresh(now)
         quotes = self.quotes(now, fx_to_gbp)
         market = {s: n for s in sorted(open_now) if s in quotes and quotes[s].tradable
