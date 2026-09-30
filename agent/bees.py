@@ -9,6 +9,12 @@ question per symbol that is trading right now: buy, hold or sell. With the
 default universe that is about 100 decisions a minute while US markets are
 open (3 bees x 32 symbols), and 15 a minute overnight, when only crypto trades.
 
+Answers are noisy from one minute to the next, and trading on each one paid
+more in fees than any move earned. So the bees act only on steady, confident
+calls: each symbol's buy and sell probabilities are averaged over recent
+answers, a new position is held for a minimum time unless its stop-loss hits,
+and a sold symbol isn't bought straight back.
+
 Each bee trades its own £100 paper sleeve at the latest 1-minute prices. The
 bees only run forward, only when OPENROUTER_API_KEY is set, and stop calling
 Jev (holding what they have) once the daily budget is spent.
@@ -47,7 +53,11 @@ class Bee:
     cap: float  # largest position, as a fraction of the sleeve
     max_positions: int
     max_exposure: float  # at most this much invested; the rest stays in cash
-    min_prob: float  # buy only when Jev gives "buy" at least this probability
+    min_prob: float  # buy only when Jev's (smoothed) "buy" probability is at least this
+    sell_prob: float  # sell only when its (smoothed) "sell" probability is at least this
+    hold_minutes: float  # a new position is kept at least this long, unless its stop-loss hits
+    stop_loss: float  # exit at this loss on the position (fees included), whatever its age
+    cooldown_minutes: float  # a sold symbol isn't bought back for this long
 
     @property
     def sleeve(self) -> str:
@@ -56,12 +66,21 @@ class Bee:
 
 BEES = (
     Bee("Bizzy", "Bizzy, a busy momentum trader: buy what is rising fast on strong volume, sell as soon as the "
-                 "move stalls, and rotate into whatever is leading now.", 0.25, 4, 1.0, 0.5),
+                 "move stalls, and rotate into whatever is leading now.",
+        cap=0.25, max_positions=4, max_exposure=1.0, min_prob=0.55, sell_prob=0.5, hold_minutes=10,
+        stop_loss=0.02, cooldown_minutes=20),
     Bee("Breezy", "Breezy, a calm, cautious investor: only buy index ETFs and large caps in steady uptrends, avoid "
-                  "3x ETFs and small coins, keep plenty of cash and trade rarely.", 0.2, 3, 0.6, 0.65),
-    Bee("Boozy", "Boozy, a reckless speculator: go big on the most volatile names (3x ETFs, COIN, MSTR, BITX, "
-                 "ETHU, crypto) and chase the biggest moves.", 0.5, 2, 1.0, 0.4),
+                  "3x ETFs and small coins, keep plenty of cash and trade rarely.",
+        cap=0.2, max_positions=3, max_exposure=0.6, min_prob=0.6, sell_prob=0.6, hold_minutes=60,
+        stop_loss=0.03, cooldown_minutes=60),
+    Bee("Boozy", "Boozy, a reckless speculator: go all in on the single most explosive name (3x ETFs, COIN, MSTR, "
+                 "BITX, ETHU, crypto) and ride the biggest moves.",
+        cap=1.0, max_positions=1, max_exposure=1.0, min_prob=0.5, sell_prob=0.5, hold_minutes=15,
+        stop_loss=0.04, cooldown_minutes=15),
 )
+
+SMOOTHING = 0.3  # weight of the newest answer in each symbol's running buy/sell probability (~3-minute memory)
+MEMORY = pd.Timedelta(minutes=10)  # older running probabilities start afresh
 
 MENU = {
     "buy": "Buy now, or add: for this trader, the price is likely to rise over the next few minutes",
@@ -95,29 +114,86 @@ def live_numbers(bars: pd.DataFrame) -> dict | None:
             "volume_vs_hour": round(float(volume.tail(5).mean() / base), 2) if base > 0 else None}
 
 
-def to_weights(bee: Bee, answers: dict, keys: dict[str, str], held: dict[str, float]) -> tuple[dict, dict]:
-    """Jev's answers -> target weights. Returns (targets, {symbol: [choice, buy probability]})."""
-    targets = {s: w for s, w in held.items() if w > 1e-9}  # anything not asked about is left alone
+@dataclass(frozen=True)
+class Holding:
+    weight: float  # fraction of the sleeve
+    pnl: float | None  # gain on the position after fees, as a fraction
+    age_minutes: float
+
+
+def _prob(probabilities, option: str) -> float:
+    try:
+        return float((probabilities or {}).get(option) or 0.0)
+    except (TypeError, ValueError, AttributeError):
+        return 0.0
+
+
+def plan(bee: Bee, answers: dict, keys: dict[str, str], book: dict[str, Holding], memory: dict,
+         now: pd.Timestamp) -> tuple[dict, dict]:
+    """Jev's answers -> target weights, trading only on steady, confident calls.
+
+    Acting on every minute's answer churned the first bees into the ground: fees were nearly all of their
+    losses. So each symbol's buy and sell probabilities are smoothed over the bee's recent answers, a buy needs
+    both the latest answer and the running probability, a new position is held at least ``hold_minutes`` unless
+    its stop-loss hits, and a sold symbol isn't bought back until its cooldown ends.
+    ``memory`` (running probabilities and sale times) is updated in place.
+    Returns (targets, {symbol: [choice, running buy probability, what was done]})."""
+    stamp = now.isoformat()
+    probs, sold = memory.setdefault("probs", {}), memory.setdefault("sold", {})
+    targets = {s: h.weight for s, h in book.items() if h.weight > 1e-9}  # anything not asked about is left alone
+    locked = {s for s in targets if book[s].age_minutes < bee.hold_minutes}
     decisions = {}
     for key, symbol in keys.items():
         answer = answers.get(key) if isinstance(answers, dict) else None
         if not isinstance(answer, dict):
             continue
-        choice = answer.get("choice")
-        try:
-            p_buy = float((answer.get("probabilities") or {}).get("buy") or 0.0)
-        except (TypeError, ValueError):
-            p_buy = 0.0
-        decisions[symbol] = [choice, round(p_buy, 3)]
-        if choice == "buy" and p_buy >= bee.min_prob:
-            targets[symbol] = max(targets.get(symbol, 0.0), bee.cap * p_buy)  # a buy never shrinks a position
-        elif choice == "sell":
-            targets.pop(symbol, None)
-    targets = dict(sorted(targets.items(), key=lambda kv: -kv[1])[:bee.max_positions])
-    total = sum(targets.values())
-    if total > bee.max_exposure:
-        targets = {s: w * bee.max_exposure / total for s, w in targets.items()}
-    return {s: round(w, 4) for s, w in targets.items()}, decisions
+        choice, probabilities = answer.get("choice"), answer.get("probabilities")
+        p_buy, p_sell = _prob(probabilities, "buy"), _prob(probabilities, "sell")
+        prev = probs.get(symbol)
+        if prev and now - pd.Timestamp(prev[2]) <= MEMORY:
+            p_buy_avg = SMOOTHING * p_buy + (1 - SMOOTHING) * prev[0]
+            p_sell_avg = SMOOTHING * p_sell + (1 - SMOOTHING) * prev[1]
+        else:
+            p_buy_avg, p_sell_avg = p_buy, p_sell
+        probs[symbol] = [round(p_buy_avg, 4), round(p_sell_avg, 4), stamp]
+        held = book.get(symbol)
+        note = ""
+        if symbol in targets:
+            if held.pnl is not None and held.pnl <= -bee.stop_loss:
+                note = f"stop-loss at {100 * held.pnl:+.1f}%"
+            elif symbol in locked:
+                note = f"holding ({held.age_minutes:.0f} of {bee.hold_minutes:.0f} min)"
+            elif choice == "sell" and p_sell_avg >= bee.sell_prob:
+                note = f"sell (sell p={p_sell_avg:.2f}) after {held.age_minutes:.0f} min"
+            elif choice == "buy" and p_buy_avg >= bee.min_prob:
+                targets[symbol] = max(targets[symbol], bee.cap * p_buy_avg)  # a buy never shrinks a position
+                note = f"add (buy p={p_buy_avg:.2f})"
+            if note.startswith(("stop", "sell")):
+                targets.pop(symbol)
+                locked.discard(symbol)
+        elif choice == "buy" and min(p_buy, p_buy_avg) >= bee.min_prob:
+            if symbol in sold and now - pd.Timestamp(sold[symbol]) < pd.Timedelta(minutes=bee.cooldown_minutes):
+                note = "cooling down after a sale"
+            else:
+                targets[symbol] = bee.cap * p_buy_avg
+                note = f"buy (buy p={p_buy_avg:.2f})"
+        decisions[symbol] = [choice, round(p_buy_avg, 3), note]
+    # positions still inside their holding time come first, then the strongest
+    keep = sorted(targets, key=lambda s: (s not in locked, -targets[s]))[:bee.max_positions]
+    targets = {s: targets[s] for s in keep}
+    fixed = sum(w for s, w in targets.items() if s in locked)
+    free = sum(w for s, w in targets.items() if s not in locked)
+    if fixed + free > bee.max_exposure and free > 0:  # trim the rest, never the positions being held
+        scale = max(0.0, bee.max_exposure - fixed) / free
+        targets = {s: (w if s in locked else w * scale) for s, w in targets.items()}
+    targets = {s: round(w, 4) for s, w in targets.items() if w > 1e-4}
+    for symbol in book:
+        if book[symbol].weight > 1e-9 and symbol not in targets:
+            sold[symbol] = stamp
+    for table in (probs, sold):  # forget what is a day old
+        for symbol in [s for s, v in table.items() if now - pd.Timestamp(v[2] if isinstance(v, list) else v) > pd.Timedelta(days=1)]:
+            del table[symbol]
+    return targets, decisions
 
 
 class JevError(RuntimeError):
@@ -206,10 +282,12 @@ class Hive:
                   and (n := live_numbers(self.data.bars.get(s))) is not None}
         return quotes, market, errors
 
-    def ask(self, bee: Bee, market: dict[str, dict], sleeve: Sleeve, usage: dict) -> tuple[dict, dict]:
-        """One bee's decisions -> (target weights, {symbol: [choice, buy probability]}).
+    def ask(self, bee: Bee, market: dict[str, dict], sleeve: Sleeve, usage: dict, memory: dict,
+            now: pd.Timestamp) -> tuple[dict, dict]:
+        """One bee's decisions -> (target weights, {symbol: [choice, running buy probability, what was done]}).
 
-        ``usage`` ({"usd", "calls"}) is updated after every request, so paid batches count even if a later one fails."""
+        ``usage`` ({"usd", "calls"}) is updated after every request, so paid batches count even if a later one fails;
+        ``memory`` keeps the bee's running probabilities and recent sales between rounds."""
         held = sleeve.weights()
         positions = sleeve.data["positions"]
         state = {"trader": bee.strategy, "cash_pct": round(100 * sleeve.data["cash_gbp"] / max(sleeve.data["equity_gbp"], 1e-9), 1),
@@ -234,7 +312,14 @@ class Hive:
             usage["usd"] += cost
             usage["calls"] += 1
             answers.update(part)
-        return to_weights(bee, answers, keys, held)
+        book = {}
+        for symbol, position in positions.items():
+            mark = sleeve.data["last_marks"].get(symbol)
+            opened = pd.Timestamp(position["opened_at"])
+            book[symbol] = Holding(held.get(symbol, 0.0),
+                                   position["units"] * mark / position["cost_gbp"] - 1 if mark and position["cost_gbp"] > 0 else None,
+                                   (now - (opened if opened.tzinfo else opened.tz_localize("UTC"))) / pd.Timedelta(minutes=1))
+        return plan(bee, answers, keys, book, memory, now)
 
     def run(self, state: dict, now: pd.Timestamp, fx_to_gbp, risk_for) -> list[dict]:
         """One round: fresh 1-minute bars, one Jev call per bee, then each bee's sleeve trades."""
@@ -257,10 +342,13 @@ class Hive:
             sleeves[bee.name] = sleeve
 
         usage = {bee.name: {"usd": 0.0, "calls": 0} for bee in BEES}
+        memory = store.setdefault("memory", {})
+        for bee in BEES:
+            memory.setdefault(bee.name, {})
 
         def ask(bee):
             try:
-                return self.ask(bee, market, sleeves[bee.name], usage[bee.name]), None
+                return self.ask(bee, market, sleeves[bee.name], usage[bee.name], memory[bee.name], now), None
             except Exception as error:  # an API problem must not stop trading
                 return None, error
 
@@ -287,7 +375,7 @@ class Hive:
                     log.warning("%s: Jev call failed: %s", bee.sleeve, error)
                     info = {**info, "error": str(error)[:300], "error_at": now_iso}
             reason = lambda symbol, side, d=info.get("decisions") or {}: (  # noqa: E731
-                f"Jev: {d[symbol][0]} (buy p={d[symbol][1]:.2f})" if symbol in d else "")
+                f"Jev: {d[symbol][2] or d[symbol][0]}" if symbol in d and len(d[symbol]) > 2 else "")
             trades.extend(sleeve.rebalance(targets, quotes, risk_for(bee.sleeve), now_iso, today, reason))
             state["sleeves"][bee.sleeve] = sleeve.data
             store[bee.name] = info

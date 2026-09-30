@@ -8,14 +8,16 @@ import pandas as pd
 import pytest
 
 from agent import bees
-from agent.bees import BEES, Bee, Hive, JevClient, JevError, live_numbers, question_key, to_weights
+from agent.bees import BEES, Bee, Hive, Holding, JevClient, JevError, live_numbers, plan, question_key
 from agent.config import Config, _crypto, _us
 from agent.data import StaticData
 from agent.engine import Engine
 
 from conftest import END
 
-BEE = Bee("Test", "a test trader", cap=0.25, max_positions=3, max_exposure=0.6, min_prob=0.5)
+BEE = Bee("Test", "a test trader", cap=0.25, max_positions=3, max_exposure=0.6, min_prob=0.5, sell_prob=0.5,
+          hold_minutes=10, stop_loss=0.03, cooldown_minutes=15)
+T0 = pd.Timestamp("2026-09-24 15:00", tz="UTC")
 
 
 def minute_bars(symbols, end, minutes=120, seed=1):
@@ -43,30 +45,95 @@ class FakeJev:
         answers = {}
         for key in questions:
             choice, p = self.picks.get(key, ("hold", 0.1))
-            answers[key] = {"type": "choice", "choice": choice, "confidence": p,
-                            "probabilities": {"buy": p if choice == "buy" else 0.1, "hold": 0.5, "sell": 0.1}}
+            answers[key] = {"type": "choice", "confidence": p, **ans(choice, p)}
         return answers, self.cost
 
 
-def test_answers_become_capped_weights():
-    keys = {question_key(s): s for s in ("AAA", "BBB", "CCC", "DDD", "BTC-USD")}
-    answers = {"AAA": {"choice": "buy", "probabilities": {"buy": 0.8}},
-               "BBB": {"choice": "buy", "probabilities": {"buy": 0.4}},  # below min_prob: no buy
-               "CCC": {"choice": "sell", "probabilities": {"buy": 0.0}},
-               "DDD": {"choice": "hold", "probabilities": {"buy": 0.2}},
-               "BTC_USD": {"choice": "buy", "probabilities": {"buy": 1.0}}}
-    held = {"CCC": 0.2, "DDD": 0.1, "EEE": 0.05}  # EEE is not open, so it is not asked about
-    targets, decisions = to_weights(BEE, answers, keys, held)
-    assert "CCC" not in targets and "BBB" not in targets
-    assert decisions["AAA"] == ["buy", 0.8] and decisions["CCC"][0] == "sell"
-    # AAA 0.2, BTC 0.25, DDD 0.1 kept, EEE 0.05 dropped by the 3-position limit; total 0.55 <= 0.6
-    assert set(targets) == {"AAA", "BTC-USD", "DDD"}
-    assert targets["AAA"] == pytest.approx(0.2) and targets["BTC-USD"] == pytest.approx(0.25)
-    assert sum(targets.values()) <= BEE.max_exposure + 1e-9
-    # a buy never shrinks a bigger position, and exposure is scaled down to the limit
-    targets, _ = to_weights(BEE, {"AAA": {"choice": "buy", "probabilities": {"buy": 0.6}}}, {"AAA": "AAA"},
-                            {"AAA": 0.3, "DDD": 0.5})
-    assert targets["AAA"] / targets["DDD"] == pytest.approx(0.3 / 0.5) and sum(targets.values()) == pytest.approx(0.6)
+def ans(choice, p):
+    return {"choice": choice, "probabilities": {"buy": p if choice == "buy" else 0.1, "hold": 0.3,
+                                                "sell": p if choice == "sell" else 0.1}}
+
+
+def test_buys_need_a_confident_call_and_fit_the_limits():
+    keys = {question_key(s): s for s in ("AAA", "BBB", "CCC", "BTC-USD")}
+    answers = {"AAA": ans("buy", 0.8), "BBB": ans("buy", 0.4), "CCC": ans("hold", 0.2), "BTC_USD": ans("buy", 1.0)}
+    book = {"CCC": Holding(0.2, 0.01, 30), "EEE": Holding(0.05, 0.0, 30)}  # EEE is closed, so it is not asked about
+    memory = {}
+    targets, decisions = plan(BEE, answers, keys, book, memory, T0)
+    # the strongest three (BTC 0.25, AAA 0.2, CCC 0.2) trimmed together to the 60% limit; EEE makes way
+    assert set(targets) == {"AAA", "BTC-USD", "CCC"} and sum(targets.values()) == pytest.approx(0.6, abs=1e-3)
+    assert targets["BTC-USD"] / targets["AAA"] == pytest.approx(0.25 / 0.2, rel=1e-3)
+    assert decisions["BBB"] == ["buy", 0.4, ""] and decisions["AAA"][2] == "buy (buy p=0.80)"
+    assert "EEE" in memory["sold"]
+
+
+def test_a_one_minute_blip_is_ignored_but_a_steady_call_gets_through():
+    memory, keys = {}, {"AAA": "AAA"}
+    for minute in range(3):
+        plan(BEE, {"AAA": ans("hold", 0.1)}, keys, {}, memory, T0 + pd.Timedelta(minutes=minute))
+    targets, _ = plan(BEE, {"AAA": ans("buy", 0.9)}, keys, {}, memory, T0 + pd.Timedelta(minutes=3))
+    assert targets == {}  # running buy probability 0.34
+    targets, decisions = plan(BEE, {"AAA": ans("buy", 0.9)}, keys, {}, memory, T0 + pd.Timedelta(minutes=4))
+    assert "AAA" in targets and decisions["AAA"][1] == pytest.approx(0.508, abs=1e-3)
+
+
+def test_positions_are_held_then_sold_only_on_a_confident_call():
+    memory, keys = {}, {"AAA": "AAA"}
+    targets, decisions = plan(BEE, {"AAA": ans("sell", 0.9)}, keys, {"AAA": Holding(0.25, 0.005, 3)}, memory, T0)
+    assert targets == {"AAA": 0.25} and decisions["AAA"][2] == "holding (3 of 10 min)"
+    later = T0 + pd.Timedelta(minutes=9)
+    targets, _ = plan(BEE, {"AAA": ans("hold", 0.2)}, keys, {"AAA": Holding(0.25, 0.005, 12)}, memory, later)
+    assert targets == {"AAA": 0.25}  # "hold" never sells
+    targets, decisions = plan(BEE, {"AAA": ans("sell", 0.9)}, keys, {"AAA": Holding(0.25, 0.005, 13)}, memory,
+                              later + pd.Timedelta(minutes=1))
+    assert targets == {} and decisions["AAA"][2].startswith("sell")
+
+
+def test_stop_loss_exits_inside_the_holding_time_and_blocks_a_quick_rebuy():
+    memory, keys = {}, {"AAA": "AAA"}
+    targets, decisions = plan(BEE, {"AAA": ans("buy", 0.9)}, keys, {"AAA": Holding(0.25, -0.035, 2)}, memory, T0)
+    assert targets == {} and decisions["AAA"][2] == "stop-loss at -3.5%"
+    targets, decisions = plan(BEE, {"AAA": ans("buy", 0.95)}, keys, {}, memory, T0 + pd.Timedelta(minutes=5))
+    assert targets == {} and decisions["AAA"][2] == "cooling down after a sale"
+    targets, _ = plan(BEE, {"AAA": ans("buy", 0.95)}, keys, {}, memory, T0 + pd.Timedelta(minutes=16))
+    assert "AAA" in targets
+
+
+def test_positions_being_held_are_never_trimmed_for_new_buys():
+    book = {"AAA": Holding(0.4, 0.0, 2)}
+    answers = {k: ans("buy", 0.9) for k in ("BBB", "CCC", "DDD")}
+    targets, _ = plan(BEE, answers, {k: k for k in answers}, book, {}, T0)
+    assert targets["AAA"] == 0.4 and len(targets) == 3 and sum(targets.values()) == pytest.approx(0.6, abs=1e-3)
+
+
+def test_flip_flopping_answers_no_longer_churn_the_sleeves():
+    class ReplayFeed(StaticData):
+        def __init__(self, config, bars):
+            super().__init__(config, bars, gbpusd=1.3)
+            self.full = bars
+
+        def refresh(self, now=None):
+            self.bars = {s: b[b.index + pd.Timedelta(minutes=1) <= now] for s, b in self.full.items()}
+            return {}
+
+    class FlipFlop(FakeJev):
+        """Buy one minute, sell the next, for everything: the noise that churned the first bees."""
+
+        def decide(self, state, questions):
+            self.calls.append((state, questions))
+            turn = sum(1 for s, _ in self.calls if s["trader"] == state["trader"])
+            return {key: ans("buy" if turn % 2 else "sell", 0.9) for key in questions}, 0.0
+
+    config = hive_config()
+    start = END - pd.Timedelta(minutes=60)
+    feed = ReplayFeed(dataclasses.replace(config, interval="1m"), minute_bars(config.symbols, END + pd.Timedelta(minutes=1), 200))
+    hive = Hive(config, client=FlipFlop(), data=feed)
+    state, trades = {"sleeves": {}}, []
+    for minute in range(60):
+        trades += hive.run(state, start + pd.Timedelta(minutes=minute, seconds=30), lambda c: 1 / 1.3, lambda n: config.risk)
+    per_bee = {b.sleeve: sum(1 for t in trades if t["sleeve"] == b.sleeve) for b in BEES}
+    assert per_bee["AI bee: Bizzy"] > 0  # it still trades...
+    assert all(n <= 5 * 3 for n in per_bee.values())  # ...but a handful of times an hour per symbol, not every minute
 
 
 def test_live_numbers_read_only_the_bars_given():

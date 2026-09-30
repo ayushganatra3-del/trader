@@ -86,7 +86,7 @@ Three AI traders race each other, as in Creator Magic's "3 AI trading bots" vide
 
 - **Bizzy** is a busy momentum trader.
 - **Breezy** is a calm, cautious investor.
-- **Boozy** is a reckless speculator in 3x ETFs, crypto stocks and coins.
+- **Boozy** is a reckless speculator that goes all in on one explosive name: a 3x ETF, a crypto stock or a coin.
 
 Each one works like this:
 
@@ -94,13 +94,20 @@ Each one works like this:
 - Jev picks **buy, hold or sell** for each symbol, with probabilities. That is about **100 decisions a minute** while US markets are open (3 bees × 32 symbols). Overnight it is 15 a minute, because only crypto trades.
 - Each bee gets its own £100 paper sleeve on the leaderboard, trading at the latest 1-minute prices.
 
-A buy is sized by Jev's probability, within each bee's limits:
+Trading on every minute's answer churned the first bees into the ground: in two days Bizzy and Boozy each lost about 17%, almost all of it in fees. So the bees act only on steady, confident calls:
 
-| Bee | Largest position | Most positions | Most invested |
-|---|---:|---:|---:|
-| Bizzy | 25% | 4 | 100% |
-| Breezy | 20% | 3 | 60% |
-| Boozy | 50% | 2 | 100% |
+- each symbol's buy and sell probabilities are averaged over the last few minutes of answers, so a one-minute blip does nothing;
+- a buy needs both the latest answer and the average to clear the bee's bar, and it is sized by that probability;
+- a new position is held for a minimum time, and a stop-loss closes it early if it drops too far;
+- a sold symbol isn't bought straight back.
+
+Each bee's limits:
+
+| Bee | Largest position | Most positions | Most invested | Holds at least | Stop-loss |
+|---|---:|---:|---:|---:|---:|
+| Bizzy | 25% | 4 | 100% | 10 min | −2% |
+| Breezy | 20% | 3 | 60% | 60 min | −3% |
+| Boozy | 100% (all in) | 1 | 100% | 15 min | −4% |
 
 To switch the bees on, add the repository secret `OPENROUTER_API_KEY` (a key from [openrouter.ai](https://openrouter.ai) with credit).
 
