@@ -8,7 +8,7 @@
    "name": "EMA 9/21 cross",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 9.195085392110007,
+   "cash_gbp": 0.0,
    "positions": {
     "TSLA": {
      "units": 0.034543315505384746,
@@ -24,19 +24,12 @@
      "entry_price": 606.0709838867188,
      "realised_gbp": 0.014330579523298859
     },
-    "LABU": {
-     "units": 0.044910742076585304,
-     "cost_gbp": 9.24430934721638,
-     "opened_at": "2026-09-30T17:46:05.000162Z",
-     "entry_price": 272.8900146484375,
-     "realised_gbp": -0.0337207604271299
-    },
     "SOXL": {
-     "units": 0.10030364240539219,
-     "cost_gbp": 11.127730773558,
+     "units": 0.0664013457830313,
+     "cost_gbp": 7.366594882857225,
      "opened_at": "2026-09-30T17:50:05.000147Z",
      "entry_price": 147.07989501953125,
-     "realised_gbp": 0.0
+     "realised_gbp": -0.012780798681311545
     },
     "TECL": {
      "units": 0.051946575385615215,
@@ -58,15 +51,36 @@
      "opened_at": "2026-09-30T18:25:05.000190Z",
      "entry_price": 33.95000076293945,
      "realised_gbp": 0.0
+    },
+    "AAPL": {
+     "units": 0.032200663543046036,
+     "cost_gbp": 8.176831951986768,
+     "opened_at": "2026-09-30T18:45:05.000153Z",
+     "entry_price": 336.7074890136719,
+     "realised_gbp": 0.0
+    },
+    "MSTR": {
+     "units": 0.07858073216564061,
+     "cost_gbp": 9.176577484693187,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 154.84500122070312,
+     "realised_gbp": 0.0
+    },
+    "COIN": {
+     "units": 0.033215790383107076,
+     "cost_gbp": 4.698424849286329,
+     "opened_at": "2026-09-30T19:00:05.000147Z",
+     "entry_price": 187.55999755859375,
+     "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -26.430052374412575,
-   "fees_gbp": 26.461349174674762,
-   "closed_trades": 323,
+   "realised_gbp": -26.578748718473452,
+   "fees_gbp": 26.48356778158012,
+   "closed_trades": 325,
    "wins": 55,
-   "losses": 268,
+   "losses": 270,
    "gross_win_gbp": 5.588737006553029,
-   "gross_loss_gbp": 32.048148285151484,
+   "gross_loss_gbp": 32.217784590958175,
    "peak_equity_gbp": 101.03420206936936,
    "max_drawdown_pct": -27.652,
    "day": "2026-09-30",
@@ -74,22 +88,24 @@
    "halted_day": "2026-09-26",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 73.62775471152878,
+   "equity_gbp": 73.57522476143947,
    "last_marks": {
-    "TSLA": 265.51121608213236,
-    "AMD": 459.6913250520687,
-    "LABU": 205.31732888688165,
-    "SOXL": 111.37247521560265,
-    "TECL": 177.16703973033742,
-    "NVDA": 173.83528922932985,
-    "SQQQ": 25.57232579843563
+    "TSLA": 266.30556188061473,
+    "AMD": 461.9120243078763,
+    "SOXL": 111.80967480649363,
+    "TECL": 178.0150535010146,
+    "NVDA": 173.91066133001408,
+    "SQQQ": 25.51202409221523,
+    "AAPL": 253.6013429932712,
+    "MSTR": 116.45294356671394,
+    "COIN": 141.1999517638109
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 82.71436286538196,
    "month": "2026-09",
    "month_start_equity_gbp": 96.48946100083897,
-   "loss_streak": 11
+   "loss_streak": 13
   },
   "EMA 20/50 cross": {
    "name": "EMA 20/50 cross",
@@ -141,19 +157,19 @@
    "gross_win_gbp": 3.314761288988377,
    "gross_loss_gbp": 20.363829304496605,
    "peak_equity_gbp": 101.62842650295136,
-   "max_drawdown_pct": -18.489,
+   "max_drawdown_pct": -18.505,
    "day": "2026-09-30",
    "day_start_equity_gbp": 86.7024835332414,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 82.9877222353776,
+   "equity_gbp": 83.1855426875085,
    "last_marks": {
-    "NVDA": 173.83528922932985,
-    "AAPL": 253.66467258069184,
-    "TSLA": 265.51121608213236,
-    "AMD": 459.6913250520687,
-    "SOXL": 111.37247521560265
+    "NVDA": 173.91066133001408,
+    "AAPL": 253.6013429932712,
+    "TSLA": 266.30556188061473,
+    "AMD": 461.9120243078763,
+    "SOXL": 111.80967480649363
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -174,13 +190,6 @@
      "opened_at": "2026-09-30T17:30:05.000186Z",
      "entry_price": 351.54998779296875,
      "realised_gbp": 0.039799247953278716
-    },
-    "LABU": {
-     "units": 0.06298349913950402,
-     "cost_gbp": 12.955639985643753,
-     "opened_at": "2026-09-30T17:46:05.000162Z",
-     "entry_price": 272.8900146484375,
-     "realised_gbp": -0.04383107089462612
     },
     "TECL": {
      "units": 0.07299104780685403,
@@ -209,154 +218,217 @@
      "opened_at": "2026-09-30T18:15:05.000173Z",
      "entry_price": 147.65499877929688,
      "realised_gbp": 0.0
+    },
+    "AAPL": {
+     "units": 0.0435211767619604,
+     "cost_gbp": 11.042708656375927,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 336.4399108886719,
+     "realised_gbp": 0.0
+    },
+    "MSTR": {
+     "units": 0.014912744869234896,
+     "cost_gbp": 1.7414950844888093,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 154.84500122070312,
+     "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -22.375622629275846,
-   "fees_gbp": 21.513954388886486,
-   "closed_trades": 246,
+   "realised_gbp": -22.547058874054862,
+   "fees_gbp": 21.526738595823403,
+   "closed_trades": 247,
    "wins": 40,
-   "losses": 206,
+   "losses": 207,
    "gross_win_gbp": 4.31718504255732,
-   "gross_loss_gbp": 26.670186864929146,
+   "gross_loss_gbp": 26.88545418060279,
    "peak_equity_gbp": 101.03420206936936,
-   "max_drawdown_pct": -23.267,
+   "max_drawdown_pct": -23.505,
    "day": "2026-09-30",
    "day_start_equity_gbp": 79.7909849879477,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 77.5852758596889,
+   "equity_gbp": 77.64674800264851,
    "last_marks": {
-    "TSLA": 265.51121608213236,
-    "LABU": 205.31732888688165,
-    "TECL": 177.16703973033742,
-    "AMD": 459.6913250520687,
-    "NVDA": 173.83528922932985,
-    "SOXL": 111.37247521560265
+    "TSLA": 266.30556188061473,
+    "TECL": 178.0150535010146,
+    "AMD": 461.9120243078763,
+    "NVDA": 173.91066133001408,
+    "SOXL": 111.80967480649363,
+    "AAPL": 253.6013429932712,
+    "MSTR": 116.45294356671394
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 86.69417121346214,
    "month": "2026-09",
    "month_start_equity_gbp": 97.51100123802766,
-   "loss_streak": 7
+   "loss_streak": 8
   },
   "MACD cross": {
    "name": "MACD cross",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 0.7608063865150081,
+   "cash_gbp": 0.0,
    "positions": {
     "AMD": {
-     "units": 0.01652849280534677,
-     "cost_gbp": 7.533552296136973,
+     "units": 0.009810155308783292,
+     "cost_gbp": 4.4821070286074525,
      "opened_at": "2026-09-30T15:30:05.000141Z",
      "entry_price": 602.2249755859375,
-     "realised_gbp": 0.032289660700061784
-    },
-    "SOXL": {
-     "units": 0.06816783379605523,
-     "cost_gbp": 7.5299251262354,
-     "opened_at": "2026-09-30T17:40:05.000158Z",
-     "entry_price": 146.44500732421875,
-     "realised_gbp": 0.04269960859023092
+     "realised_gbp": 0.09023276948834313
     },
     "AAPL": {
-     "units": 0.029854451958620742,
-     "cost_gbp": 7.584452193268396,
+     "units": 0.017829780792900974,
+     "cost_gbp": 4.5277551013193404,
      "opened_at": "2026-09-30T17:50:05.000147Z",
      "entry_price": 336.80499267578125,
-     "realised_gbp": -0.012398589714512909
+     "realised_gbp": -0.023320343452777337
     },
     "TECL": {
-     "units": 0.04268862693718771,
-     "cost_gbp": 7.572672114679545,
+     "units": 0.025423681969074165,
+     "cost_gbp": 4.50663679264788,
      "opened_at": "2026-09-30T18:00:05.000145Z",
      "entry_price": 235.17999267578125,
+     "realised_gbp": 0.020895354693332813
+    },
+    "COIN": {
+     "units": 0.0320067680028396,
+     "cost_gbp": 4.522719015551019,
+     "opened_at": "2026-09-30T18:50:05.000122Z",
+     "entry_price": 187.19000244140625,
+     "realised_gbp": -0.003362235734825525
+    },
+    "MSTR": {
+     "units": 0.038782164593906016,
+     "cost_gbp": 4.527283642956637,
+     "opened_at": "2026-09-30T18:50:05.000122Z",
+     "entry_price": 154.75999450683594,
+     "realised_gbp": -0.010196238860568307
+    },
+    "DOGE-USD": {
+     "units": 63.50363923835183,
+     "cost_gbp": 4.522731776904622,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 0.0942,
+     "realised_gbp": 0.0
+    },
+    "ETH-USD": {
+     "units": 0.0022331887916723575,
+     "cost_gbp": 4.522731776904622,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 2678.7,
+     "realised_gbp": 0.0
+    },
+    "ETHU": {
+     "units": 0.1990365249258728,
+     "cost_gbp": 4.522731776904622,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 30.13010025024414,
+     "realised_gbp": 0.0
+    },
+    "GOOGL": {
+     "units": 0.017156071505575902,
+     "cost_gbp": 4.522731776904622,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 349.55499267578125,
      "realised_gbp": 0.0
     },
     "IWM": {
-     "units": 0.02938228774041453,
-     "cost_gbp": 6.184716371639882,
-     "opened_at": "2026-09-30T18:10:05.000142Z",
-     "entry_price": 279.05999755859375,
+     "units": 0.021498826980281605,
+     "cost_gbp": 4.522731776904622,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 278.94500732421875,
      "realised_gbp": 0.0
     },
-    "NVDA": {
-     "units": 0.03909617816039244,
-     "cost_gbp": 6.799322656068453,
-     "opened_at": "2026-09-30T18:10:05.000142Z",
-     "entry_price": 230.53500366210938,
-     "realised_gbp": 0.0
-    },
-    "SQQQ": {
-     "units": 0.2655398633995281,
-     "cost_gbp": 6.798873975328146,
-     "opened_at": "2026-09-30T18:25:05.000190Z",
-     "entry_price": 33.95000076293945,
-     "realised_gbp": 0.0
-    },
-    "TNA": {
-     "units": 0.08092154513704487,
-     "cost_gbp": 3.5637506384606397,
-     "opened_at": "2026-09-30T18:25:05.000190Z",
-     "entry_price": 58.39500045776367,
+    "META": {
+     "units": 0.008165280617881309,
+     "cost_gbp": 4.522731776904622,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 734.4500122070312,
      "realised_gbp": 0.0
     },
     "PLTR": {
-     "units": 0.04760846020090655,
-     "cost_gbp": 6.76947670111237,
-     "opened_at": "2026-09-30T18:30:05.000146Z",
-     "entry_price": 188.5399932861328,
+     "units": 0.031877299676911754,
+     "cost_gbp": 4.522731776904622,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 188.12730407714844,
      "realised_gbp": 0.0
     },
-    "LABU": {
-     "units": 0.03303952808643715,
-     "cost_gbp": 6.790966310494205,
-     "opened_at": "2026-09-30T18:35:05.000154Z",
-     "entry_price": 272.5400085449219,
+    "XRP-USD": {
+     "units": 3.982561107188932,
+     "cost_gbp": 4.5023794839085545,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 1.4953,
+     "realised_gbp": 0.0
+    },
+    "MSFT": {
+     "units": 0.008248645560410186,
+     "cost_gbp": 3.2249535647980205,
+     "opened_at": "2026-09-30T19:10:05.000178Z",
+     "entry_price": 518.4099731445312,
+     "realised_gbp": 0.0
+    },
+    "NVDA": {
+     "units": 0.018534469762808037,
+     "cost_gbp": 3.2249535647980205,
+     "opened_at": "2026-09-30T19:10:05.000178Z",
+     "entry_price": 230.71499633789062,
+     "realised_gbp": 0.0
+    },
+    "QQQ": {
+     "units": 0.0045598529198352155,
+     "cost_gbp": 2.5578464903132176,
+     "opened_at": "2026-09-30T19:10:05.000178Z",
+     "entry_price": 743.7999877929688,
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -32.111485230060985,
-   "fees_gbp": 31.485955739997955,
-   "closed_trades": 340,
-   "wins": 49,
-   "losses": 291,
-   "gross_win_gbp": 3.61478773758224,
-   "gross_loss_gbp": 35.78886364721899,
+   "realised_gbp": -32.26424287676751,
+   "fees_gbp": 31.629825482510594,
+   "closed_trades": 348,
+   "wins": 50,
+   "losses": 298,
+   "gross_win_gbp": 3.664433534809848,
+   "gross_loss_gbp": 36.002925717710845,
    "peak_equity_gbp": 100.50057588205145,
-   "max_drawdown_pct": -32.436,
+   "max_drawdown_pct": -32.633,
    "day": "2026-09-30",
    "day_start_equity_gbp": 71.95323523787346,
    "halted_day": "2026-09-29",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 67.96310961933665,
+   "equity_gbp": 67.70375110888932,
    "last_marks": {
-    "AMD": 459.6913250520687,
-    "SOXL": 111.37247521560265,
-    "AAPL": 253.66467258069184,
-    "TECL": 177.16703973033742,
-    "IWM": 210.4167063992206,
-    "NVDA": 173.83528922932985,
-    "SQQQ": 25.57232579843563,
-    "TNA": 44.07033353958917,
-    "PLTR": 141.93111749987017,
-    "LABU": 205.31732888688165
+    "AMD": 461.9120243078763,
+    "AAPL": 253.6013429932712,
+    "TECL": 178.0150535010146,
+    "COIN": 141.1999517638109,
+    "MSTR": 116.45294356671394,
+    "DOGE-USD": 0.07090902702897964,
+    "ETH-USD": 2017.7074316978978,
+    "ETHU": 22.681541768064804,
+    "GOOGL": 263.3440697792907,
+    "IWM": 210.2998698665256,
+    "META": 553.270555598588,
+    "PLTR": 141.82935998808114,
+    "XRP-USD": 1.1260869084574539,
+    "MSFT": 390.7722631848429,
+    "NVDA": 173.91066133001408,
+    "QQQ": 560.6690064692925
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 81.7797075846468,
    "month": "2026-09",
    "month_start_equity_gbp": 94.54629744155508,
-   "loss_streak": 2
+   "loss_streak": 6
   },
   "MACD zero-line": {
    "name": "MACD zero-line",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 0.0,
+   "cash_gbp": 7.775897383647121,
    "positions": {
     "AMD": {
      "units": 0.03448856861644176,
@@ -365,69 +437,69 @@
      "entry_price": 606.0399780273438,
      "realised_gbp": 0.02983635020677644
     },
-    "SOXL": {
-     "units": 0.14231045714716128,
-     "cost_gbp": 15.793930027223917,
-     "opened_at": "2026-09-30T17:50:05.000147Z",
-     "entry_price": 147.07989501953125,
-     "realised_gbp": 0.013795400839935468
-    },
     "TECL": {
-     "units": 0.11151832243321141,
-     "cost_gbp": 19.777498750085833,
+     "units": 0.07435723858630458,
+     "cost_gbp": 13.187072412080257,
      "opened_at": "2026-09-30T18:00:05.000145Z",
      "entry_price": 235.17999267578125,
+     "realised_gbp": -0.009998979287397347
+    },
+    "AAPL": {
+     "units": 0.05187947520099593,
+     "cost_gbp": 13.173651842858003,
+     "opened_at": "2026-09-30T18:50:05.000122Z",
+     "entry_price": 336.70001220703125,
      "realised_gbp": 0.0
     },
-    "NVDA": {
-     "units": 0.11373376326084571,
-     "cost_gbp": 19.780397812379565,
-     "opened_at": "2026-09-30T18:25:05.000190Z",
-     "entry_price": 230.61000061035156,
+    "MSTR": {
+     "units": 0.11287038351954794,
+     "cost_gbp": 13.173651842858003,
+     "opened_at": "2026-09-30T18:50:05.000122Z",
+     "entry_price": 154.75999450683594,
      "realised_gbp": 0.0
     },
-    "SQQQ": {
-     "units": 0.3111886089132816,
-     "cost_gbp": 7.957664650869248,
-     "opened_at": "2026-09-30T18:30:05.000146Z",
-     "entry_price": 33.90739822387695,
+    "COIN": {
+     "units": 0.1119619325105541,
+     "cost_gbp": 15.822813706198009,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 187.4600067138672,
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -20.915475298788902,
-   "fees_gbp": 20.26464204275912,
-   "closed_trades": 236,
+   "realised_gbp": -21.091879351706073,
+   "fees_gbp": 20.318525684291366,
+   "closed_trades": 239,
    "wins": 38,
-   "losses": 198,
+   "losses": 201,
    "gross_win_gbp": 3.8167424484532253,
-   "gross_loss_gbp": 24.775849498288835,
+   "gross_loss_gbp": 24.928459171078675,
    "peak_equity_gbp": 100.50057588205145,
-   "max_drawdown_pct": -21.312,
+   "max_drawdown_pct": -21.397,
    "day": "2026-09-30",
    "day_start_equity_gbp": 81.93361357429322,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 79.1896928526516,
+   "equity_gbp": 79.05310219086479,
    "last_marks": {
-    "AMD": 459.6913250520687,
-    "SOXL": 111.37247521560265,
-    "TECL": 177.16703973033742,
-    "NVDA": 173.83528922932985,
-    "SQQQ": 25.57232579843563
+    "AMD": 461.9120243078763,
+    "TECL": 178.0150535010146,
+    "AAPL": 253.6013429932712,
+    "MSTR": 116.45294356671394,
+    "COIN": 141.1999517638109
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 88.04550228447555,
    "month": "2026-09",
    "month_start_equity_gbp": 98.29134486144926,
-   "loss_streak": 0
+   "loss_streak": 3
   },
   "Supertrend": {
    "name": "Supertrend",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 7.783140383979763,
+   "cash_gbp": 0.0,
    "positions": {
     "TSLA": {
      "units": 0.06058906659427651,
@@ -444,22 +516,29 @@
      "realised_gbp": 0.004432143197967697
     },
     "TECL": {
-     "units": 0.11274202029440007,
-     "cost_gbp": 19.985866196066453,
+     "units": 0.09016474810510906,
+     "cost_gbp": 15.983575480776203,
      "opened_at": "2026-09-30T17:55:05.000150Z",
      "entry_price": 235.10000610351562,
-     "realised_gbp": 0.0
+     "realised_gbp": -0.01021743422769239
     },
     "SOXL": {
-     "units": 0.1797211508208394,
-     "cost_gbp": 19.996724834779815,
+     "units": 0.14362633665646132,
+     "cost_gbp": 15.980625096318269,
      "opened_at": "2026-09-30T18:15:05.000173Z",
      "entry_price": 147.65499877929688,
+     "realised_gbp": 0.007026057735459723
+    },
+    "COIN": {
+     "units": 0.11163150474508318,
+     "cost_gbp": 15.798339461239326,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 187.72000122070312,
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -20.26150479951813,
-   "fees_gbp": 18.339890255763756,
+   "realised_gbp": -20.26469617601036,
+   "fees_gbp": 18.351795082224108,
    "closed_trades": 199,
    "wins": 36,
    "losses": 163,
@@ -472,12 +551,13 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 79.94919001847057,
+   "equity_gbp": 80.17360106327916,
    "last_marks": {
-    "TSLA": 265.51121608213236,
-    "AMD": 459.6913250520687,
-    "TECL": 177.16703973033742,
-    "SOXL": 111.37247521560265
+    "TSLA": 266.30556188061473,
+    "AMD": 461.9120243078763,
+    "TECL": 178.0150535010146,
+    "SOXL": 111.80967480649363,
+    "COIN": 141.1999517638109
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -490,41 +570,13 @@
    "name": "Parabolic SAR",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 14.48702015184207,
+   "cash_gbp": 0.0,
    "positions": {
-    "AMD": {
-     "units": 0.019173533591620807,
-     "cost_gbp": 8.764394704206955,
-     "opened_at": "2026-09-30T17:00:05.000152Z",
-     "entry_price": 606.0709838867188,
-     "realised_gbp": -0.013482014288269895
-    },
-    "LABU": {
-     "units": 0.04279980373601651,
-     "cost_gbp": 8.809799336229688,
-     "opened_at": "2026-09-30T17:46:05.000162Z",
-     "entry_price": 272.8900146484375,
-     "realised_gbp": -0.03478969970975321
-    },
-    "QQQ": {
-     "units": 0.015603040874855142,
-     "cost_gbp": 8.755320834882383,
-     "opened_at": "2026-09-30T17:50:05.000147Z",
-     "entry_price": 743.9199829101562,
-     "realised_gbp": 0.0
-    },
     "TECL": {
      "units": 0.049393250642420033,
      "cost_gbp": 8.755320834882383,
      "opened_at": "2026-09-30T17:50:05.000147Z",
      "entry_price": 235.0,
-     "realised_gbp": 0.0
-    },
-    "TQQQ": {
-     "units": 0.19594172719721317,
-     "cost_gbp": 11.695551834746624,
-     "opened_at": "2026-09-30T17:50:05.000147Z",
-     "entry_price": 79.30400085449219,
      "realised_gbp": 0.0
     },
     "NVDA": {
@@ -533,60 +585,138 @@
      "opened_at": "2026-09-30T18:10:05.000142Z",
      "entry_price": 230.53500366210938,
      "realised_gbp": 0.0
+    },
+    "MSTR": {
+     "units": 0.08580730590192384,
+     "cost_gbp": 9.997516520581833,
+     "opened_at": "2026-09-30T18:45:05.000153Z",
+     "entry_price": 154.49000549316406,
+     "realised_gbp": 0.0
+    },
+    "AAPL": {
+     "units": 0.030585386914929076,
+     "cost_gbp": 7.766486402095402,
+     "opened_at": "2026-09-30T18:50:05.000122Z",
+     "entry_price": 336.70001220703125,
+     "realised_gbp": -0.006001728915828064
+    },
+    "GOOGL": {
+     "units": 0.02944441401599982,
+     "cost_gbp": 7.757444949055135,
+     "opened_at": "2026-09-30T18:50:05.000122Z",
+     "entry_price": 349.3399963378906,
+     "realised_gbp": -0.0014945339881746733
+    },
+    "AMD": {
+     "units": 0.01614297099293557,
+     "cost_gbp": 7.425102693998568,
+     "opened_at": "2026-09-30T19:00:05.000147Z",
+     "entry_price": 609.8900146484375,
+     "realised_gbp": 0.0
+    },
+    "META": {
+     "units": 0.014006805236007482,
+     "cost_gbp": 7.758339988349672,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 734.4500122070312,
+     "realised_gbp": 0.0
+    },
+    "SOXL": {
+     "units": 0.06936279196394657,
+     "cost_gbp": 7.749228700885057,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 147.94000244140625,
+     "realised_gbp": 0.0
+    },
+    "TSLA": {
+     "units": 0.014349486528085716,
+     "cost_gbp": 3.823258746596458,
+     "opened_at": "2026-09-30T19:10:05.000178Z",
+     "entry_price": 353.2887878417969,
+     "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -30.00359152520261,
-   "fees_gbp": 28.03349141001077,
-   "closed_trades": 314,
-   "wins": 42,
-   "losses": 272,
-   "gross_win_gbp": 3.9134449352659315,
-   "gross_loss_gbp": 33.86876474647052,
+   "realised_gbp": -30.238300385548204,
+   "fees_gbp": 28.0979254953751,
+   "closed_trades": 319,
+   "wins": 43,
+   "losses": 276,
+   "gross_win_gbp": 3.9156569457601575,
+   "gross_loss_gbp": 34.14646106840436,
    "peak_equity_gbp": 100.2496815738259,
-   "max_drawdown_pct": -30.383,
+   "max_drawdown_pct": -30.408,
    "day": "2026-09-30",
    "day_start_equity_gbp": 72.65295761748081,
    "halted_day": "2026-09-29",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 69.990998021455,
+   "equity_gbp": 69.80878792662537,
    "last_marks": {
-    "AMD": 459.6913250520687,
-    "LABU": 205.31732888688165,
-    "QQQ": 560.254431160722,
-    "TECL": 177.16703973033742,
-    "TQQQ": 59.62856193435026,
-    "NVDA": 173.83528922932985
+    "TECL": 178.0150535010146,
+    "NVDA": 173.91066133001408,
+    "MSTR": 116.45294356671394,
+    "AAPL": 253.6013429932712,
+    "GOOGL": 263.3440697792907,
+    "AMD": 461.9120243078763,
+    "META": 553.270555598588,
+    "SOXL": 111.80967480649363,
+    "TSLA": 266.30556188061473
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 81.37368212889099,
    "month": "2026-09",
    "month_start_equity_gbp": 96.08251383853835,
-   "loss_streak": 1
+   "loss_streak": 4
   },
   "ADX DI cross": {
    "name": "ADX DI cross",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 76.33501543783188,
-   "positions": {},
+   "cash_gbp": 19.07341037674789,
+   "positions": {
+    "COIN": {
+     "units": 0.13518038569773821,
+     "cost_gbp": 19.08375385945797,
+     "opened_at": "2026-09-30T18:50:05.000122Z",
+     "entry_price": 187.19000244140625,
+     "realised_gbp": 0.0
+    },
+    "TSLA": {
+     "units": 0.07172322721435657,
+     "cost_gbp": 19.090794988328657,
+     "opened_at": "2026-09-30T19:00:05.000147Z",
+     "entry_price": 352.9366149902344,
+     "realised_gbp": 0.0
+    },
+    "DOGE-USD": {
+     "units": 268.3715615866087,
+     "cost_gbp": 19.08705621329737,
+     "opened_at": "2026-09-30T19:10:05.000178Z",
+     "entry_price": 0.09407,
+     "realised_gbp": 0.0
+    }
+   },
    "realised_gbp": -23.66498456216805,
-   "fees_gbp": 20.824015940378807,
+   "fees_gbp": 20.90018357487798,
    "closed_trades": 233,
    "wins": 19,
    "losses": 214,
    "gross_win_gbp": 1.6840552459911624,
    "gross_loss_gbp": 25.349039808159198,
    "peak_equity_gbp": 100.0,
-   "max_drawdown_pct": -23.675,
+   "max_drawdown_pct": -23.709,
    "day": "2026-09-30",
    "day_start_equity_gbp": 79.09649238582328,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 76.33501543783188,
-   "last_marks": {},
+   "equity_gbp": 76.29113495424642,
+   "last_marks": {
+    "COIN": 141.1999517638109,
+    "TSLA": 266.30556188061473,
+    "DOGE-USD": 0.07090902702897964
+   },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 86.4191623377048,
@@ -598,15 +728,8 @@
    "name": "Ichimoku",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 41.61422480953284,
+   "cash_gbp": 62.271441662263555,
    "positions": {
-    "LABU": {
-     "units": 0.10154505130453213,
-     "cost_gbp": 20.825686944026693,
-     "opened_at": "2026-09-30T18:15:05.000173Z",
-     "entry_price": 271.94000244140625,
-     "realised_gbp": 0.0
-    },
     "TECL": {
      "units": 0.11735106021572064,
      "cost_gbp": 20.801135317609614,
@@ -615,31 +738,30 @@
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -16.758952928830823,
-   "fees_gbp": 13.684723232149615,
-   "closed_trades": 135,
+   "realised_gbp": -16.927423020126806,
+   "fees_gbp": 13.695057007463637,
+   "closed_trades": 136,
    "wins": 13,
-   "losses": 122,
+   "losses": 123,
    "gross_win_gbp": 1.4243896130927247,
-   "gross_loss_gbp": 18.183342541923544,
+   "gross_loss_gbp": 18.351812633219527,
    "peak_equity_gbp": 100.73585934090583,
-   "max_drawdown_pct": -17.414,
+   "max_drawdown_pct": -17.575,
    "day": "2026-09-30",
    "day_start_equity_gbp": 85.61577453801699,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 83.25392345269654,
+   "equity_gbp": 83.16169692496585,
    "last_marks": {
-    "LABU": 205.31732888688165,
-    "TECL": 177.16703973033742
+    "TECL": 178.0150535010146
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 89.1462558799819,
    "month": "2026-09",
    "month_start_equity_gbp": 98.28172603821719,
-   "loss_streak": 3
+   "loss_streak": 4
   },
   "Heikin-Ashi": {
    "name": "Heikin-Ashi",
@@ -676,70 +798,102 @@
    "capital_gbp": 100.0,
    "cash_gbp": 0.0,
    "positions": {
-    "LABU": {
-     "units": 0.09545048457323052,
-     "cost_gbp": 19.52167352461952,
-     "opened_at": "2026-09-30T16:55:05.000151Z",
-     "entry_price": 269.7950134277344,
-     "realised_gbp": 0.06202511113247944
-    },
     "MSFT": {
-     "units": 0.04020332569731613,
-     "cost_gbp": 15.700532390252304,
+     "units": 0.022278478318913743,
+     "cost_gbp": 8.70037402092309,
      "opened_at": "2026-09-30T17:40:05.000158Z",
      "entry_price": 517.9500122070312,
-     "realised_gbp": 0.005513699787719872
-    },
-    "NVDA": {
-     "units": 0.11281019721726382,
-     "cost_gbp": 19.613200632089644,
-     "opened_at": "2026-09-30T17:50:05.000147Z",
-     "entry_price": 230.39500427246094,
-     "realised_gbp": 0.0
+     "realised_gbp": 0.00847988318357995
     },
     "TECL": {
-     "units": 0.08855685841510685,
-     "cost_gbp": 15.680724137055156,
+     "units": 0.04895270832134883,
+     "cost_gbp": 8.668034624157903,
      "opened_at": "2026-09-30T17:50:05.000147Z",
      "entry_price": 235.0,
-     "realised_gbp": 0.0001972161770478209
+     "realised_gbp": 0.02934329853508011
     },
     "AAPL": {
-     "units": 0.030954966552728783,
-     "cost_gbp": 7.856107546071886,
+     "units": 0.03433082822740541,
+     "cost_gbp": 8.712057960505462,
      "opened_at": "2026-09-30T18:40:05.000144Z",
      "entry_price": 336.5190124511719,
+     "realised_gbp": -0.009951088101699312
+    },
+    "SOXL": {
+     "units": 0.07809138145995362,
+     "cost_gbp": 8.662708847910086,
+     "opened_at": "2026-09-30T19:00:05.000147Z",
+     "entry_price": 147.08999633789062,
+     "realised_gbp": 0.05194979637106911
+    },
+    "GOOGL": {
+     "units": 0.03303361666395345,
+     "cost_gbp": 8.708414845647562,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 349.55499267578125,
+     "realised_gbp": 0.0
+    },
+    "META": {
+     "units": 0.01572205791967208,
+     "cost_gbp": 8.708414845647562,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 734.4500122070312,
+     "realised_gbp": 0.0
+    },
+    "NVDA": {
+     "units": 0.050070747158580245,
+     "cost_gbp": 8.708414845647562,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 230.61500549316406,
+     "realised_gbp": 0.0
+    },
+    "QQQ": {
+     "units": 0.015530059548425212,
+     "cost_gbp": 8.708414845647562,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 743.530029296875,
+     "realised_gbp": 0.0
+    },
+    "TQQQ": {
+     "units": 0.14549637118073802,
+     "cost_gbp": 8.690500758817981,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 79.19999694824219,
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -21.627761769911537,
-   "fees_gbp": 18.36829792863181,
-   "closed_trades": 201,
+   "realised_gbp": -21.73266440509528,
+   "fees_gbp": 18.443064067443203,
+   "closed_trades": 203,
    "wins": 35,
-   "losses": 166,
+   "losses": 168,
    "gross_win_gbp": 3.7813843917506658,
-   "gross_loss_gbp": 25.476882188759447,
+   "gross_loss_gbp": 25.593870686833977,
    "peak_equity_gbp": 101.06181145214714,
-   "max_drawdown_pct": -22.6,
+   "max_drawdown_pct": -22.667,
    "day": "2026-09-30",
    "day_start_equity_gbp": 79.38926425238562,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 78.4389261566054,
+   "equity_gbp": 78.36559685363628,
    "last_marks": {
-    "LABU": 205.31732888688165,
-    "MSFT": 390.2502139088081,
-    "NVDA": 173.83528922932985,
-    "TECL": 177.16703973033742,
-    "AAPL": 253.66467258069184
+    "MSFT": 390.7722631848429,
+    "TECL": 178.0150535010146,
+    "AAPL": 253.6013429932712,
+    "SOXL": 111.80967480649363,
+    "GOOGL": 263.3440697792907,
+    "META": 553.270555598588,
+    "NVDA": 173.91066133001408,
+    "QQQ": 560.6690064692925,
+    "TQQQ": 59.76047173698984
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 86.35851747748112,
    "month": "2026-09",
    "month_start_equity_gbp": 96.82262871900451,
-   "loss_streak": 18
+   "loss_streak": 20
   },
   "VWAP momentum": {
    "name": "VWAP momentum",
@@ -774,24 +928,42 @@
    "name": "ROC + volume",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 84.467522516072,
-   "positions": {},
+   "cash_gbp": 42.233761258036,
+   "positions": {
+    "AMD": {
+     "units": 0.04569339258251793,
+     "cost_gbp": 21.116880629018,
+     "opened_at": "2026-09-30T19:10:05.000178Z",
+     "entry_price": 612.7860717773438,
+     "realised_gbp": 0.0
+    },
+    "SOXL": {
+     "units": 0.18877013551656938,
+     "cost_gbp": 21.116880629018,
+     "opened_at": "2026-09-30T19:10:05.000178Z",
+     "entry_price": 148.3300018310547,
+     "realised_gbp": 0.0
+    }
+   },
    "realised_gbp": -15.532477483927961,
-   "fees_gbp": 14.74940726589515,
+   "fees_gbp": 14.770513593360432,
    "closed_trades": 181,
    "wins": 36,
    "losses": 145,
    "gross_win_gbp": 3.978602960532889,
    "gross_loss_gbp": 19.511080444460855,
    "peak_equity_gbp": 100.23528345885438,
-   "max_drawdown_pct": -15.731,
+   "max_drawdown_pct": -15.752,
    "day": "2026-09-30",
    "day_start_equity_gbp": 87.31441642442186,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 84.467522516072,
-   "last_marks": {},
+   "equity_gbp": 84.44641618860672,
+   "last_marks": {
+    "AMD": 461.9120243078763,
+    "SOXL": 111.80967480649363
+   },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 91.2724765496229,
@@ -803,15 +975,8 @@
    "name": "RSI momentum",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 7.587995709948455,
+   "cash_gbp": 0.0,
    "positions": {
-    "LABU": {
-     "units": 0.07595829315345616,
-     "cost_gbp": 15.306086393538235,
-     "opened_at": "2026-09-30T14:10:05.000127Z",
-     "entry_price": 263.2301025390625,
-     "realised_gbp": 0.1373300675501934
-    },
     "AMD": {
      "units": 0.033876208660371124,
      "cost_gbp": 15.463128057695894,
@@ -820,211 +985,258 @@
      "realised_gbp": 0.012793245833057743
     },
     "TSLA": {
-     "units": 0.07306327801293337,
-     "cost_gbp": 19.398177338385086,
+     "units": 0.05818894319985484,
+     "cost_gbp": 15.449066480759221,
      "opened_at": "2026-09-30T17:15:05.000170Z",
      "entry_price": 351.45001220703125,
-     "realised_gbp": 0.015478767344568212
+     "realised_gbp": 0.015433321758336671
     },
     "SOXL": {
-     "units": 0.1744663298978707,
-     "cost_gbp": 19.384404376808124,
+     "units": 0.13950263928990092,
+     "cost_gbp": 15.49969884281061,
      "opened_at": "2026-09-30T18:00:05.000145Z",
      "entry_price": 147.35000610351562,
+     "realised_gbp": -0.01004564937394381
+    },
+    "COIN": {
+     "units": 0.10917832375753839,
+     "cost_gbp": 15.45661700446172,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 187.72000122070312,
+     "realised_gbp": 0.0
+    },
+    "MSTR": {
+     "units": 0.132004749092564,
+     "cost_gbp": 15.407230061238385,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 154.84500122070312,
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -22.860208123624194,
-   "fees_gbp": 18.6255769105205,
-   "closed_trades": 233,
-   "wins": 34,
+   "realised_gbp": -22.724259553034155,
+   "fees_gbp": 18.652644869499287,
+   "closed_trades": 234,
+   "wins": 35,
    "losses": 199,
-   "gross_win_gbp": 3.276055127197077,
+   "gross_win_gbp": 3.5594248602974825,
    "gross_loss_gbp": 26.301865331549095,
    "peak_equity_gbp": 101.03420206936936,
-   "max_drawdown_pct": -23.44,
+   "max_drawdown_pct": -23.528,
    "day": "2026-09-30",
    "day_start_equity_gbp": 79.74443359490203,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 77.58601561251777,
+   "equity_gbp": 77.5299277107487,
    "last_marks": {
-    "LABU": 205.31732888688165,
-    "AMD": 459.6913250520687,
-    "TSLA": 265.51121608213236,
-    "SOXL": 111.37247521560265
+    "AMD": 461.9120243078763,
+    "TSLA": 266.30556188061473,
+    "SOXL": 111.80967480649363,
+    "COIN": 141.1999517638109,
+    "MSTR": 116.45294356671394
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 87.42097017056156,
    "month": "2026-09",
    "month_start_equity_gbp": 97.89649280836208,
-   "loss_streak": 6
+   "loss_streak": 0
   },
   "OBV trend": {
    "name": "OBV trend",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 4.644552391284065,
+   "cash_gbp": 0.0,
    "positions": {
     "TSLA": {
-     "units": 0.026538991434399056,
-     "cost_gbp": 7.029780966659022,
+     "units": 0.02412314421092451,
+     "cost_gbp": 6.398288923651012,
      "opened_at": "2026-09-30T17:15:05.000170Z",
      "entry_price": 351.45001220703125,
-     "realised_gbp": 0.07205217417932808
-    },
-    "LABU": {
-     "units": 0.03461321473259995,
-     "cost_gbp": 7.12469332936282,
-     "opened_at": "2026-09-30T17:46:05.000162Z",
-     "entry_price": 272.8900146484375,
-     "realised_gbp": -0.07067057042122293
+     "realised_gbp": 0.08346424858966728
     },
     "QQQ": {
-     "units": 0.012618548617979272,
-     "cost_gbp": 7.0806352753335275,
+     "units": 0.011446269347305785,
+     "cost_gbp": 6.417749429922491,
      "opened_at": "2026-09-30T17:50:05.000147Z",
      "entry_price": 743.9199829101562,
-     "realised_gbp": 0.0
-    },
-    "TECL": {
-     "units": 0.03994549137122603,
-     "cost_gbp": 7.0806352753335275,
-     "opened_at": "2026-09-30T17:50:05.000147Z",
-     "entry_price": 235.0,
-     "realised_gbp": 0.0
-    },
-    "TQQQ": {
-     "units": 0.11836969599379776,
-     "cost_gbp": 7.0806352753335275,
-     "opened_at": "2026-09-30T17:50:05.000147Z",
-     "entry_price": 79.30400085449219,
-     "realised_gbp": 0.0
+     "realised_gbp": -0.004761815750772946
     },
     "AMD": {
-     "units": 0.015437248788849745,
-     "cost_gbp": 7.076245573012762,
+     "units": 0.013915150483114085,
+     "cost_gbp": 6.382544883053385,
      "opened_at": "2026-09-30T18:00:05.000145Z",
      "entry_price": 607.7100219726562,
+     "realised_gbp": 0.02473799940551835
+    },
+    "MSTR": {
+     "units": 0.05501030711531443,
+     "cost_gbp": 6.424047368715891,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 154.84500122070312,
+     "realised_gbp": -0.009952253009604561
+    },
+    "SOXL": {
+     "units": 0.057527679077286446,
+     "cost_gbp": 6.381568941741671,
+     "opened_at": "2026-09-30T19:00:05.000147Z",
+     "entry_price": 147.08999633789062,
+     "realised_gbp": 0.025567775288524608
+    },
+    "TECL": {
+     "units": 0.03606205501331437,
+     "cost_gbp": 6.3947857670957475,
+     "opened_at": "2026-09-30T19:00:05.000147Z",
+     "entry_price": 235.1300048828125,
+     "realised_gbp": 0.014318372690544479
+    },
+    "GOOGL": {
+     "units": 0.024334917153188557,
+     "cost_gbp": 6.415239238265968,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 349.55499267578125,
+     "realised_gbp": 0.0
+    },
+    "META": {
+     "units": 0.011581988761477117,
+     "cost_gbp": 6.415239238265968,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 734.4500122070312,
+     "realised_gbp": 0.0
+    },
+    "MSFT": {
+     "units": 0.016403713608130976,
+     "cost_gbp": 6.415239238265968,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 518.5650024414062,
      "realised_gbp": 0.0
     },
     "NVDA": {
-     "units": 0.045138387023101086,
-     "cost_gbp": 7.849093577072772,
-     "opened_at": "2026-09-30T18:10:05.000142Z",
-     "entry_price": 230.53500366210938,
+     "units": 0.03688568213095186,
+     "cost_gbp": 6.415239238265968,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 230.61500549316406,
      "realised_gbp": 0.0
     },
-    "SOXL": {
-     "units": 0.07064479295371026,
-     "cost_gbp": 7.849093577072772,
-     "opened_at": "2026-09-30T18:10:05.000142Z",
-     "entry_price": 147.3000030517578,
-     "realised_gbp": 0.0
-    },
-    "AAPL": {
-     "units": 0.03093749209837945,
-     "cost_gbp": 7.851672678004966,
-     "opened_at": "2026-09-30T18:40:05.000144Z",
-     "entry_price": 336.5190124511719,
+    "TQQQ": {
+     "units": 0.10713543099408897,
+     "cost_gbp": 6.399201140170312,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 79.19999694824219,
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -29.332962081530308,
-   "fees_gbp": 28.10561226058705,
-   "closed_trades": 340,
+   "realised_gbp": -29.540856592585683,
+   "fees_gbp": 28.197819361524544,
+   "closed_trades": 347,
    "wins": 54,
-   "losses": 286,
+   "losses": 293,
    "gross_win_gbp": 4.596649411863426,
-   "gross_loss_gbp": 33.93099309715183,
+   "gross_loss_gbp": 34.27088033166298,
    "peak_equity_gbp": 100.77802820016885,
-   "max_drawdown_pct": -29.966,
+   "max_drawdown_pct": -30.141,
    "day": "2026-09-30",
    "day_start_equity_gbp": 74.83181983137352,
    "halted_day": "2026-09-26",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 70.66113022764289,
+   "equity_gbp": 70.57094623509983,
    "last_marks": {
-    "TSLA": 265.51121608213236,
-    "LABU": 205.31732888688165,
-    "QQQ": 560.254431160722,
-    "TECL": 177.16703973033742,
-    "TQQQ": 59.62856193435026,
-    "AMD": 459.6913250520687,
-    "NVDA": 173.83528922932985,
-    "SOXL": 111.37247521560265,
-    "AAPL": 253.66467258069184
+    "TSLA": 266.30556188061473,
+    "QQQ": 560.6690064692925,
+    "AMD": 461.9120243078763,
+    "MSTR": 116.45294356671394,
+    "SOXL": 111.80967480649363,
+    "TECL": 178.0150535010146,
+    "GOOGL": 263.3440697792907,
+    "META": 553.270555598588,
+    "MSFT": 390.7722631848429,
+    "NVDA": 173.91066133001408,
+    "TQQQ": 59.76047173698984
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 82.34452191450583,
    "month": "2026-09",
    "month_start_equity_gbp": 95.893724539049,
-   "loss_streak": 9
+   "loss_streak": 16
   },
   "Donchian 20/10": {
    "name": "Donchian 20/10",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 19.690833536101795,
+   "cash_gbp": 0.0,
    "positions": {
     "AMD": {
-     "units": 0.04348157587863315,
-     "cost_gbp": 19.846577057841866,
+     "units": 0.03436077955266979,
+     "cost_gbp": 15.683512967953067,
      "opened_at": "2026-09-30T17:00:05.000152Z",
      "entry_price": 606.0709838867188,
+     "realised_gbp": 0.03975315598168816
+    },
+    "TECL": {
+     "units": 0.08904828762235864,
+     "cost_gbp": 15.78430972186448,
+     "opened_at": "2026-09-30T18:32:05.000152Z",
+     "entry_price": 235.03500366210938,
+     "realised_gbp": 0.012373995526397952
+    },
+    "MSTR": {
+     "units": 0.16935101889806614,
+     "cost_gbp": 19.765781710221702,
+     "opened_at": "2026-09-30T18:50:05.000122Z",
+     "entry_price": 154.75999450683594,
+     "realised_gbp": 0.0
+    },
+    "COIN": {
+     "units": 0.1384654453494427,
+     "cost_gbp": 19.602859647044056,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 187.72000122070312,
      "realised_gbp": 0.0
     },
     "SOXL": {
-     "units": 0.17797750246535335,
-     "cost_gbp": 19.74490341218395,
-     "opened_at": "2026-09-30T17:50:05.000147Z",
-     "entry_price": 147.07989501953125,
-     "realised_gbp": 0.0
-    },
-    "TECL": {
-     "units": 0.11155162212976404,
-     "cost_gbp": 19.773152305182414,
-     "opened_at": "2026-09-30T18:32:05.000152Z",
-     "entry_price": 235.03500366210938,
+     "units": 0.07353165578173987,
+     "cost_gbp": 8.20403382471482,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 147.94000244140625,
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -20.944533688689944,
-   "fees_gbp": 18.957896118938827,
-   "closed_trades": 242,
+   "realised_gbp": -20.959502128201848,
+   "fees_gbp": 18.99561846407495,
+   "closed_trades": 243,
    "wins": 46,
-   "losses": 196,
+   "losses": 197,
    "gross_win_gbp": 4.452328316649585,
-   "gross_loss_gbp": 25.39686200533953,
+   "gross_loss_gbp": 25.46395759635952,
    "peak_equity_gbp": 100.74725899397845,
-   "max_drawdown_pct": -21.463,
+   "max_drawdown_pct": -21.543,
    "day": "2026-09-30",
    "day_start_equity_gbp": 81.04420872922269,
    "halted_day": "2026-09-25",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 79.26400241920766,
+   "equity_gbp": 79.21788229717556,
    "last_marks": {
-    "AMD": 459.6913250520687,
-    "SOXL": 111.37247521560265,
-    "TECL": 177.16703973033742
+    "AMD": 461.9120243078763,
+    "TECL": 178.0150535010146,
+    "MSTR": 116.45294356671394,
+    "COIN": 141.1999517638109,
+    "SOXL": 111.80967480649363
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 85.72403992314084,
    "month": "2026-09",
    "month_start_equity_gbp": 96.97432581141453,
-   "loss_streak": 4
+   "loss_streak": 5
   },
   "Donchian 55/20": {
    "name": "Donchian 55/20",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 64.40016776271933,
+   "cash_gbp": 42.9077267414525,
    "positions": {
     "AMD": {
      "units": 0.04678612403029029,
@@ -1032,25 +1244,33 @@
      "opened_at": "2026-09-30T18:30:05.000146Z",
      "entry_price": 609.10498046875,
      "realised_gbp": 0.0
+    },
+    "SOXL": {
+     "units": 0.19263386875907643,
+     "cost_gbp": 21.492441021266835,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 147.94000244140625,
+     "realised_gbp": 0.0
     }
    },
    "realised_gbp": -14.10783907866642,
-   "fees_gbp": 10.780680886688781,
+   "fees_gbp": 10.791421736774371,
    "closed_trades": 118,
    "wins": 22,
    "losses": 96,
    "gross_win_gbp": 2.690380236616442,
    "gross_loss_gbp": 16.798219315282854,
    "peak_equity_gbp": 100.0,
-   "max_drawdown_pct": -14.161,
+   "max_drawdown_pct": -14.164,
    "day": "2026-09-30",
    "day_start_equity_gbp": 87.14245917900529,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 85.90734311225391,
+   "equity_gbp": 86.05713022447239,
    "last_marks": {
-    "AMD": 459.6913250520687
+    "AMD": 461.9120243078763,
+    "SOXL": 111.80967480649363
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -1063,7 +1283,7 @@
    "name": "Bollinger breakout",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 19.282013291588033,
+   "cash_gbp": 0.0,
    "positions": {
     "AMD": {
      "units": 0.04248666669308644,
@@ -1072,47 +1292,55 @@
      "entry_price": 606.0709838867188,
      "realised_gbp": 0.0
     },
-    "SOXL": {
-     "units": 0.17443695517731936,
-     "cost_gbp": 19.352113518741607,
-     "opened_at": "2026-09-30T17:50:05.000147Z",
-     "entry_price": 147.07989501953125,
+    "MSTR": {
+     "units": 0.1654460046398495,
+     "cost_gbp": 19.310008488983083,
+     "opened_at": "2026-09-30T18:50:05.000122Z",
+     "entry_price": 154.75999450683594,
      "realised_gbp": 0.0
     },
-    "NVDA": {
-     "units": 0.11047221089514458,
-     "cost_gbp": 19.22814973520838,
-     "opened_at": "2026-09-30T18:15:05.000173Z",
-     "entry_price": 230.7899932861328,
+    "COIN": {
+     "units": 0.13640833450882464,
+     "cost_gbp": 19.311629911096,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 187.72000122070312,
+     "realised_gbp": 0.0
+    },
+    "SOXL": {
+     "units": 0.17090025170113,
+     "cost_gbp": 19.11785571783478,
+     "opened_at": "2026-09-30T19:10:05.000178Z",
+     "entry_price": 148.3300018310547,
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -22.71688465995792,
-   "fees_gbp": 19.508467051663473,
-   "closed_trades": 245,
+   "realised_gbp": -22.839667087582082,
+   "fees_gbp": 19.556560730655683,
+   "closed_trades": 247,
    "wins": 39,
-   "losses": 206,
+   "losses": 208,
    "gross_win_gbp": 3.4223871744751593,
-   "gross_loss_gbp": 26.139271834433064,
+   "gross_loss_gbp": 26.262054262057227,
    "peak_equity_gbp": 100.12010489251558,
-   "max_drawdown_pct": -22.762,
+   "max_drawdown_pct": -22.886,
    "day": "2026-09-30",
    "day_start_equity_gbp": 80.45264912643843,
    "halted_day": "2026-09-25",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 77.4442096007107,
+   "equity_gbp": 77.26092827983935,
    "last_marks": {
-    "AMD": 459.6913250520687,
-    "SOXL": 111.37247521560265,
-    "NVDA": 173.83528922932985
+    "AMD": 461.9120243078763,
+    "MSTR": 116.45294356671394,
+    "COIN": 141.1999517638109,
+    "SOXL": 111.80967480649363
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 87.08936683179962,
    "month": "2026-09",
    "month_start_equity_gbp": 97.09542362440169,
-   "loss_streak": 9
+   "loss_streak": 11
   },
   "Keltner breakout": {
    "name": "Keltner breakout",
@@ -1136,15 +1364,15 @@
    "gross_win_gbp": 3.479411840256277,
    "gross_loss_gbp": 20.1193492361561,
    "peak_equity_gbp": 100.0,
-   "max_drawdown_pct": -16.653,
+   "max_drawdown_pct": -16.673,
    "day": "2026-09-30",
    "day_start_equity_gbp": 85.48203968045185,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 83.3971096225883,
+   "equity_gbp": 83.49809405305308,
    "last_marks": {
-    "AMD": 459.6913250520687
+    "AMD": 461.9120243078763
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -1157,7 +1385,7 @@
    "name": "Squeeze breakout",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 43.51449067095714,
+   "cash_gbp": 65.27847753499213,
    "positions": {
     "AMD": {
      "units": 0.047953657701179056,
@@ -1165,63 +1393,65 @@
      "opened_at": "2026-09-30T17:00:05.000152Z",
      "entry_price": 606.0709838867188,
      "realised_gbp": 0.0
-    },
-    "SOXL": {
-     "units": 0.1968461152254807,
-     "cost_gbp": 21.878301394419907,
-     "opened_at": "2026-09-30T18:00:05.000145Z",
-     "entry_price": 147.35000610351562,
-     "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -12.68715957237226,
-   "fees_gbp": 9.474280309005835,
-   "closed_trades": 108,
+   "realised_gbp": -12.801474102757169,
+   "fees_gbp": 9.485167746156428,
+   "closed_trades": 109,
    "wins": 14,
-   "losses": 94,
+   "losses": 95,
    "gross_win_gbp": 1.6832422404217908,
-   "gross_loss_gbp": 14.370401812794046,
+   "gross_loss_gbp": 14.484716343178956,
    "peak_equity_gbp": 100.05155100002139,
-   "max_drawdown_pct": -12.69,
+   "max_drawdown_pct": -12.796,
    "day": "2026-09-30",
    "day_start_equity_gbp": 89.50923462205822,
    "halted_day": "2026-09-25",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 87.48161020994299,
+   "equity_gbp": 87.42884863671074,
    "last_marks": {
-    "AMD": 459.6913250520687,
-    "SOXL": 111.37247521560265
+    "AMD": 461.9120243078763
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 91.55650642450262,
    "month": "2026-09",
    "month_start_equity_gbp": 96.55738674529302,
-   "loss_streak": 16
+   "loss_streak": 17
   },
   "Volume breakout": {
    "name": "Volume breakout",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 85.07303295811369,
-   "positions": {},
+   "cash_gbp": 63.804774718585264,
+   "positions": {
+    "AMD": {
+     "units": 0.04623947842613319,
+     "cost_gbp": 21.26825823952842,
+     "opened_at": "2026-09-30T19:00:05.000147Z",
+     "entry_price": 609.8900146484375,
+     "realised_gbp": 0.0
+    }
+   },
    "realised_gbp": -14.926967041886291,
-   "fees_gbp": 12.145443564321615,
+   "fees_gbp": 12.156072379034024,
    "closed_trades": 114,
    "wins": 17,
    "losses": 97,
    "gross_win_gbp": 1.130216821499002,
    "gross_loss_gbp": 16.057183863385298,
    "peak_equity_gbp": 100.0,
-   "max_drawdown_pct": -14.927,
+   "max_drawdown_pct": -14.938,
    "day": "2026-09-30",
    "day_start_equity_gbp": 87.11987220922762,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 85.07303295811369,
-   "last_marks": {},
+   "equity_gbp": 85.16334580134082,
+   "last_marks": {
+    "AMD": 461.9120243078763
+   },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 92.93218839163954,
@@ -1233,7 +1463,7 @@
    "name": "RSI(14) reversion",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 68.41657637835335,
+   "cash_gbp": 22.722931565983277,
    "positions": {
     "PLTR": {
      "units": 0.1606853104028211,
@@ -1241,15 +1471,29 @@
      "opened_at": "2026-09-30T17:25:05.000181Z",
      "entry_price": 188.16000366210938,
      "realised_gbp": 0.0
+    },
+    "XRP-USD": {
+     "units": 20.2169334040415,
+     "cost_gbp": 22.80222352235662,
+     "opened_at": "2026-09-30T18:45:05.000153Z",
+     "entry_price": 1.4918,
+     "realised_gbp": 0.0
+    },
+    "DOGE-USD": {
+     "units": 320.08084122335345,
+     "cost_gbp": 22.74777105532132,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 0.094,
+     "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -8.777898162195555,
-   "fees_gbp": 9.790756962015415,
-   "closed_trades": 128,
+   "realised_gbp": -8.921548396887697,
+   "fees_gbp": 10.063380546987455,
+   "closed_trades": 129,
    "wins": 46,
-   "losses": 82,
+   "losses": 83,
    "gross_win_gbp": 3.2142471138188293,
-   "gross_loss_gbp": 11.992145276014387,
+   "gross_loss_gbp": 12.13579551070653,
    "peak_equity_gbp": 100.0,
    "max_drawdown_pct": -9.439,
    "day": "2026-09-30",
@@ -1257,123 +1501,102 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 91.22282204963926,
+   "equity_gbp": 90.97547135711417,
    "last_marks": {
-    "PLTR": 141.93111749987017
+    "PLTR": 141.82935998808114,
+    "XRP-USD": 1.1260869084574539,
+    "DOGE-USD": 0.07090902702897964
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 95.49015418719266,
    "month": "2026-09",
    "month_start_equity_gbp": 99.46653033177967,
-   "loss_streak": 0
+   "loss_streak": 1
   },
   "Connors RSI(2)": {
    "name": "Connors RSI(2)",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 18.23391258026064,
+   "cash_gbp": 54.74081846996403,
    "positions": {
-    "BITX": {
-     "units": 1.230733801472991,
-     "cost_gbp": 18.291050123877532,
-     "opened_at": "2026-09-30T18:25:05.000190Z",
-     "entry_price": 19.71500015258789,
-     "realised_gbp": 0.0
-    },
-    "BTC-USD": {
-     "units": 0.0002888920087779579,
-     "cost_gbp": 18.314449505277967,
-     "opened_at": "2026-09-30T18:25:05.000190Z",
-     "entry_price": 83861.43,
-     "realised_gbp": 0.0
-    },
-    "MSFT": {
-     "units": 0.04675642591377071,
-     "cost_gbp": 18.25436735502673,
-     "opened_at": "2026-09-30T18:35:05.000154Z",
-     "entry_price": 517.405029296875,
+    "LABU": {
+     "units": 0.08981540460546457,
+     "cost_gbp": 18.248703868082195,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 269.4100036621094,
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -26.906220435557124,
-   "fees_gbp": 26.921740375573894,
-   "closed_trades": 310,
-   "wins": 59,
-   "losses": 251,
-   "gross_win_gbp": 2.1630037474739696,
-   "gross_loss_gbp": 29.069224183031103,
+   "realised_gbp": -27.010477661953768,
+   "fees_gbp": 27.022166405998217,
+   "closed_trades": 314,
+   "wins": 62,
+   "losses": 252,
+   "gross_win_gbp": 2.170689337062613,
+   "gross_loss_gbp": 29.18116699901639,
    "peak_equity_gbp": 100.76523090405013,
-   "max_drawdown_pct": -27.577,
+   "max_drawdown_pct": -27.629,
    "day": "2026-09-30",
    "day_start_equity_gbp": 77.12004756882612,
    "halted_day": "2026-09-27",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 72.9770707808184,
+   "equity_gbp": 72.9807413863616,
    "last_marks": {
-    "BITX": 14.830818036524716,
-    "BTC-USD": 63150.46235520202,
-    "MSFT": 390.2502139088081
+    "LABU": 203.08234424284728
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 84.64998955496164,
    "month": "2026-09",
    "month_start_equity_gbp": 96.23732373904515,
-   "loss_streak": 2
+   "loss_streak": 0
   },
   "Bollinger reversion": {
    "name": "Bollinger reversion",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 17.58641159719964,
+   "cash_gbp": 9.981918286459466,
    "positions": {
     "AMZN": {
-     "units": 0.03494215465120307,
-     "cost_gbp": 6.609397368476561,
+     "units": 0.05490390418843681,
+     "cost_gbp": 10.3750675617319,
      "opened_at": "2026-09-30T17:25:05.000181Z",
      "entry_price": 250.77000427246094,
      "realised_gbp": -0.01306181976121934
     },
     "SPY": {
-     "units": 0.011422314596313455,
-     "cost_gbp": 6.607985358485366,
+     "units": 0.017917559171535227,
+     "cost_gbp": 10.362586433715789,
      "opened_at": "2026-09-30T17:30:05.000186Z",
      "entry_price": 766.969970703125,
      "realised_gbp": -0.003896184947240755
     },
     "UPRO": {
-     "units": 0.058545852212592585,
-     "cost_gbp": 6.601975663562465,
+     "units": 0.0920225214866362,
+     "cost_gbp": 10.36983753557427,
      "opened_at": "2026-09-30T17:30:05.000186Z",
      "entry_price": 149.5,
      "realised_gbp": 0.0011204989128312803
     },
     "BITX": {
-     "units": 0.2865923233440276,
-     "cost_gbp": 4.282384035523626,
+     "units": 0.541967216451289,
+     "cost_gbp": 8.076511491829145,
      "opened_at": "2026-09-30T17:50:05.000147Z",
      "entry_price": 19.809999465942383,
      "realised_gbp": 0.0
     },
     "BTC-USD": {
-     "units": 6.737233965971009e-05,
-     "cost_gbp": 4.282384035523626,
+     "units": 0.00012722734368667267,
+     "cost_gbp": 8.07553710609048,
      "opened_at": "2026-09-30T17:50:05.000147Z",
      "entry_price": 84058.87,
      "realised_gbp": 0.0
     },
-    "COIN": {
-     "units": 0.030374202050754258,
-     "cost_gbp": 4.282384035523626,
-     "opened_at": "2026-09-30T17:50:05.000147Z",
-     "entry_price": 186.9149932861328,
-     "realised_gbp": 0.0
-    },
     "ETH-USD": {
-     "units": 0.0021110392372744474,
-     "cost_gbp": 4.282384035523626,
+     "units": 0.003988454761797789,
+     "cost_gbp": 8.077593638118351,
      "opened_at": "2026-09-30T17:50:05.000147Z",
      "entry_price": 2682.68,
      "realised_gbp": 0.0
@@ -1384,29 +1607,15 @@
      "opened_at": "2026-09-30T17:50:05.000147Z",
      "entry_price": 30.20989990234375,
      "realised_gbp": 0.0
-    },
-    "META": {
-     "units": 0.009386270063303812,
-     "cost_gbp": 5.191720665656678,
-     "opened_at": "2026-09-30T18:05:05.000173Z",
-     "entry_price": 733.2999877929688,
-     "realised_gbp": 0.0
-    },
-    "MSTR": {
-     "units": 0.04804031714916691,
-     "cost_gbp": 5.579484326202125,
-     "opened_at": "2026-09-30T18:30:05.000146Z",
-     "entry_price": 154.0,
-     "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -27.42916841907472,
-   "fees_gbp": 27.366886281012896,
-   "closed_trades": 349,
-   "wins": 59,
-   "losses": 290,
-   "gross_win_gbp": 1.9899451090077886,
-   "gross_loss_gbp": 29.403276022286903,
+   "realised_gbp": -27.41662748723266,
+   "fees_gbp": 27.412294376683953,
+   "closed_trades": 352,
+   "wins": 61,
+   "losses": 291,
+   "gross_win_gbp": 2.0091554600487043,
+   "gross_loss_gbp": 29.40994544148576,
    "peak_equity_gbp": 100.0,
    "max_drawdown_pct": -27.589,
    "day": "2026-09-30",
@@ -1414,25 +1623,22 @@
    "halted_day": "2026-09-28",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 72.4113483041287,
+   "equity_gbp": 72.44094292283597,
    "last_marks": {
-    "AMZN": 188.73017585182075,
+    "AMZN": 188.69248405051718,
     "SPY": 578.0061768920259,
-    "UPRO": 112.61630465862024,
-    "BITX": 14.830818036524716,
-    "BTC-USD": 63150.46235520202,
-    "COIN": 140.55169188792743,
-    "ETH-USD": 2015.1671593359583,
-    "ETHU": 22.643852842241962,
-    "META": 552.6713054161297,
-    "MSTR": 116.09874185138186
+    "UPRO": 112.63130316606603,
+    "BITX": 14.838432309476488,
+    "BTC-USD": 63152.52773985239,
+    "ETH-USD": 2017.7074316978978,
+    "ETHU": 22.681541768064804
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 84.31960104802228,
    "month": "2026-09",
    "month_start_equity_gbp": 96.78988308248742,
-   "loss_streak": 3
+   "loss_streak": 1
   },
   "Z-score reversion": {
    "name": "Z-score reversion",
@@ -1497,14 +1703,14 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 83.37758036158482,
+   "equity_gbp": 83.39613505477318,
    "last_marks": {
-    "ETH-USD": 2015.1671593359583,
-    "XRP-USD": 1.123222506387611,
-    "TNA": 44.07033353958917,
-    "PLTR": 141.93111749987017,
+    "ETH-USD": 2017.7074316978978,
+    "XRP-USD": 1.1260869084574539,
+    "TNA": 43.98741617749049,
+    "PLTR": 141.82935998808114,
     "SPY": 578.0061768920259,
-    "UPRO": 112.61630465862024
+    "UPRO": 112.63130316606603
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -1583,15 +1789,15 @@
    "halted_day": "2026-09-28",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 83.31921483695005,
+   "equity_gbp": 83.39844445602515,
    "last_marks": {
-    "BITX": 14.830818036524716,
-    "COIN": 140.55169188792743,
-    "ETHU": 22.643852842241962,
-    "MSTR": 116.09874185138186,
-    "IWM": 210.4167063992206,
-    "PLTR": 141.93111749987017,
-    "TNA": 44.07033353958917
+    "BITX": 14.838432309476488,
+    "COIN": 141.1999517638109,
+    "ETHU": 22.681541768064804,
+    "MSTR": 116.45294356671394,
+    "IWM": 210.2998698665256,
+    "PLTR": 141.82935998808114,
+    "TNA": 43.98741617749049
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -1604,7 +1810,7 @@
    "name": "Stochastic reversion",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 5.3298070651542275,
+   "cash_gbp": 6.954617015056672,
    "positions": {
     "TNA": {
      "units": 0.12060945983462582,
@@ -1632,20 +1838,6 @@
      "cost_gbp": 5.300796340751728,
      "opened_at": "2026-09-30T17:25:05.000181Z",
      "entry_price": 278.8699951171875,
-     "realised_gbp": 0.0
-    },
-    "META": {
-     "units": 0.009566842540295798,
-     "cost_gbp": 5.300796340751728,
-     "opened_at": "2026-09-30T17:25:05.000181Z",
-     "entry_price": 734.5745849609375,
-     "realised_gbp": 0.0
-    },
-    "MSTR": {
-     "units": 0.045580229097574226,
-     "cost_gbp": 5.300796340751728,
-     "opened_at": "2026-09-30T17:25:05.000181Z",
-     "entry_price": 154.17999267578125,
      "realised_gbp": 0.0
     },
     "PLTR": {
@@ -1676,13 +1868,6 @@
      "entry_price": 2677.88,
      "realised_gbp": 0.0
     },
-    "COIN": {
-     "units": 0.0329606442717003,
-     "cost_gbp": 4.647040162366918,
-     "opened_at": "2026-09-30T17:50:05.000147Z",
-     "entry_price": 186.9149932861328,
-     "realised_gbp": 0.0
-    },
     "ETHU": {
      "units": 0.20393442622011146,
      "cost_gbp": 4.647040162366918,
@@ -1691,8 +1876,8 @@
      "realised_gbp": 0.0
     },
     "SOL-USD": {
-     "units": 0.021933990983890962,
-     "cost_gbp": 1.9773666834004953,
+     "units": 0.06373535282020257,
+     "cost_gbp": 5.717381399070834,
      "opened_at": "2026-09-30T17:50:05.000147Z",
      "entry_price": 119.22,
      "realised_gbp": 0.0
@@ -1710,15 +1895,29 @@
      "opened_at": "2026-09-30T18:40:05.000144Z",
      "entry_price": 348.8800048828125,
      "realised_gbp": 0.0
+    },
+    "LABU": {
+     "units": 0.024382091472171085,
+     "cost_gbp": 4.941360199965313,
+     "opened_at": "2026-09-30T19:00:05.000147Z",
+     "entry_price": 268.7250061035156,
+     "realised_gbp": 0.0
+    },
+    "SPY": {
+     "units": 0.008548269813477255,
+     "cost_gbp": 4.941360199965313,
+     "opened_at": "2026-09-30T19:00:05.000147Z",
+     "entry_price": 766.47998046875,
+     "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -25.70693375754515,
-   "fees_gbp": 26.90131553000301,
-   "closed_trades": 370,
-   "wins": 91,
-   "losses": 279,
-   "gross_win_gbp": 3.5973381816713386,
-   "gross_loss_gbp": 29.266567013451763,
+   "realised_gbp": -25.708021535912117,
+   "fees_gbp": 26.925068491776443,
+   "closed_trades": 373,
+   "wins": 93,
+   "losses": 280,
+   "gross_win_gbp": 3.603289169143426,
+   "gross_loss_gbp": 29.27360577929082,
    "peak_equity_gbp": 100.0,
    "max_drawdown_pct": -25.972,
    "day": "2026-09-30",
@@ -1726,44 +1925,36 @@
    "halted_day": "2026-09-28",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 74.03688916042267,
+   "equity_gbp": 74.09744182103599,
    "last_marks": {
-    "TNA": 44.07033353958917,
-    "AMZN": 188.73017585182075,
-    "BTC-USD": 63150.46235520202,
-    "IWM": 210.4167063992206,
-    "META": 552.6713054161297,
-    "MSTR": 116.09874185138186,
-    "PLTR": 141.93111749987017,
-    "BITX": 14.830818036524716,
-    "DOGE-USD": 0.07072057952438471,
-    "ETH-USD": 2015.1671593359583,
-    "COIN": 140.55169188792743,
-    "ETHU": 22.643852842241962,
-    "SOL-USD": 89.24873817615807,
-    "XRP-USD": 1.123222506387611,
-    "GOOGL": 262.98226529292975
+    "TNA": 43.98741617749049,
+    "AMZN": 188.69248405051718,
+    "BTC-USD": 63152.52773985239,
+    "IWM": 210.2998698665256,
+    "PLTR": 141.82935998808114,
+    "BITX": 14.838432309476488,
+    "DOGE-USD": 0.07090902702897964,
+    "ETH-USD": 2017.7074316978978,
+    "ETHU": 22.681541768064804,
+    "SOL-USD": 89.23366237579047,
+    "XRP-USD": 1.1260869084574539,
+    "GOOGL": 263.3440697792907,
+    "LABU": 203.08234424284728,
+    "SPY": 578.0061768920259
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 86.0869668467867,
    "month": "2026-09",
    "month_start_equity_gbp": 97.65255615456758,
-   "loss_streak": 3
+   "loss_streak": 1
   },
   "Williams %R": {
    "name": "Williams %R",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 24.028722506104444,
+   "cash_gbp": 0.0,
    "positions": {
-    "MSTR": {
-     "units": 0.030597474394610746,
-     "cost_gbp": 3.557208869394005,
-     "opened_at": "2026-09-30T17:20:05.000182Z",
-     "entry_price": 154.1300048828125,
-     "realised_gbp": 0.005750612551201684
-    },
     "AMZN": {
      "units": 0.018843507114744702,
      "cost_gbp": 3.563158650202715,
@@ -1806,75 +1997,115 @@
      "entry_price": 149.77999877929688,
      "realised_gbp": 0.0
     },
-    "META": {
-     "units": 0.0076304960906145875,
-     "cost_gbp": 4.2265554353731,
-     "opened_at": "2026-09-30T17:55:05.000150Z",
-     "entry_price": 734.3400268554688,
+    "GOOGL": {
+     "units": 0.025635233210117722,
+     "cost_gbp": 6.745465719876598,
+     "opened_at": "2026-09-30T18:45:05.000153Z",
+     "entry_price": 348.9049987792969,
      "realised_gbp": 0.0
     },
-    "SQQQ": {
-     "units": 0.15570325093130322,
-     "cost_gbp": 3.9784470150075917,
-     "opened_at": "2026-09-30T18:05:05.000173Z",
-     "entry_price": 33.875,
+    "BTC-USD": {
+     "units": 0.00010640356180673993,
+     "cost_gbp": 6.744621945680061,
+     "opened_at": "2026-09-30T18:50:05.000122Z",
+     "entry_price": 83839.78,
      "realised_gbp": 0.0
     },
-    "COIN": {
-     "units": 0.04798654719870527,
-     "cost_gbp": 6.751604006385897,
-     "opened_at": "2026-09-30T18:10:05.000142Z",
-     "entry_price": 186.72999572753906,
+    "TSLA": {
+     "units": 0.025384298650643823,
+     "cost_gbp": 6.744621945680061,
+     "opened_at": "2026-09-30T18:50:05.000122Z",
+     "entry_price": 352.30999755859375,
+     "realised_gbp": 0.0
+    },
+    "BITX": {
+     "units": 0.28318952334305414,
+     "cost_gbp": 4.213778791153137,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 19.729999542236328,
+     "realised_gbp": 0.0
+    },
+    "DOGE-USD": {
+     "units": 59.29151726212368,
+     "cost_gbp": 4.213778791153137,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 0.094,
+     "realised_gbp": 0.0
+    },
+    "ETH-USD": {
+     "units": 0.0020817328801286472,
+     "cost_gbp": 4.213778791153137,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 2677.29,
+     "realised_gbp": 0.0
+    },
+    "ETHU": {
+     "units": 0.18553309674214638,
+     "cost_gbp": 4.213778791153137,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 30.114999771118164,
+     "realised_gbp": 0.0
+    },
+    "SOL-USD": {
+     "units": 0.014032922654839504,
+     "cost_gbp": 1.2576632472796305,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 118.54,
+     "realised_gbp": 0.0
+    },
+    "XRP-USD": {
+     "units": 3.7360736418339213,
+     "cost_gbp": 4.219765047953447,
+     "opened_at": "2026-09-30T19:10:05.000178Z",
+     "entry_price": 1.4939,
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -32.52016894425247,
-   "fees_gbp": 31.495798707060512,
-   "closed_trades": 419,
-   "wins": 92,
-   "losses": 327,
-   "gross_win_gbp": 2.5210336558504314,
-   "gross_loss_gbp": 35.04695321265412,
+   "realised_gbp": -32.49545370543517,
+   "fees_gbp": 31.581756752925656,
+   "closed_trades": 424,
+   "wins": 95,
+   "losses": 329,
+   "gross_win_gbp": 2.5582898946385964,
+   "gross_loss_gbp": 35.05374360007377,
    "peak_equity_gbp": 100.0,
-   "max_drawdown_pct": -32.561,
+   "max_drawdown_pct": -32.613,
    "day": "2026-09-30",
    "day_start_equity_gbp": 71.58929997995307,
    "halted_day": "2026-09-29",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 67.43855036171598,
+   "equity_gbp": 67.40129436544177,
    "last_marks": {
-    "MSTR": 116.09874185138186,
-    "AMZN": 188.73017585182075,
+    "AMZN": 188.69248405051718,
     "SPY": 578.0061768920259,
-    "TNA": 44.07033353958917,
-    "PLTR": 141.93111749987017,
-    "IWM": 210.4167063992206,
-    "UPRO": 112.61630465862024,
-    "META": 552.6713054161297,
-    "SQQQ": 25.57232579843563,
-    "COIN": 140.55169188792743
+    "TNA": 43.98741617749049,
+    "PLTR": 141.82935998808114,
+    "IWM": 210.2998698665256,
+    "UPRO": 112.63130316606603,
+    "GOOGL": 263.3440697792907,
+    "BTC-USD": 63152.52773985239,
+    "TSLA": 266.30556188061473,
+    "BITX": 14.838432309476488,
+    "DOGE-USD": 0.07090902702897964,
+    "ETH-USD": 2017.7074316978978,
+    "ETHU": 22.681541768064804,
+    "SOL-USD": 89.23366237579047,
+    "XRP-USD": 1.1260869084574539
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 81.4598314159545,
    "month": "2026-09",
    "month_start_equity_gbp": 95.1378839754598,
-   "loss_streak": 7
+   "loss_streak": 2
   },
   "CCI reversion": {
    "name": "CCI reversion",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 0.33981524676797115,
+   "cash_gbp": 2.4767747222924537,
    "positions": {
-    "AAPL": {
-     "units": 0.025342715258205327,
-     "cost_gbp": 6.422007819580421,
-     "opened_at": "2026-09-30T17:40:05.000158Z",
-     "entry_price": 335.9549865722656,
-     "realised_gbp": 0.0
-    },
     "QQQ": {
      "units": 0.011456302453526216,
      "cost_gbp": 6.422007819580421,
@@ -1901,13 +2132,6 @@
      "cost_gbp": 5.441706736317682,
      "opened_at": "2026-09-30T17:50:05.000147Z",
      "entry_price": 279.1400146484375,
-     "realised_gbp": 0.0
-    },
-    "MSTR": {
-     "units": 0.04673580053731968,
-     "cost_gbp": 5.441706736317682,
-     "opened_at": "2026-09-30T17:50:05.000147Z",
-     "entry_price": 154.36500549316406,
      "realised_gbp": 0.0
     },
     "PLTR": {
@@ -1938,25 +2162,11 @@
      "entry_price": 19.78499984741211,
      "realised_gbp": 0.0
     },
-    "COIN": {
-     "units": 0.019247250746277433,
-     "cost_gbp": 2.711521537744321,
-     "opened_at": "2026-09-30T18:15:05.000173Z",
-     "entry_price": 186.8000030517578,
-     "realised_gbp": 0.0
-    },
     "DOGE-USD": {
      "units": 55.027922102548125,
      "cost_gbp": 3.9211710536088225,
      "opened_at": "2026-09-30T18:20:05.000154Z",
      "entry_price": 0.09425,
-     "realised_gbp": 0.0
-    },
-    "META": {
-     "units": 0.004476010365160635,
-     "cost_gbp": 2.4747630519666783,
-     "opened_at": "2026-09-30T18:20:05.000154Z",
-     "entry_price": 733.1199951171875,
      "realised_gbp": 0.0
     },
     "GOOGL": {
@@ -1979,15 +2189,43 @@
      "opened_at": "2026-09-30T18:35:05.000154Z",
      "entry_price": 58.35499954223633,
      "realised_gbp": 0.0
+    },
+    "AMZN": {
+     "units": 0.02072553902373198,
+     "cost_gbp": 3.915053538865478,
+     "opened_at": "2026-09-30T18:45:05.000153Z",
+     "entry_price": 250.47500610351562,
+     "realised_gbp": 0.0
+    },
+    "SPY": {
+     "units": 0.006769638166587701,
+     "cost_gbp": 3.915053538865478,
+     "opened_at": "2026-09-30T18:45:05.000153Z",
+     "entry_price": 766.8400268554688,
+     "realised_gbp": 0.0
+    },
+    "UPRO": {
+     "units": 0.034743698736622815,
+     "cost_gbp": 3.915053538865478,
+     "opened_at": "2026-09-30T18:45:05.000153Z",
+     "entry_price": 149.4149932861328,
+     "realised_gbp": 0.0
+    },
+    "XRP-USD": {
+     "units": 2.822481344837748,
+     "cost_gbp": 3.185547034628981,
+     "opened_at": "2026-09-30T18:55:05.000134Z",
+     "entry_price": 1.4928,
+     "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -29.38315924020922,
-   "fees_gbp": 27.545619877287045,
-   "closed_trades": 294,
-   "wins": 39,
-   "losses": 255,
-   "gross_win_gbp": 1.4747856047652785,
-   "gross_loss_gbp": 30.857944844974504,
+   "realised_gbp": -29.365491259068428,
+   "fees_gbp": 27.56955568232037,
+   "closed_trades": 298,
+   "wins": 42,
+   "losses": 256,
+   "gross_win_gbp": 1.4943562794977412,
+   "gross_loss_gbp": 30.85984753856617,
    "peak_equity_gbp": 100.31126675914274,
    "max_drawdown_pct": -29.88,
    "day": "2026-09-30",
@@ -1995,31 +2233,31 @@
    "halted_day": "2026-09-28",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 70.44637581763416,
+   "equity_gbp": 70.49817464402688,
    "last_marks": {
-    "AAPL": 253.66467258069184,
-    "QQQ": 560.254431160722,
-    "TQQQ": 59.62856193435026,
-    "ETH-USD": 2015.1671593359583,
-    "IWM": 210.4167063992206,
-    "MSTR": 116.09874185138186,
-    "PLTR": 141.93111749987017,
-    "BTC-USD": 63150.46235520202,
-    "ETHU": 22.643852842241962,
-    "BITX": 14.830818036524716,
-    "COIN": 140.55169188792743,
-    "DOGE-USD": 0.07072057952438471,
-    "META": 552.6713054161297,
-    "GOOGL": 262.98226529292975,
-    "SOL-USD": 89.24873817615807,
-    "TNA": 44.07033353958917
+    "QQQ": 560.6690064692925,
+    "TQQQ": 59.76047173698984,
+    "ETH-USD": 2017.7074316978978,
+    "IWM": 210.2998698665256,
+    "PLTR": 141.82935998808114,
+    "BTC-USD": 63152.52773985239,
+    "ETHU": 22.681541768064804,
+    "BITX": 14.838432309476488,
+    "DOGE-USD": 0.07090902702897964,
+    "GOOGL": 263.3440697792907,
+    "SOL-USD": 89.23366237579047,
+    "TNA": 43.98741617749049,
+    "AMZN": 188.69248405051718,
+    "SPY": 578.0061768920259,
+    "UPRO": 112.63130316606603,
+    "XRP-USD": 1.1260869084574539
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 81.82183099669754,
    "month": "2026-09",
    "month_start_equity_gbp": 95.66812060665958,
-   "loss_streak": 4
+   "loss_streak": 0
   },
   "MFI reversion": {
    "name": "MFI reversion",
@@ -2077,13 +2315,13 @@
    "halted_day": "2026-09-25",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 79.31835279913065,
+   "equity_gbp": 79.43290279439772,
    "last_marks": {
-    "TNA": 44.07033353958917,
-    "PLTR": 141.93111749987017,
-    "DOGE-USD": 0.07072057952438471,
-    "COIN": 140.55169188792743,
-    "XRP-USD": 1.123222506387611
+    "TNA": 43.98741617749049,
+    "PLTR": 141.82935998808114,
+    "DOGE-USD": 0.07090902702897964,
+    "COIN": 141.1999517638109,
+    "XRP-USD": 1.1260869084574539
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -2120,9 +2358,9 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 99.94629318995513,
+   "equity_gbp": 99.949562010675,
    "last_marks": {
-    "BTC-USD": 63150.46235520202
+    "BTC-USD": 63152.52773985239
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -2134,10 +2372,18 @@
    "name": "Agent",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 99.75203459536596,
-   "positions": {},
-   "realised_gbp": -0.2479654046340123,
-   "fees_gbp": 0.760241250952584,
+   "cash_gbp": 79.9029164835865,
+   "positions": {
+    "TQQQ": {
+     "units": 0.3343052125967817,
+     "cost_gbp": 19.908807303941867,
+     "opened_at": "2026-09-30T19:00:05.000147Z",
+     "entry_price": 78.96499633789062,
+     "realised_gbp": 0.05968919216241275
+    }
+   },
+   "realised_gbp": -0.18827621247159954,
+   "fees_gbp": 0.7902125515427044,
    "closed_trades": 26,
    "wins": 18,
    "losses": 8,
@@ -2150,8 +2396,10 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 99.75203459536596,
-   "last_marks": {},
+   "equity_gbp": 99.88115369250485,
+   "last_marks": {
+    "TQQQ": 59.76047173698984
+   },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 100.40014529576762,
@@ -2192,15 +2440,8 @@
    "name": "Consensus",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 18.306984652906927,
+   "cash_gbp": 0.0,
    "positions": {
-    "LABU": {
-     "units": 0.09024319343884668,
-     "cost_gbp": 18.49910720191021,
-     "opened_at": "2026-09-30T18:15:05.000173Z",
-     "entry_price": 271.94000244140625,
-     "realised_gbp": 0.0
-    },
     "TECL": {
      "units": 0.10413974279955038,
      "cost_gbp": 18.440259077616105,
@@ -2208,40 +2449,55 @@
      "entry_price": 235.03500366210938,
      "realised_gbp": 0.0
     },
+    "GOOGL": {
+     "units": 0.06998259091698775,
+     "cost_gbp": 18.414701522292894,
+     "opened_at": "2026-09-30T18:45:05.000153Z",
+     "entry_price": 348.9049987792969,
+     "realised_gbp": 0.0
+    },
+    "AMD": {
+     "units": 0.03980495872789375,
+     "cost_gbp": 18.395582258024614,
+     "opened_at": "2026-09-30T19:10:05.000178Z",
+     "entry_price": 612.7860717773438,
+     "realised_gbp": 0.0
+    },
     "SOXL": {
-     "units": 0.1653849000379885,
-     "cost_gbp": 18.428535343356053,
-     "opened_at": "2026-09-30T18:40:05.000144Z",
-     "entry_price": 147.75,
+     "units": 0.16286336369281207,
+     "cost_gbp": 18.218804582251213,
+     "opened_at": "2026-09-30T19:10:05.000178Z",
+     "entry_price": 148.3300018310547,
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -26.325113724210713,
-   "fees_gbp": 22.347896054033416,
-   "closed_trades": 220,
+   "realised_gbp": -26.530652559815184,
+   "fees_gbp": 22.393767084791126,
+   "closed_trades": 222,
    "wins": 15,
-   "losses": 205,
+   "losses": 207,
    "gross_win_gbp": 1.9192150683491724,
-   "gross_loss_gbp": 28.24432879255989,
+   "gross_loss_gbp": 28.449867628164363,
    "peak_equity_gbp": 100.73585934090583,
-   "max_drawdown_pct": -26.837,
+   "max_drawdown_pct": -27.071,
    "day": "2026-09-30",
    "day_start_equity_gbp": 76.82343580423762,
    "halted_day": "2026-09-27",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 73.70493171058395,
+   "equity_gbp": 73.56403098770053,
    "last_marks": {
-    "LABU": 205.31732888688165,
-    "TECL": 177.16703973033742,
-    "SOXL": 111.37247521560265
+    "TECL": 178.0150535010146,
+    "GOOGL": 263.3440697792907,
+    "AMD": 461.9120243078763,
+    "SOXL": 111.80967480649363
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 83.225107464946,
    "month": "2026-09",
    "month_start_equity_gbp": 95.03958332999736,
-   "loss_streak": 13
+   "loss_streak": 15
   },
   "Gap and go": {
    "name": "Gap and go",
@@ -2356,17 +2612,17 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 95.7586212691405,
+   "equity_gbp": 95.76847580776749,
    "last_marks": {
-    "AAPL": 253.66467258069184,
-    "AMZN": 188.73017585182075,
-    "GOOGL": 262.98226529292975,
-    "MSFT": 390.2502139088081,
-    "QQQ": 560.254431160722,
-    "TECL": 177.16703973033742,
-    "LABU": 205.31732888688165,
-    "META": 552.6713054161297,
-    "TQQQ": 59.62856193435026
+    "AAPL": 253.6013429932712,
+    "AMZN": 188.69248405051718,
+    "GOOGL": 263.3440697792907,
+    "MSFT": 390.7722631848429,
+    "QQQ": 560.6690064692925,
+    "TECL": 178.0150535010146,
+    "LABU": 203.08234424284728,
+    "META": 553.270555598588,
+    "TQQQ": 59.76047173698984
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -2439,21 +2695,21 @@
    "gross_win_gbp": 1.111497058932649,
    "gross_loss_gbp": 4.273569656912193,
    "peak_equity_gbp": 100.03502703682577,
-   "max_drawdown_pct": -3.345,
+   "max_drawdown_pct": -3.375,
    "day": "2026-09-30",
    "day_start_equity_gbp": 97.17362379368598,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 96.82427527096235,
+   "equity_gbp": 96.77883591368474,
    "last_marks": {
-    "AMZN": 188.73017585182075,
-    "MSFT": 390.2502139088081,
-    "QQQ": 560.254431160722,
-    "TQQQ": 59.62856193435026,
-    "LABU": 205.31732888688165,
-    "GOOGL": 262.98226529292975,
-    "META": 552.6713054161297
+    "AMZN": 188.69248405051718,
+    "MSFT": 390.7722631848429,
+    "QQQ": 560.6690064692925,
+    "TQQQ": 59.76047173698984,
+    "LABU": 203.08234424284728,
+    "GOOGL": 263.3440697792907,
+    "META": 553.270555598588
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -2598,19 +2854,19 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 91.7910643504316,
+   "equity_gbp": 91.85001775302968,
    "last_marks": {
-    "NVDA": 173.83528922932985,
-    "SOXL": 111.37247521560265,
-    "DOGE-USD": 0.07072057952438471,
-    "SOL-USD": 89.24873817615807,
-    "XRP-USD": 1.123222506387611,
-    "BTC-USD": 63150.46235520202,
-    "ETH-USD": 2015.1671593359583,
-    "LABU": 205.31732888688165,
-    "GOOGL": 262.98226529292975,
-    "AMZN": 188.73017585182075,
-    "QQQ": 560.254431160722
+    "NVDA": 173.91066133001408,
+    "SOXL": 111.80967480649363,
+    "DOGE-USD": 0.07090902702897964,
+    "SOL-USD": 89.23366237579047,
+    "XRP-USD": 1.1260869084574539,
+    "BTC-USD": 63152.52773985239,
+    "ETH-USD": 2017.7074316978978,
+    "LABU": 203.08234424284728,
+    "GOOGL": 263.3440697792907,
+    "AMZN": 188.69248405051718,
+    "QQQ": 560.6690064692925
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -2703,17 +2959,17 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 97.32687939256286,
+   "equity_gbp": 97.41277024423454,
    "last_marks": {
-    "NVDA": 173.83528922932985,
-    "SOXL": 111.37247521560265,
-    "TQQQ": 59.62856193435026,
-    "BITX": 14.830818036524716,
-    "ETHU": 22.643852842241962,
-    "TECL": 177.16703973033742,
-    "META": 552.6713054161297,
-    "GOOGL": 262.98226529292975,
-    "LABU": 205.31732888688165
+    "NVDA": 173.91066133001408,
+    "SOXL": 111.80967480649363,
+    "TQQQ": 59.76047173698984,
+    "BITX": 14.838432309476488,
+    "ETHU": 22.681541768064804,
+    "TECL": 178.0150535010146,
+    "META": 553.270555598588,
+    "GOOGL": 263.3440697792907,
+    "LABU": 203.08234424284728
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -2726,7 +2982,7 @@
    "name": "Triple EMA stack \u00b7 1h",
    "created_at": "2026-09-24T21:15:39.937014Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 0.0,
+   "cash_gbp": 3.0622573041098757,
    "positions": {
     "NVDA": {
      "units": 0.044339802428587115,
@@ -2748,13 +3004,6 @@
      "opened_at": "2026-09-30T14:00:05.000126Z",
      "entry_price": 0.0962,
      "realised_gbp": -0.1444322549548076
-    },
-    "XRP-USD": {
-     "units": 6.838991315111993,
-     "cost_gbp": 7.842604576715105,
-     "opened_at": "2026-09-30T14:00:05.000126Z",
-     "entry_price": 1.5193,
-     "realised_gbp": -0.107409974152743
     },
     "QQQ": {
      "units": 0.020692409860058613,
@@ -2806,20 +3055,20 @@
      "realised_gbp": 0.0
     },
     "SOL-USD": {
-     "units": 0.04219079921304715,
-     "cost_gbp": 3.788893415868521,
+     "units": 0.09370605430124285,
+     "cost_gbp": 8.410484470688328,
      "opened_at": "2026-09-30T18:30:05.000146Z",
      "entry_price": 118.78,
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -6.978184442498666,
-   "fees_gbp": 1.6602249468090486,
-   "closed_trades": 34,
+   "realised_gbp": -7.136940660284089,
+   "fees_gbp": 1.697169157863933,
+   "closed_trades": 35,
    "wins": 2,
-   "losses": 32,
+   "losses": 33,
    "gross_win_gbp": 0.3395117121886466,
-   "gross_loss_gbp": 6.680014582857555,
+   "gross_loss_gbp": 6.946180774795721,
    "peak_equity_gbp": 101.14408666219427,
    "max_drawdown_pct": -8.764,
    "day": "2026-09-30",
@@ -2827,33 +3076,32 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 92.43375933399112,
+   "equity_gbp": 92.45195572057551,
    "last_marks": {
-    "NVDA": 173.83528922932985,
-    "SOXL": 111.37247521560265,
-    "DOGE-USD": 0.07072057952438471,
-    "XRP-USD": 1.123222506387611,
-    "QQQ": 560.254431160722,
-    "TECL": 177.16703973033742,
-    "TQQQ": 59.62856193435026,
-    "BITX": 14.830818036524716,
-    "GOOGL": 262.98226529292975,
-    "LABU": 205.31732888688165,
-    "PLTR": 141.93111749987017,
-    "SOL-USD": 89.24873817615807
+    "NVDA": 173.91066133001408,
+    "SOXL": 111.80967480649363,
+    "DOGE-USD": 0.07090902702897964,
+    "QQQ": 560.6690064692925,
+    "TECL": 178.0150535010146,
+    "TQQQ": 59.76047173698984,
+    "BITX": 14.838432309476488,
+    "GOOGL": 263.3440697792907,
+    "LABU": 203.08234424284728,
+    "PLTR": 141.82935998808114,
+    "SOL-USD": 89.23366237579047
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 99.01082277435037,
    "month": "2026-09",
    "month_start_equity_gbp": 100.06949469950564,
-   "loss_streak": 25
+   "loss_streak": 26
   },
   "MACD cross \u00b7 1h": {
    "name": "MACD cross \u00b7 1h",
    "created_at": "2026-09-24T21:15:39.937014Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 0.0044273421640124155,
+   "cash_gbp": 9.908299433205382,
    "positions": {
     "LABU": {
      "units": 0.0297176932028507,
@@ -2882,27 +3130,6 @@
      "opened_at": "2026-09-30T13:35:05.000156Z",
      "entry_price": 85194.33,
      "realised_gbp": -0.11385245212099804
-    },
-    "DOGE-USD": {
-     "units": 74.3304413049172,
-     "cost_gbp": 5.46730475992329,
-     "opened_at": "2026-09-30T13:35:05.000156Z",
-     "entry_price": 0.09745,
-     "realised_gbp": -0.18332263728371156
-    },
-    "ETH-USD": {
-     "units": 0.0026267440806419864,
-     "cost_gbp": 5.397978075222904,
-     "opened_at": "2026-09-30T13:35:05.000156Z",
-     "entry_price": 2722.63,
-     "realised_gbp": -0.12020390410275095
-    },
-    "SOL-USD": {
-     "units": 0.059290062704166833,
-     "cost_gbp": 5.460565975910366,
-     "opened_at": "2026-09-30T13:35:05.000156Z",
-     "entry_price": 122.02,
-     "realised_gbp": -0.17733484749846795
     },
     "BITX": {
      "units": 0.4012359659975627,
@@ -2980,15 +3207,22 @@
      "opened_at": "2026-09-30T18:00:05.000145Z",
      "entry_price": 336.45001220703125,
      "realised_gbp": 0.0
+    },
+    "TSLA": {
+     "units": 0.022269832620701518,
+     "cost_gbp": 5.9276307759490505,
+     "opened_at": "2026-09-30T19:00:05.000147Z",
+     "entry_price": 352.9366149902344,
+     "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -4.9815995507077995,
-   "fees_gbp": 2.755445249306237,
-   "closed_trades": 42,
+   "realised_gbp": -5.4759454947739385,
+   "fees_gbp": 2.8060450043906617,
+   "closed_trades": 45,
    "wins": 4,
-   "losses": 38,
+   "losses": 41,
    "gross_win_gbp": 0.8465866170459329,
-   "gross_loss_gbp": 6.421032390044386,
+   "gross_loss_gbp": 7.396239722995456,
    "peak_equity_gbp": 100.74906863555756,
    "max_drawdown_pct": -5.926,
    "day": "2026-09-30",
@@ -2996,33 +3230,31 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 94.89552130200033,
+   "equity_gbp": 94.8633421788434,
    "last_marks": {
-    "LABU": 205.31732888688165,
-    "AMZN": 188.73017585182075,
-    "GOOGL": 262.98226529292975,
-    "BTC-USD": 63150.46235520202,
-    "DOGE-USD": 0.07072057952438471,
-    "ETH-USD": 2015.1671593359583,
-    "SOL-USD": 89.24873817615807,
-    "BITX": 14.830818036524716,
-    "IWM": 210.4167063992206,
-    "QQQ": 560.254431160722,
+    "LABU": 203.08234424284728,
+    "AMZN": 188.69248405051718,
+    "GOOGL": 263.3440697792907,
+    "BTC-USD": 63152.52773985239,
+    "BITX": 14.838432309476488,
+    "IWM": 210.2998698665256,
+    "QQQ": 560.6690064692925,
     "SPY": 578.0061768920259,
-    "MSFT": 390.2502139088081,
-    "PLTR": 141.93111749987017,
-    "TECL": 177.16703973033742,
-    "TNA": 44.07033353958917,
-    "TQQQ": 59.62856193435026,
-    "UPRO": 112.61630465862024,
-    "AAPL": 253.66467258069184
+    "MSFT": 390.7722631848429,
+    "PLTR": 141.82935998808114,
+    "TECL": 178.0150535010146,
+    "TNA": 43.98741617749049,
+    "TQQQ": 59.76047173698984,
+    "UPRO": 112.63130316606603,
+    "AAPL": 253.6013429932712,
+    "TSLA": 266.30556188061473
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 98.70342642027815,
    "month": "2026-09",
    "month_start_equity_gbp": 99.25857297192141,
-   "loss_streak": 5
+   "loss_streak": 8
   },
   "MACD zero-line \u00b7 1h": {
    "name": "MACD zero-line \u00b7 1h",
@@ -3031,85 +3263,69 @@
    "cash_gbp": 0.0,
    "positions": {
     "BTC-USD": {
-     "units": 0.00020848880223001042,
-     "cost_gbp": 13.193485647571809,
+     "units": 0.00029027490736126336,
+     "cost_gbp": 18.38213650710277,
      "opened_at": "2026-09-30T12:00:05.000122Z",
      "entry_price": 83879.17,
      "realised_gbp": -0.03149073426477411
     },
-    "DOGE-USD": {
-     "units": 184.84138367097475,
-     "cost_gbp": 13.355230517141603,
-     "opened_at": "2026-09-30T12:00:05.000122Z",
-     "entry_price": 0.09577,
-     "realised_gbp": -0.09526400947238134
-    },
-    "SOL-USD": {
-     "units": 0.14743969006211272,
-     "cost_gbp": 13.311906668497398,
-     "opened_at": "2026-09-30T12:00:05.000122Z",
-     "entry_price": 119.46,
-     "realised_gbp": -0.14359346625649927
-    },
     "QQQ": {
-     "units": 0.024232340760536954,
-     "cost_gbp": 13.56577443269394,
+     "units": 0.03281249250967514,
+     "cost_gbp": 18.37268988552304,
      "opened_at": "2026-09-30T14:30:05.000157Z",
      "entry_price": 743.2109985351562,
      "realised_gbp": 0.0
     },
     "GOOGL": {
-     "units": 0.04975782337548067,
-     "cost_gbp": 13.157883668610657,
+     "units": 0.0698292771624146,
+     "cost_gbp": 18.441683861287796,
      "opened_at": "2026-09-30T15:30:05.000141Z",
      "entry_price": 351.135009765625,
      "realised_gbp": 0.0
     },
     "TQQQ": {
-     "units": 0.21215320868336285,
-     "cost_gbp": 12.66992042524821,
+     "units": 0.30734725029620275,
+     "cost_gbp": 18.33899096181602,
      "opened_at": "2026-09-30T15:30:05.000141Z",
      "entry_price": 79.30010223388672,
      "realised_gbp": 0.0
     },
     "AMZN": {
-     "units": 0.06948674115358786,
-     "cost_gbp": 13.154070541222357,
+     "units": 0.09744544365054261,
+     "cost_gbp": 18.428320297662594,
      "opened_at": "2026-09-30T18:00:05.000145Z",
      "entry_price": 250.9698944091797,
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -7.5917280990140465,
-   "fees_gbp": 3.182707311642579,
-   "closed_trades": 24,
+   "realised_gbp": -8.036178486607799,
+   "fees_gbp": 3.287643242844488,
+   "closed_trades": 26,
    "wins": 1,
-   "losses": 23,
+   "losses": 25,
    "gross_win_gbp": 0.42496395754616945,
-   "gross_loss_gbp": 7.746343846566561,
+   "gross_loss_gbp": 8.429651709889194,
    "peak_equity_gbp": 100.6592030844799,
-   "max_drawdown_pct": -8.819,
+   "max_drawdown_pct": -8.826,
    "day": "2026-09-30",
    "day_start_equity_gbp": 94.28831597058277,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 91.82339734178572,
+   "equity_gbp": 91.87210723878562,
    "last_marks": {
-    "BTC-USD": 63150.46235520202,
-    "DOGE-USD": 0.07072057952438471,
-    "SOL-USD": 89.24873817615807,
-    "QQQ": 560.254431160722,
-    "GOOGL": 262.98226529292975,
-    "TQQQ": 59.62856193435026,
-    "AMZN": 188.73017585182075
+    "BTC-USD": 63152.52773985239,
+    "QQQ": 560.6690064692925,
+    "GOOGL": 263.3440697792907,
+    "TQQQ": 59.76047173698984,
+    "AMZN": 188.69248405051718
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 97.91248370560466,
    "month": "2026-09",
    "month_start_equity_gbp": 99.17509142383366,
-   "loss_streak": 18
+   "loss_streak": 20
   },
   "Supertrend \u00b7 1h": {
    "name": "Supertrend \u00b7 1h",
@@ -3209,19 +3425,19 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 96.26675221344976,
+   "equity_gbp": 96.3483087863321,
    "last_marks": {
-    "MSFT": 390.2502139088081,
-    "SQQQ": 25.57232579843563,
-    "TECL": 177.16703973033742,
-    "NVDA": 173.83528922932985,
-    "BTC-USD": 63150.46235520202,
-    "DOGE-USD": 0.07072057952438471,
-    "ETH-USD": 2015.1671593359583,
-    "SOL-USD": 89.24873817615807,
-    "AAPL": 253.66467258069184,
-    "GOOGL": 262.98226529292975,
-    "AMZN": 188.73017585182075
+    "MSFT": 390.7722631848429,
+    "SQQQ": 25.51202409221523,
+    "TECL": 178.0150535010146,
+    "NVDA": 173.91066133001408,
+    "BTC-USD": 63152.52773985239,
+    "DOGE-USD": 0.07090902702897964,
+    "ETH-USD": 2017.7074316978978,
+    "SOL-USD": 89.23366237579047,
+    "AAPL": 253.6013429932712,
+    "GOOGL": 263.3440697792907,
+    "AMZN": 188.69248405051718
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -3234,7 +3450,7 @@
    "name": "Parabolic SAR \u00b7 1h",
    "created_at": "2026-09-24T21:15:39.937014Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 19.930253963171754,
+   "cash_gbp": 24.910629796550932,
    "positions": {
     "NVDA": {
      "units": 0.02871407201474236,
@@ -3263,13 +3479,6 @@
      "opened_at": "2026-09-29T17:30:05.000137Z",
      "entry_price": 727.2249755859375,
      "realised_gbp": -0.13074720807216966
-    },
-    "XRP-USD": {
-     "units": 4.432771897546705,
-     "cost_gbp": 5.137477502408543,
-     "opened_at": "2026-09-30T13:35:05.000156Z",
-     "entry_price": 1.5355,
-     "realised_gbp": -0.17089661510524135
     },
     "AAPL": {
      "units": 0.019610274173306998,
@@ -3342,13 +3551,13 @@
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -5.015717482985322,
-   "fees_gbp": 1.4065814384457789,
-   "closed_trades": 30,
+   "realised_gbp": -5.172819152014687,
+   "fees_gbp": 1.4215675242031887,
+   "closed_trades": 31,
    "wins": 4,
-   "losses": 26,
+   "losses": 27,
    "gross_win_gbp": 0.2211247817575579,
-   "gross_loss_gbp": 5.205998861551354,
+   "gross_loss_gbp": 5.53399714568596,
    "peak_equity_gbp": 101.10910228628532,
    "max_drawdown_pct": -6.471,
    "day": "2026-09-30",
@@ -3356,30 +3565,29 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 95.04205739185925,
+   "equity_gbp": 95.06774908057471,
    "last_marks": {
-    "NVDA": 173.83528922932985,
-    "LABU": 205.31732888688165,
-    "SOXL": 111.37247521560265,
-    "META": 552.6713054161297,
-    "XRP-USD": 1.123222506387611,
-    "AAPL": 253.66467258069184,
-    "AMZN": 188.73017585182075,
-    "BITX": 14.830818036524716,
-    "GOOGL": 262.98226529292975,
-    "MSFT": 390.2502139088081,
-    "QQQ": 560.254431160722,
+    "NVDA": 173.91066133001408,
+    "LABU": 203.08234424284728,
+    "SOXL": 111.80967480649363,
+    "META": 553.270555598588,
+    "AAPL": 253.6013429932712,
+    "AMZN": 188.69248405051718,
+    "BITX": 14.838432309476488,
+    "GOOGL": 263.3440697792907,
+    "MSFT": 390.7722631848429,
+    "QQQ": 560.6690064692925,
     "SPY": 578.0061768920259,
-    "TECL": 177.16703973033742,
-    "TQQQ": 59.62856193435026,
-    "UPRO": 112.61630465862024
+    "TECL": 178.0150535010146,
+    "TQQQ": 59.76047173698984,
+    "UPRO": 112.63130316606603
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 100.32296309653381,
    "month": "2026-09",
    "month_start_equity_gbp": 99.74700543564713,
-   "loss_streak": 1
+   "loss_streak": 2
   },
   "ADX DI cross \u00b7 1h": {
    "name": "ADX DI cross \u00b7 1h",
@@ -3458,16 +3666,16 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 94.26900625081905,
+   "equity_gbp": 94.39522962001709,
    "last_marks": {
-    "NVDA": 173.83528922932985,
-    "SOXL": 111.37247521560265,
-    "MSFT": 390.2502139088081,
-    "AAPL": 253.66467258069184,
-    "AMD": 459.6913250520687,
-    "AMZN": 188.73017585182075,
-    "BITX": 14.830818036524716,
-    "GOOGL": 262.98226529292975
+    "NVDA": 173.91066133001408,
+    "SOXL": 111.80967480649363,
+    "MSFT": 390.7722631848429,
+    "AAPL": 253.6013429932712,
+    "AMD": 461.9120243078763,
+    "AMZN": 188.69248405051718,
+    "BITX": 14.838432309476488,
+    "GOOGL": 263.3440697792907
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -3525,12 +3733,12 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 93.78513304141528,
+   "equity_gbp": 93.97933380357465,
    "last_marks": {
-    "SOXL": 111.37247521560265,
-    "QQQ": 560.254431160722,
-    "TQQQ": 59.62856193435026,
-    "GOOGL": 262.98226529292975
+    "SOXL": 111.80967480649363,
+    "QQQ": 560.6690064692925,
+    "TQQQ": 59.76047173698984,
+    "GOOGL": 263.3440697792907
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -3596,20 +3804,20 @@
    "gross_win_gbp": 0.33769880553066045,
    "gross_loss_gbp": 9.88141578671775,
    "peak_equity_gbp": 100.14106699897769,
-   "max_drawdown_pct": -9.012,
+   "max_drawdown_pct": -9.024,
    "day": "2026-09-30",
    "day_start_equity_gbp": 92.70765557360872,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 91.30607484017109,
+   "equity_gbp": 91.26981850948589,
    "last_marks": {
-    "LABU": 205.31732888688165,
-    "MSFT": 390.2502139088081,
-    "NVDA": 173.83528922932985,
-    "QQQ": 560.254431160722,
-    "TQQQ": 59.62856193435026,
-    "TSLA": 265.51121608213236
+    "LABU": 203.08234424284728,
+    "MSFT": 390.7722631848429,
+    "NVDA": 173.91066133001408,
+    "QQQ": 560.6690064692925,
+    "TQQQ": 59.76047173698984,
+    "TSLA": 266.30556188061473
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -3695,16 +3903,16 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 96.00563390630903,
+   "equity_gbp": 96.15312305460606,
    "last_marks": {
-    "ETHU": 22.643852842241962,
-    "TECL": 177.16703973033742,
-    "MSFT": 390.2502139088081,
-    "PLTR": 141.93111749987017,
-    "BITX": 14.830818036524716,
-    "SOXL": 111.37247521560265,
-    "BTC-USD": 63150.46235520202,
-    "META": 552.6713054161297
+    "ETHU": 22.681541768064804,
+    "TECL": 178.0150535010146,
+    "MSFT": 390.7722631848429,
+    "PLTR": 141.82935998808114,
+    "BITX": 14.838432309476488,
+    "SOXL": 111.80967480649363,
+    "BTC-USD": 63152.52773985239,
+    "META": 553.270555598588
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -3777,21 +3985,21 @@
    "gross_win_gbp": 1.858278080075391,
    "gross_loss_gbp": 9.027138045408073,
    "peak_equity_gbp": 100.3803023452525,
-   "max_drawdown_pct": -7.652,
+   "max_drawdown_pct": -7.837,
    "day": "2026-09-30",
    "day_start_equity_gbp": 93.70177290463363,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 92.8469255468531,
+   "equity_gbp": 92.87422423325188,
    "last_marks": {
-    "LABU": 205.31732888688165,
-    "META": 552.6713054161297,
-    "AMD": 459.6913250520687,
-    "QQQ": 560.254431160722,
-    "SOXL": 111.37247521560265,
-    "TQQQ": 59.62856193435026,
-    "TSLA": 265.51121608213236
+    "LABU": 203.08234424284728,
+    "META": 553.270555598588,
+    "AMD": 461.9120243078763,
+    "QQQ": 560.6690064692925,
+    "SOXL": 111.80967480649363,
+    "TQQQ": 59.76047173698984,
+    "TSLA": 266.30556188061473
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -3870,15 +4078,15 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 87.40389287257597,
+   "equity_gbp": 87.41439755280999,
    "last_marks": {
-    "AMZN": 188.73017585182075,
-    "GOOGL": 262.98226529292975,
-    "LABU": 205.31732888688165,
-    "MSFT": 390.2502139088081,
-    "TECL": 177.16703973033742,
-    "TQQQ": 59.62856193435026,
-    "DOGE-USD": 0.07072057952438471
+    "AMZN": 188.69248405051718,
+    "GOOGL": 263.3440697792907,
+    "LABU": 203.08234424284728,
+    "MSFT": 390.7722631848429,
+    "TECL": 178.0150535010146,
+    "TQQQ": 59.76047173698984,
+    "DOGE-USD": 0.07090902702897964
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -3985,19 +4193,19 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 93.39624729460274,
+   "equity_gbp": 93.44499093737102,
    "last_marks": {
-    "NVDA": 173.83528922932985,
-    "MSFT": 390.2502139088081,
-    "SOXL": 111.37247521560265,
-    "DOGE-USD": 0.07072057952438471,
-    "GOOGL": 262.98226529292975,
-    "QQQ": 560.254431160722,
-    "TECL": 177.16703973033742,
-    "AMZN": 188.73017585182075,
-    "LABU": 205.31732888688165,
-    "PLTR": 141.93111749987017,
-    "TQQQ": 59.62856193435026
+    "NVDA": 173.91066133001408,
+    "MSFT": 390.7722631848429,
+    "SOXL": 111.80967480649363,
+    "DOGE-USD": 0.07090902702897964,
+    "GOOGL": 263.3440697792907,
+    "QQQ": 560.6690064692925,
+    "TECL": 178.0150535010146,
+    "AMZN": 188.69248405051718,
+    "LABU": 203.08234424284728,
+    "PLTR": 141.82935998808114,
+    "TQQQ": 59.76047173698984
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -4010,7 +4218,7 @@
    "name": "OBV trend \u00b7 1h",
    "created_at": "2026-09-24T21:15:39.937014Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 0.0,
+   "cash_gbp": 13.074952620309283,
    "positions": {
     "MSFT": {
      "units": 0.02105313197341762,
@@ -4061,20 +4269,6 @@
      "entry_price": 19.670000076293945,
      "realised_gbp": 0.0
     },
-    "META": {
-     "units": 0.014797595274555821,
-     "cost_gbp": 8.203492927090872,
-     "opened_at": "2026-09-30T15:00:05.000159Z",
-     "entry_price": 729.4600219726562,
-     "realised_gbp": 0.0
-    },
-    "XRP-USD": {
-     "units": 4.3608857723949,
-     "cost_gbp": 4.982178602741708,
-     "opened_at": "2026-09-30T17:00:05.000152Z",
-     "entry_price": 1.511,
-     "realised_gbp": 0.0
-    },
     "GOOGL": {
      "units": 0.031052262569018288,
      "cost_gbp": 8.185396954945341,
@@ -4090,40 +4284,38 @@
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -10.053481021806512,
-   "fees_gbp": 3.0764943890390963,
-   "closed_trades": 66,
+   "realised_gbp": -10.16419993132981,
+   "fees_gbp": 3.095327162458349,
+   "closed_trades": 68,
    "wins": 4,
-   "losses": 62,
+   "losses": 64,
    "gross_win_gbp": 0.140622404853616,
-   "gross_loss_gbp": 10.201991919035036,
+   "gross_loss_gbp": 10.312710828558334,
    "peak_equity_gbp": 100.00254876854368,
-   "max_drawdown_pct": -10.239,
+   "max_drawdown_pct": -10.301,
    "day": "2026-09-30",
    "day_start_equity_gbp": 92.49284581021257,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 89.80629056252299,
+   "equity_gbp": 89.8069541503736,
    "last_marks": {
-    "MSFT": 390.2502139088081,
-    "NVDA": 173.83528922932985,
-    "PLTR": 141.93111749987017,
-    "QQQ": 560.254431160722,
-    "TECL": 177.16703973033742,
-    "TQQQ": 59.62856193435026,
-    "BITX": 14.830818036524716,
-    "META": 552.6713054161297,
-    "XRP-USD": 1.123222506387611,
-    "GOOGL": 262.98226529292975,
-    "LABU": 205.31732888688165
+    "MSFT": 390.7722631848429,
+    "NVDA": 173.91066133001408,
+    "PLTR": 141.82935998808114,
+    "QQQ": 560.6690064692925,
+    "TECL": 178.0150535010146,
+    "TQQQ": 59.76047173698984,
+    "BITX": 14.838432309476488,
+    "GOOGL": 263.3440697792907,
+    "LABU": 203.08234424284728
    },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 98.14983521849037,
    "month": "2026-09",
    "month_start_equity_gbp": 99.08465429149662,
-   "loss_streak": 17
+   "loss_streak": 19
   },
   "Donchian 20/10 \u00b7 1h": {
    "name": "Donchian 20/10 \u00b7 1h",
@@ -4168,18 +4360,18 @@
    "gross_win_gbp": 0.3207421858136481,
    "gross_loss_gbp": 8.497623414820389,
    "peak_equity_gbp": 101.3520462128837,
-   "max_drawdown_pct": -10.07,
+   "max_drawdown_pct": -10.279,
    "day": "2026-09-30",
    "day_start_equity_gbp": 94.07036037686308,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 91.17747986817348,
+   "equity_gbp": 91.01645224678481,
    "last_marks": {
-    "DOGE-USD": 0.07072057952438471,
-    "GOOGL": 262.98226529292975,
-    "AMZN": 188.73017585182075,
-    "LABU": 205.31732888688165
+    "DOGE-USD": 0.07090902702897964,
+    "GOOGL": 263.3440697792907,
+    "AMZN": 188.69248405051718,
+    "LABU": 203.08234424284728
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -4237,12 +4429,12 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 95.99395988475597,
+   "equity_gbp": 96.23201351080415,
    "last_marks": {
-    "QQQ": 560.254431160722,
-    "SOXL": 111.37247521560265,
-    "TECL": 177.16703973033742,
-    "NVDA": 173.83528922932985
+    "QQQ": 560.6690064692925,
+    "SOXL": 111.80967480649363,
+    "TECL": 178.0150535010146,
+    "NVDA": 173.91066133001408
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -4287,17 +4479,17 @@
    "gross_win_gbp": 0.11507719629929714,
    "gross_loss_gbp": 6.644918385224195,
    "peak_equity_gbp": 100.90828432487957,
-   "max_drawdown_pct": -7.71,
+   "max_drawdown_pct": -7.895,
    "day": "2026-09-30",
    "day_start_equity_gbp": 94.916717174416,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 93.26483774371667,
+   "equity_gbp": 93.03869331465827,
    "last_marks": {
-    "GOOGL": 262.98226529292975,
-    "AMZN": 188.73017585182075,
-    "LABU": 205.31732888688165
+    "GOOGL": 263.3440697792907,
+    "AMZN": 188.69248405051718,
+    "LABU": 203.08234424284728
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -4335,16 +4527,16 @@
    "gross_win_gbp": 0.0,
    "gross_loss_gbp": 8.019014387283601,
    "peak_equity_gbp": 100.56265506406697,
-   "max_drawdown_pct": -8.81,
+   "max_drawdown_pct": -8.938,
    "day": "2026-09-30",
    "day_start_equity_gbp": 94.0214981034873,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 91.86991442288215,
+   "equity_gbp": 91.65195205981036,
    "last_marks": {
-    "GOOGL": 262.98226529292975,
-    "LABU": 205.31732888688165
+    "GOOGL": 263.3440697792907,
+    "LABU": 203.08234424284728
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -4381,9 +4573,9 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 94.96119684194801,
+   "equity_gbp": 94.9938382966441,
    "last_marks": {
-    "GOOGL": 262.98226529292975
+    "GOOGL": 263.3440697792907
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -4420,9 +4612,9 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 94.26036698924365,
+   "equity_gbp": 94.2927675444287,
    "last_marks": {
-    "GOOGL": 262.98226529292975
+    "GOOGL": 263.3440697792907
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -4466,10 +4658,10 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 99.45635789144052,
+   "equity_gbp": 99.5245932595322,
    "last_marks": {
-    "AAPL": 253.66467258069184,
-    "TSLA": 265.51121608213236
+    "AAPL": 253.6013429932712,
+    "TSLA": 266.30556188061473
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -4556,12 +4748,12 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 97.4890966522477,
+   "equity_gbp": 97.60171243234353,
    "last_marks": {
-    "MSTR": 116.09874185138186,
-    "IWM": 210.4167063992206,
-    "TNA": 44.07033353958917,
-    "COIN": 140.55169188792743
+    "MSTR": 116.45294356671394,
+    "IWM": 210.2998698665256,
+    "TNA": 43.98741617749049,
+    "COIN": 141.1999517638109
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -4626,13 +4818,13 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 98.07555334832183,
+   "equity_gbp": 98.15642490127732,
    "last_marks": {
-    "IWM": 210.4167063992206,
-    "TNA": 44.07033353958917,
-    "AAPL": 253.66467258069184,
-    "COIN": 140.55169188792743,
-    "TSLA": 265.51121608213236
+    "IWM": 210.2998698665256,
+    "TNA": 43.98741617749049,
+    "AAPL": 253.6013429932712,
+    "COIN": 141.1999517638109,
+    "TSLA": 266.30556188061473
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -4669,9 +4861,9 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 99.55950961875061,
+   "equity_gbp": 99.6354945506202,
    "last_marks": {
-    "MSTR": 116.09874185138186
+    "MSTR": 116.45294356671394
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -4764,17 +4956,17 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 98.85050051190957,
+   "equity_gbp": 98.9562659388415,
    "last_marks": {
-    "BITX": 14.830818036524716,
-    "ETHU": 22.643852842241962,
-    "MSTR": 116.09874185138186,
-    "AAPL": 253.66467258069184,
-    "IWM": 210.4167063992206,
-    "TNA": 44.07033353958917,
-    "COIN": 140.55169188792743,
-    "SQQQ": 25.57232579843563,
-    "AMD": 459.6913250520687
+    "BITX": 14.838432309476488,
+    "ETHU": 22.681541768064804,
+    "MSTR": 116.45294356671394,
+    "AAPL": 253.6013429932712,
+    "IWM": 210.2998698665256,
+    "TNA": 43.98741617749049,
+    "COIN": 141.1999517638109,
+    "SQQQ": 25.51202409221523,
+    "AMD": 461.9120243078763
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -4881,19 +5073,19 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 98.50120225602805,
+   "equity_gbp": 98.63458008447515,
    "last_marks": {
-    "ETHU": 22.643852842241962,
-    "BITX": 14.830818036524716,
-    "AMD": 459.6913250520687,
-    "IWM": 210.4167063992206,
-    "TNA": 44.07033353958917,
-    "AAPL": 253.66467258069184,
-    "NVDA": 173.83528922932985,
-    "TSLA": 265.51121608213236,
-    "SOL-USD": 89.24873817615807,
-    "XRP-USD": 1.123222506387611,
-    "COIN": 140.55169188792743
+    "ETHU": 22.681541768064804,
+    "BITX": 14.838432309476488,
+    "AMD": 461.9120243078763,
+    "IWM": 210.2998698665256,
+    "TNA": 43.98741617749049,
+    "AAPL": 253.6013429932712,
+    "NVDA": 173.91066133001408,
+    "TSLA": 266.30556188061473,
+    "SOL-USD": 89.23366237579047,
+    "XRP-USD": 1.1260869084574539,
+    "COIN": 141.1999517638109
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -5021,22 +5213,22 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 98.4733108005633,
+   "equity_gbp": 98.58451404886014,
    "last_marks": {
-    "SOXL": 111.37247521560265,
-    "AMD": 459.6913250520687,
-    "ETHU": 22.643852842241962,
-    "META": 552.6713054161297,
-    "IWM": 210.4167063992206,
-    "PLTR": 141.93111749987017,
+    "SOXL": 111.80967480649363,
+    "AMD": 461.9120243078763,
+    "ETHU": 22.681541768064804,
+    "META": 553.270555598588,
+    "IWM": 210.2998698665256,
+    "PLTR": 141.82935998808114,
     "SPY": 578.0061768920259,
-    "TNA": 44.07033353958917,
-    "UPRO": 112.61630465862024,
-    "AAPL": 253.66467258069184,
-    "COIN": 140.55169188792743,
-    "MSTR": 116.09874185138186,
-    "TSLA": 265.51121608213236,
-    "SQQQ": 25.57232579843563
+    "TNA": 43.98741617749049,
+    "UPRO": 112.63130316606603,
+    "AAPL": 253.6013429932712,
+    "COIN": 141.1999517638109,
+    "MSTR": 116.45294356671394,
+    "TSLA": 266.30556188061473,
+    "SQQQ": 25.51202409221523
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -5101,12 +5293,12 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 94.93070552547823,
+   "equity_gbp": 95.01652645034078,
    "last_marks": {
-    "SOL-USD": 89.24873817615807,
-    "UPRO": 112.61630465862024,
-    "ETH-USD": 2015.1671593359583,
-    "TSLA": 265.51121608213236,
+    "SOL-USD": 89.23366237579047,
+    "UPRO": 112.63130316606603,
+    "ETH-USD": 2017.7074316978978,
+    "TSLA": 266.30556188061473,
     "SPY": 578.0061768920259
    },
    "halt_reason": null,
@@ -5144,9 +5336,9 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 98.10493790251581,
+   "equity_gbp": 98.17745576074867,
    "last_marks": {
-    "TQQQ": 59.62856193435026
+    "TQQQ": 59.76047173698984
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -5183,9 +5375,9 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 100.10137283449257,
+   "equity_gbp": 100.1298960015309,
    "last_marks": {
-    "NANC": 39.679506107431195
+    "NANC": 39.69081249762998
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -5259,9 +5451,9 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 98.40236258364402,
+   "equity_gbp": 98.3200354501424,
    "last_marks": {
-    "ARKK": 67.5772762979336
+    "ARKK": 67.52073859597824
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -5297,9 +5489,9 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 99.09439812863619,
+   "equity_gbp": 98.785656336381,
    "last_marks": {
-    "BRK-B": 377.4226714042608
+    "BRK-B": 376.2467608158961
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -5384,16 +5576,16 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 99.3384448911409,
+   "equity_gbp": 99.45153982735135,
    "last_marks": {
-    "BBD": 2.6533408503191875,
+    "BBD": 2.668416636309378,
     "ENHA": 1.0628439007549395,
-    "ETRA": 8.78919149928823,
-    "GME": 18.637458491986486,
-    "GRAB": 2.354689289032,
-    "GSAT": 62.40627631177184,
-    "CX": 7.198694819300298,
-    "ADRX": 15.776825314725858
+    "ETRA": 8.676123284079344,
+    "GME": 18.71660609885867,
+    "GRAB": 2.356724410512973,
+    "GSAT": 62.51180645426809,
+    "CX": 7.213770245855399,
+    "ADRX": 15.874817384509463
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -5430,9 +5622,9 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 99.59619996745812,
+   "equity_gbp": 99.81652584242764,
    "last_marks": {
-    "TQQQ": 59.62856193435026
+    "TQQQ": 59.76047173698984
    },
    "week": "2026-W40",
    "week_start_equity_gbp": 100.36953260756216,
@@ -5468,9 +5660,9 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 99.82415926420738,
+   "equity_gbp": 99.898026831027,
    "last_marks": {
-    "QQQ": 560.254431160722
+    "QQQ": 560.6690064692925
    },
    "week": "2026-W40",
    "week_start_equity_gbp": 100.1338728262547,
@@ -5584,12 +5776,12 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 99.05889839399208,
+   "equity_gbp": 99.12829886464604,
    "last_marks": {
-    "MSFT": 390.2502139088081,
-    "BITX": 14.830818036524716,
-    "ETHU": 22.643852842241962,
-    "PLTR": 141.93111749987017
+    "MSFT": 390.7722631848429,
+    "BITX": 14.838432309476488,
+    "ETHU": 22.681541768064804,
+    "PLTR": 141.82935998808114
    },
    "week": "2026-W40",
    "week_start_equity_gbp": 100.47850072204248,
@@ -5626,9 +5818,9 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 94.3603385211984,
+   "equity_gbp": 94.40878395229684,
    "last_marks": {
-    "BITX": 14.830818036524716
+    "BITX": 14.838432309476488
    },
    "week": "2026-W40",
    "week_start_equity_gbp": 99.69355100693042,
@@ -5665,9 +5857,9 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 95.7239325342766,
+   "equity_gbp": 95.77307804658334,
    "last_marks": {
-    "BITX": 14.830818036524716
+    "BITX": 14.838432309476488
    },
    "week": "2026-W40",
    "week_start_equity_gbp": 99.69355100693042,
@@ -5680,20 +5872,13 @@
    "name": "Candlestick reversal",
    "created_at": "2026-09-25T14:39:33.674994Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 22.59365706704547,
+   "cash_gbp": 6.408988528162745,
    "positions": {
     "IWM": {
      "units": 0.02663894824959451,
      "cost_gbp": 5.602344448304794,
      "opened_at": "2026-09-30T17:30:05.000186Z",
      "entry_price": 278.81500244140625,
-     "realised_gbp": 0.0
-    },
-    "SPY": {
-     "units": 0.009684001597139617,
-     "cost_gbp": 5.602344448304794,
-     "opened_at": "2026-09-30T17:30:05.000186Z",
-     "entry_price": 766.969970703125,
      "realised_gbp": 0.0
     },
     "PLTR": {
@@ -5703,34 +5888,6 @@
      "entry_price": 188.24000549316406,
      "realised_gbp": 0.0
     },
-    "SQQQ": {
-     "units": 0.21815304915587821,
-     "cost_gbp": 5.579002430601171,
-     "opened_at": "2026-09-30T18:20:05.000154Z",
-     "entry_price": 33.90999984741211,
-     "realised_gbp": 0.0
-    },
-    "AMZN": {
-     "units": 0.02555734286154913,
-     "cost_gbp": 4.825950000097407,
-     "opened_at": "2026-09-30T18:30:05.000146Z",
-     "entry_price": 250.3800048828125,
-     "realised_gbp": 0.0
-    },
-    "DOGE-USD": {
-     "units": 67.84034287065063,
-     "cost_gbp": 4.825950000097407,
-     "opened_at": "2026-09-30T18:30:05.000146Z",
-     "entry_price": 0.09409,
-     "realised_gbp": 0.0
-    },
-    "GOOGL": {
-     "units": 0.01832802704356254,
-     "cost_gbp": 4.825950000097407,
-     "opened_at": "2026-09-30T18:30:05.000146Z",
-     "entry_price": 349.1400146484375,
-     "realised_gbp": 0.0
-    },
     "SOL-USD": {
      "units": 0.05373882691277587,
      "cost_gbp": 4.825950000097407,
@@ -5738,68 +5895,111 @@
      "entry_price": 118.78,
      "realised_gbp": 0.0
     },
-    "MSTR": {
-     "units": 0.06909469241226758,
-     "cost_gbp": 8.025817761101322,
-     "opened_at": "2026-09-30T18:40:05.000144Z",
-     "entry_price": 154.02000427246094,
+    "BITX": {
+     "units": 0.4861988954223465,
+     "cost_gbp": 7.22350014875009,
+     "opened_at": "2026-09-30T18:45:05.000153Z",
+     "entry_price": 19.700000762939453,
+     "realised_gbp": 0.0
+    },
+    "ETH-USD": {
+     "units": 0.003246605836900686,
+     "cost_gbp": 6.5671127539601,
+     "opened_at": "2026-09-30T18:50:05.000122Z",
+     "entry_price": 2675.43,
+     "realised_gbp": 0.0
+    },
+    "SPY": {
+     "units": 0.01041734778846113,
+     "cost_gbp": 6.021787902616425,
+     "opened_at": "2026-09-30T19:00:05.000147Z",
+     "entry_price": 766.47998046875,
+     "realised_gbp": 0.0
+    },
+    "TNA": {
+     "units": 0.13677095552156082,
+     "cost_gbp": 6.021787902616425,
+     "opened_at": "2026-09-30T19:00:05.000147Z",
+     "entry_price": 58.380001068115234,
+     "realised_gbp": 0.0
+    },
+    "TQQQ": {
+     "units": 0.08856634025341142,
+     "cost_gbp": 5.274372445538986,
+     "opened_at": "2026-09-30T19:00:05.000147Z",
+     "entry_price": 78.96499633789062,
+     "realised_gbp": 0.0
+    },
+    "AMZN": {
+     "units": 0.02942751886985285,
+     "cost_gbp": 5.558524317789659,
+     "opened_at": "2026-09-30T19:06:05.000147Z",
+     "entry_price": 250.4600067138672,
+     "realised_gbp": 0.0
+    },
+    "GOOGL": {
+     "units": 0.024908904805304076,
+     "cost_gbp": 6.562892171356292,
+     "opened_at": "2026-09-30T19:10:05.000178Z",
+     "entry_price": 349.3599853515625,
+     "realised_gbp": 0.0
+    },
+    "UPRO": {
+     "units": 0.058239691637963845,
+     "cost_gbp": 6.562892171356292,
+     "opened_at": "2026-09-30T19:10:05.000178Z",
+     "entry_price": 149.4199981689453,
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -27.714031413651664,
-   "fees_gbp": 28.571906514038595,
-   "closed_trades": 348,
-   "wins": 51,
-   "losses": 297,
-   "gross_win_gbp": 2.7177320598411003,
-   "gross_loss_gbp": 30.431763473492776,
+   "realised_gbp": -27.790844778849625,
+   "fees_gbp": 28.72786456410508,
+   "closed_trades": 357,
+   "wins": 54,
+   "losses": 303,
+   "gross_win_gbp": 2.7569270673408925,
+   "gross_loss_gbp": 30.547771846190532,
    "peak_equity_gbp": 100.70336002318129,
-   "max_drawdown_pct": -28.293,
+   "max_drawdown_pct": -28.356,
    "day": "2026-09-30",
    "day_start_equity_gbp": 76.18620728785628,
    "halted_day": "2026-09-29",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 72.21175110995094,
+   "equity_gbp": 72.14752946650023,
    "last_marks": {
-    "IWM": 210.4167063992206,
+    "IWM": 210.2998698665256,
+    "PLTR": 141.82935998808114,
+    "SOL-USD": 89.23366237579047,
+    "BITX": 14.838432309476488,
+    "ETH-USD": 2017.7074316978978,
     "SPY": 578.0061768920259,
-    "PLTR": 141.93111749987017,
-    "SQQQ": 25.57232579843563,
-    "AMZN": 188.73017585182075,
-    "DOGE-USD": 0.07072057952438471,
-    "GOOGL": 262.98226529292975,
-    "SOL-USD": 89.24873817615807,
-    "MSTR": 116.09874185138186
+    "TNA": 43.98741617749049,
+    "TQQQ": 59.76047173698984,
+    "AMZN": 188.69248405051718,
+    "GOOGL": 263.3440697792907,
+    "UPRO": 112.63130316606603
    },
    "week": "2026-W40",
    "week_start_equity_gbp": 86.770722119175,
    "month": "2026-09",
    "month_start_equity_gbp": 100.0,
    "halt_reason": null,
-   "loss_streak": 6
+   "loss_streak": 1
   },
   "Three white soldiers": {
    "name": "Three white soldiers",
    "created_at": "2026-09-25T14:39:33.674994Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 70.85248467528385,
-   "positions": {
-    "AMD": {
-     "units": 0.05158737814653305,
-     "cost_gbp": 23.647021643935034,
-     "opened_at": "2026-09-30T18:00:05.000145Z",
-     "entry_price": 607.7100219726562,
-     "realised_gbp": 0.0
-    }
-   },
-   "realised_gbp": -5.5004936807811085,
-   "fees_gbp": 5.834276911635086,
-   "closed_trades": 50,
+   "cash_gbp": 94.4757649255365,
+   "positions": {},
+   "realised_gbp": -5.524235074463494,
+   "fees_gbp": 5.846094460534662,
+   "closed_trades": 51,
    "wins": 10,
-   "losses": 40,
+   "losses": 41,
    "gross_win_gbp": 1.2421117935370702,
-   "gross_loss_gbp": 6.742605474318179,
+   "gross_loss_gbp": 6.766346868000564,
    "peak_equity_gbp": 100.31945013165013,
    "max_drawdown_pct": -5.983,
    "day": "2026-09-30",
@@ -5807,16 +6007,14 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 94.56675489142576,
-   "last_marks": {
-    "AMD": 459.6913250520687
-   },
+   "equity_gbp": 94.4757649255365,
+   "last_marks": {},
    "week": "2026-W40",
    "week_start_equity_gbp": 97.27831982815255,
    "month": "2026-09",
    "month_start_equity_gbp": 100.0,
    "halt_reason": null,
-   "loss_streak": 1
+   "loss_streak": 2
   },
   "Candlestick reversal \u00b7 1h": {
    "name": "Candlestick reversal \u00b7 1h",
@@ -5916,19 +6114,19 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 98.26031562540587,
+   "equity_gbp": 98.30903339392081,
    "last_marks": {
-    "QQQ": 560.254431160722,
-    "META": 552.6713054161297,
-    "TQQQ": 59.62856193435026,
-    "IWM": 210.4167063992206,
+    "QQQ": 560.6690064692925,
+    "META": 553.270555598588,
+    "TQQQ": 59.76047173698984,
+    "IWM": 210.2998698665256,
     "SPY": 578.0061768920259,
-    "TNA": 44.07033353958917,
-    "UPRO": 112.61630465862024,
-    "PLTR": 141.93111749987017,
-    "TSLA": 265.51121608213236,
-    "MSTR": 116.09874185138186,
-    "SQQQ": 25.57232579843563
+    "TNA": 43.98741617749049,
+    "UPRO": 112.63130316606603,
+    "PLTR": 141.82935998808114,
+    "TSLA": 266.30556188061473,
+    "MSTR": 116.45294356671394,
+    "SQQQ": 25.51202409221523
    },
    "week": "2026-W40",
    "week_start_equity_gbp": 99.9231519585962,
@@ -5988,15 +6186,15 @@
    "gross_win_gbp": 0.0,
    "gross_loss_gbp": 0.0,
    "peak_equity_gbp": 100.58159393988272,
-   "max_drawdown_pct": -1.376,
+   "max_drawdown_pct": -1.392,
    "day": "2026-09-30",
    "day_start_equity_gbp": 100.0,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 99.49622126660992,
+   "equity_gbp": 99.30902131726523,
    "last_marks": {
-    "TNA": 44.07033353958917
+    "TNA": 43.98741617749049
    },
    "week": "2026-W40",
    "week_start_equity_gbp": 100.0,
@@ -6032,9 +6230,9 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 101.76045536613765,
+   "equity_gbp": 101.98556898867712,
    "last_marks": {
-    "TQQQ": 59.62856193435026
+    "TQQQ": 59.76047173698984
    },
    "week": "2026-W40",
    "week_start_equity_gbp": 100.0,
@@ -6100,9 +6298,9 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 100.27522464365431,
+   "equity_gbp": 100.49705265129514,
    "last_marks": {
-    "TQQQ": 59.62856193435026
+    "TQQQ": 59.76047173698984
    },
    "week": "2026-W40",
    "week_start_equity_gbp": 100.0,
@@ -6337,29 +6535,29 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 96.03141616856013,
+   "equity_gbp": 96.10900093207728,
    "last_marks": {
-    "AMD": 459.6913250520687,
-    "BITX": 14.830818036524716,
-    "ETHU": 22.643852842241962,
-    "GOOGL": 262.98226529292975,
-    "META": 552.6713054161297,
-    "MSFT": 390.2502139088081,
-    "SOXL": 111.37247521560265,
-    "SQQQ": 25.57232579843563,
-    "TECL": 177.16703973033742,
-    "LABU": 205.31732888688165,
-    "NVDA": 173.83528922932985,
-    "AMZN": 188.73017585182075,
-    "TNA": 44.07033353958917,
-    "MSTR": 116.09874185138186,
-    "SOL-USD": 89.24873817615807,
-    "DOGE-USD": 0.07072057952438471,
-    "TSLA": 265.51121608213236,
-    "COIN": 140.55169188792743,
-    "ETH-USD": 2015.1671593359583,
-    "AAPL": 253.66467258069184,
-    "BTC-USD": 63150.46235520202
+    "AMD": 461.9120243078763,
+    "BITX": 14.838432309476488,
+    "ETHU": 22.681541768064804,
+    "GOOGL": 263.3440697792907,
+    "META": 553.270555598588,
+    "MSFT": 390.7722631848429,
+    "SOXL": 111.80967480649363,
+    "SQQQ": 25.51202409221523,
+    "TECL": 178.0150535010146,
+    "LABU": 203.08234424284728,
+    "NVDA": 173.91066133001408,
+    "AMZN": 188.69248405051718,
+    "TNA": 43.98741617749049,
+    "MSTR": 116.45294356671394,
+    "SOL-USD": 89.23366237579047,
+    "DOGE-USD": 0.07090902702897964,
+    "TSLA": 266.30556188061473,
+    "COIN": 141.1999517638109,
+    "ETH-USD": 2017.7074316978978,
+    "AAPL": 253.6013429932712,
+    "BTC-USD": 63152.52773985239
    },
    "week": "2026-W40",
    "week_start_equity_gbp": 99.45472617670049,
@@ -6396,9 +6594,9 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 98.37006268546577,
+   "equity_gbp": 98.34550374542484,
    "last_marks": {
-    "AAPL": 253.66467258069184
+    "AAPL": 253.6013429932712
    },
    "week": "2026-W40",
    "week_start_equity_gbp": 100.0,
@@ -6494,19 +6692,19 @@
   }
  },
  "kronos": {},
- "last_history_at": "2026-09-30T18:37:05.000144Z",
- "ticks": 7168,
+ "last_history_at": "2026-09-30T19:09:05.000132Z",
+ "ticks": 7188,
  "broker": null,
  "last_tick": {
-  "at": "2026-09-30T18:40:05.000144Z",
-  "seconds": 77.19,
+  "at": "2026-09-30T19:10:05.000178Z",
+  "seconds": 77.4,
   "data_errors": {
    "CRAFX": "yfinance: 'tradingPeriods'; yahoo: cooling down after a rate limit",
    "CYBN": "yfinance: $CYBN: possibly delisted; no timezone found; yahoo: cooling down after a rate limit",
    "GREE": "yfinance: $GREE: possibly delisted; no timezone found; yahoo: cooling down after a rate limit"
   },
-  "new_trades": 31,
-  "latest_bar": "2026-09-30T18:35:00Z",
+  "new_trades": 24,
+  "latest_bar": "2026-09-30T19:05:00Z",
   "tradable": [
    "AAPL",
    "ADRX",
@@ -6557,7 +6755,7 @@
     "source": "",
     "schedule": [],
     "as_of": null,
-    "updated_at": "2026-09-30T17:58:05.000164+00:00",
+    "updated_at": "2026-09-30T18:58:05.000183+00:00",
     "error": "Refresh failed: SEC refused the request (HTTP 403): set the repository variable SEC_USER_AGENT to 'Your Name your@email.com'",
     "stale": false,
     "kind": "copy",
@@ -6569,7 +6767,7 @@
     "source": "",
     "schedule": [],
     "as_of": null,
-    "updated_at": "2026-09-30T17:58:05.000164+00:00",
+    "updated_at": "2026-09-30T18:58:05.000183+00:00",
     "error": "Refresh failed: SEC refused the request (HTTP 403): set the repository variable SEC_USER_AGENT to 'Your Name your@email.com'",
     "stale": false,
     "kind": "copy",
@@ -6581,7 +6779,7 @@
     "source": "",
     "schedule": [],
     "as_of": null,
-    "updated_at": "2026-09-30T17:58:05.000164+00:00",
+    "updated_at": "2026-09-30T18:58:05.000183+00:00",
     "error": "Refresh failed: SEC refused the request (HTTP 403): set the repository variable SEC_USER_AGENT to 'Your Name your@email.com'",
     "stale": false,
     "kind": "copy",
@@ -6593,7 +6791,7 @@
     "source": "",
     "schedule": [],
     "as_of": null,
-    "updated_at": "2026-09-30T17:58:05.000164+00:00",
+    "updated_at": "2026-09-30T18:58:05.000183+00:00",
     "error": "Refresh failed: SEC refused the request (HTTP 403): set the repository variable SEC_USER_AGENT to 'Your Name your@email.com'",
     "stale": false,
     "kind": "copy",
@@ -6605,7 +6803,7 @@
     "source": "",
     "schedule": [],
     "as_of": null,
-    "updated_at": "2026-09-30T17:58:05.000164+00:00",
+    "updated_at": "2026-09-30T18:58:05.000183+00:00",
     "error": "Refresh failed: SEC refused the request (HTTP 403): set the repository variable SEC_USER_AGENT to 'Your Name your@email.com'",
     "stale": false,
     "kind": "copy",
@@ -6617,7 +6815,7 @@
     "source": "",
     "schedule": [],
     "as_of": null,
-    "updated_at": "2026-09-30T17:58:05.000164+00:00",
+    "updated_at": "2026-09-30T18:58:05.000183+00:00",
     "error": "Refresh failed: SEC refused the request (HTTP 403): set the repository variable SEC_USER_AGENT to 'Your Name your@email.com'",
     "stale": false,
     "kind": "copy",
@@ -7181,7 +7379,7 @@
      ]
     ],
     "as_of": "2026-09-30",
-    "updated_at": "2026-09-30T17:58:05.000164+00:00",
+    "updated_at": "2026-09-30T18:58:05.000183+00:00",
     "error": null,
     "stale": false,
     "kind": "copy",
@@ -7193,7 +7391,7 @@
     "source": "",
     "schedule": [],
     "as_of": null,
-    "updated_at": "2026-09-30T17:58:05.000164+00:00",
+    "updated_at": "2026-09-30T18:58:05.000183+00:00",
     "error": "Refresh failed: GET https://ai4trade.ai/api/leaderboard/position-pnl: The read operation timed out",
     "stale": false,
     "kind": "copy",
@@ -7202,14 +7400,14 @@
   },
   "cusips": {},
   "attempts": {
-   "Copy: Buffett (Berkshire) 13F": "2026-09-30T17:58:05.000164+00:00",
-   "Copy: Burry (Scion) 13F": "2026-09-30T17:58:05.000164+00:00",
-   "Copy: Ackman (Pershing Square) 13F": "2026-09-30T17:58:05.000164+00:00",
-   "Copy: Druckenmiller (Duquesne) 13F": "2026-09-30T17:58:05.000164+00:00",
-   "Copy: Tepper (Appaloosa) 13F": "2026-09-30T17:58:05.000164+00:00",
-   "Copy: Cathie Wood (ARK) 13F": "2026-09-30T17:58:05.000164+00:00",
-   "Copy: Insider buying": "2026-09-30T17:58:05.000164+00:00",
-   "Copy: AI-Trader top agents": "2026-09-30T17:58:05.000164+00:00"
+   "Copy: Buffett (Berkshire) 13F": "2026-09-30T18:58:05.000183+00:00",
+   "Copy: Burry (Scion) 13F": "2026-09-30T18:58:05.000183+00:00",
+   "Copy: Ackman (Pershing Square) 13F": "2026-09-30T18:58:05.000183+00:00",
+   "Copy: Druckenmiller (Duquesne) 13F": "2026-09-30T18:58:05.000183+00:00",
+   "Copy: Tepper (Appaloosa) 13F": "2026-09-30T18:58:05.000183+00:00",
+   "Copy: Cathie Wood (ARK) 13F": "2026-09-30T18:58:05.000183+00:00",
+   "Copy: Insider buying": "2026-09-30T18:58:05.000183+00:00",
+   "Copy: AI-Trader top agents": "2026-09-30T18:58:05.000183+00:00"
   }
  },
  "regime": {
@@ -7239,194 +7437,203 @@
   "model": "typesafe/jev-1.13",
   "spend": {
    "day": "2026-09-30",
-   "usd": 0.399117,
-   "calls": 2796,
-   "decisions": 32109
+   "usd": 0.419728,
+   "calls": 2856,
+   "decisions": 33870
   },
   "data_errors": {},
   "budget_spent": false,
   "Bizzy": {
-   "at": "2026-09-30T18:40:05.000144Z",
+   "at": "2026-09-30T19:10:05.000178Z",
    "decisions": {
     "AAPL": [
-     "buy",
-     0.479,
-     ""
-    ],
-    "AMD": [
-     "buy",
-     0.51,
-     ""
-    ],
-    "AMZN": [
-     "hold",
-     0.206,
-     ""
-    ],
-    "ARKK": [
      "hold",
      0.088,
      ""
     ],
-    "BITX": [
-     "sell",
-     0.013,
-     ""
-    ],
-    "BRK-B": [
-     "sell",
-     0.013,
-     ""
-    ],
-    "BTC-USD": [
-     "sell",
-     0.025,
-     ""
-    ],
-    "COIN": [
-     "sell",
-     0.107,
-     ""
-    ],
-    "DOGE-USD": [
-     "sell",
-     0.02,
-     ""
-    ],
-    "ETH-USD": [
-     "sell",
-     0.021,
-     ""
-    ],
-    "ETHU": [
-     "sell",
-     0.021,
-     ""
-    ],
-    "GOOGL": [
-     "hold",
-     0.112,
-     ""
-    ],
-    "IWM": [
-     "hold",
-     0.14,
-     ""
-    ],
-    "LABU": [
-     "buy",
-     0.474,
-     ""
-    ],
-    "META": [
-     "hold",
-     0.25,
-     ""
-    ],
-    "MSFT": [
-     "hold",
-     0.078,
-     ""
-    ],
-    "MSTR": [
-     "hold",
-     0.138,
-     ""
-    ],
-    "NVDA": [
-     "hold",
-     0.095,
-     ""
-    ],
-    "PLTR": [
-     "hold",
-     0.132,
-     ""
-    ],
-    "QQQ": [
-     "buy",
-     0.354,
-     ""
-    ],
-    "SOL-USD": [
-     "sell",
-     0.027,
-     ""
-    ],
-    "SOXL": [
-     "buy",
-     0.398,
-     ""
-    ],
-    "SPY": [
-     "hold",
-     0.141,
-     ""
-    ],
-    "SQQQ": [
-     "sell",
-     0.136,
-     ""
-    ],
-    "TNA": [
-     "buy",
-     0.308,
-     ""
-    ],
-    "TQQQ": [
-     "hold",
-     0.289,
-     ""
-    ],
-    "TSLA": [
-     "hold",
-     0.194,
-     ""
-    ],
-    "UPRO": [
-     "buy",
-     0.286,
-     ""
-    ],
-    "XRP-USD": [
-     "sell",
-     0.044,
-     ""
-    ]
-   },
-   "counts": {
-    "buy": 7,
-    "hold": 12,
-    "sell": 10
-   },
-   "targets": {},
-   "error": null
-  },
-  "Breezy": {
-   "at": "2026-09-30T18:40:05.000144Z",
-   "decisions": {
-    "AAPL": [
-     "hold",
-     0.138,
-     ""
-    ],
     "AMD": [
-     "hold",
-     0.028,
-     ""
+     "buy",
+     0.718,
+     "buy (buy p=0.72)"
     ],
     "AMZN": [
-     "hold",
-     0.028,
+     "sell",
+     0.049,
      ""
     ],
     "ARKK": [
      "hold",
-     0.007,
+     0.06,
      ""
     ],
     "BITX": [
+     "sell",
+     0.041,
+     ""
+    ],
+    "BRK-B": [
+     "sell",
+     0.042,
+     ""
+    ],
+    "BTC-USD": [
+     "sell",
+     0.049,
+     ""
+    ],
+    "COIN": [
+     "sell",
+     0.065,
+     ""
+    ],
+    "DOGE-USD": [
+     "sell",
+     0.21,
+     ""
+    ],
+    "ETH-USD": [
+     "sell",
+     0.044,
+     ""
+    ],
+    "ETHU": [
+     "sell",
+     0.096,
+     ""
+    ],
+    "GOOGL": [
+     "sell",
+     0.176,
+     ""
+    ],
+    "IWM": [
      "hold",
+     0.079,
+     ""
+    ],
+    "LABU": [
+     "sell",
+     0.09,
+     "warming up"
+    ],
+    "META": [
+     "sell",
+     0.263,
+     ""
+    ],
+    "MSFT": [
+     "hold",
+     0.132,
+     ""
+    ],
+    "MSTR": [
+     "sell",
+     0.087,
+     ""
+    ],
+    "NVDA": [
+     "hold",
+     0.343,
+     ""
+    ],
+    "PLTR": [
+     "sell",
+     0.146,
+     ""
+    ],
+    "QQQ": [
+     "hold",
+     0.3,
+     ""
+    ],
+    "SOL-USD": [
+     "sell",
+     0.038,
+     ""
+    ],
+    "SOXL": [
+     "buy",
+     0.581,
+     "buy (buy p=0.58)"
+    ],
+    "SPY": [
+     "hold",
+     0.072,
+     ""
+    ],
+    "SQQQ": [
+     "sell",
+     0.037,
+     ""
+    ],
+    "TECL": [
+     "buy",
+     0.666,
+     "buy (buy p=0.67)"
+    ],
+    "TNA": [
+     "sell",
+     0.181,
+     ""
+    ],
+    "TQQQ": [
+     "hold",
+     0.352,
+     ""
+    ],
+    "TSLA": [
+     "hold",
+     0.205,
+     ""
+    ],
+    "UPRO": [
+     "buy",
+     0.223,
+     ""
+    ],
+    "XRP-USD": [
+     "hold",
+     0.132,
+     ""
+    ]
+   },
+   "counts": {
+    "buy": 4,
+    "hold": 10,
+    "sell": 16
+   },
+   "targets": {
+    "AMD": 0.1795,
+    "TECL": 0.1665,
+    "SOXL": 0.1453
+   },
+   "error": null
+  },
+  "Breezy": {
+   "at": "2026-09-30T19:10:05.000178Z",
+   "decisions": {
+    "AAPL": [
+     "hold",
+     0.044,
+     ""
+    ],
+    "AMD": [
+     "hold",
+     0.036,
+     ""
+    ],
+    "AMZN": [
+     "hold",
+     0.014,
+     ""
+    ],
+    "ARKK": [
+     "hold",
+     0.004,
+     ""
+    ],
+    "BITX": [
+     "sell",
      0.0,
      ""
     ],
@@ -7446,7 +7653,7 @@
      ""
     ],
     "DOGE-USD": [
-     "sell",
+     "hold",
      0.0,
      ""
     ],
@@ -7457,52 +7664,52 @@
     ],
     "ETHU": [
      "sell",
-     0.0,
+     0.002,
      ""
     ],
     "GOOGL": [
      "hold",
-     0.019,
+     0.038,
      ""
     ],
     "IWM": [
      "hold",
-     0.019,
+     0.012,
      ""
     ],
     "LABU": [
      "hold",
-     0.018,
-     ""
+     0.0,
+     "warming up"
     ],
     "META": [
      "hold",
-     0.032,
+     0.026,
      ""
     ],
     "MSFT": [
      "hold",
-     0.042,
+     0.048,
      ""
     ],
     "MSTR": [
-     "hold",
-     0.003,
+     "sell",
+     0.0,
      ""
     ],
     "NVDA": [
      "hold",
-     0.043,
+     0.041,
      ""
     ],
     "PLTR": [
      "hold",
-     0.012,
+     0.006,
      ""
     ],
     "QQQ": [
      "hold",
-     0.075,
+     0.064,
      ""
     ],
     "SOL-USD": [
@@ -7517,27 +7724,32 @@
     ],
     "SPY": [
      "hold",
-     0.06,
+     0.042,
      ""
     ],
     "SQQQ": [
-     "sell",
+     "hold",
      0.0,
+     ""
+    ],
+    "TECL": [
+     "hold",
+     0.011,
      ""
     ],
     "TNA": [
      "hold",
-     0.006,
+     0.0,
      ""
     ],
     "TQQQ": [
-     "hold",
+     "sell",
      0.0,
      ""
     ],
     "TSLA": [
      "hold",
-     0.018,
+     0.019,
      ""
     ],
     "UPRO": [
@@ -7554,327 +7766,330 @@
    "counts": {
     "buy": 0,
     "hold": 24,
-    "sell": 5
+    "sell": 6
    },
    "targets": {},
    "error": null
   },
   "Boozy": {
-   "at": "2026-09-30T18:40:05.000144Z",
+   "at": "2026-09-30T19:10:05.000178Z",
    "decisions": {
     "AAPL": [
      "hold",
-     0.069,
+     0.043,
      ""
     ],
     "AMD": [
      "hold",
-     0.161,
+     0.323,
      ""
     ],
     "AMZN": [
      "hold",
-     0.064,
+     0.048,
      ""
     ],
     "ARKK": [
      "hold",
-     0.047,
+     0.055,
      ""
     ],
     "BITX": [
      "sell",
-     0.306,
+     0.37,
      ""
     ],
     "BRK-B": [
      "hold",
-     0.01,
+     0.019,
      ""
     ],
     "BTC-USD": [
      "hold",
-     0.228,
+     0.254,
      ""
     ],
     "COIN": [
      "buy",
-     0.523,
-     "buy (buy p=0.52)"
+     0.539,
+     ""
     ],
     "DOGE-USD": [
-     "sell",
-     0.07,
+     "hold",
+     0.183,
      ""
     ],
     "ETH-USD": [
      "hold",
-     0.192,
+     0.244,
      ""
     ],
     "ETHU": [
      "sell",
-     0.292,
+     0.378,
      ""
     ],
     "GOOGL": [
      "hold",
-     0.068,
+     0.102,
      ""
     ],
     "IWM": [
      "hold",
-     0.065,
+     0.051,
      ""
     ],
     "LABU": [
-     "buy",
-     0.345,
-     ""
+     "sell",
+     0.16,
+     "warming up"
     ],
     "META": [
      "hold",
-     0.104,
+     0.107,
      ""
     ],
     "MSFT": [
      "hold",
-     0.054,
+     0.062,
      ""
     ],
     "MSTR": [
-     "buy",
-     0.44,
+     "sell",
+     0.448,
      ""
     ],
     "NVDA": [
      "hold",
-     0.069,
+     0.142,
      ""
     ],
     "PLTR": [
      "hold",
-     0.086,
+     0.094,
      ""
     ],
     "QQQ": [
      "hold",
-     0.104,
+     0.121,
      ""
     ],
     "SOL-USD": [
      "sell",
-     0.121,
+     0.145,
      ""
     ],
     "SOXL": [
-     "hold",
-     0.284,
+     "buy",
+     0.454,
      ""
     ],
     "SPY": [
      "hold",
-     0.046,
+     0.038,
      ""
     ],
     "SQQQ": [
-     "sell",
-     0.114,
+     "hold",
+     0.073,
+     ""
+    ],
+    "TECL": [
+     "buy",
+     0.483,
      ""
     ],
     "TNA": [
      "hold",
-     0.211,
+     0.16,
      ""
     ],
     "TQQQ": [
      "buy",
-     0.359,
+     0.437,
      ""
     ],
     "TSLA": [
      "hold",
-     0.087,
+     0.11,
      ""
     ],
     "UPRO": [
      "hold",
-     0.225,
+     0.278,
      ""
     ],
     "XRP-USD": [
      "hold",
-     0.098,
+     0.114,
      ""
     ]
    },
    "counts": {
     "buy": 4,
-    "hold": 20,
+    "hold": 21,
     "sell": 5
    },
-   "targets": {
-    "COIN": 0.5227
-   },
+   "targets": {},
    "error": null
   },
   "memory": {
    "Bizzy": {
     "probs": {
      "AAPL": [
-      0.4786,
-      0.1407,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0876,
+      0.44,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "AMD": [
-      0.5104,
-      0.2363,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.7181,
+      0.072,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "AMZN": [
-      0.2058,
-      0.3929,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0491,
+      0.4113,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "ARKK": [
-      0.0883,
-      0.3204,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0601,
+      0.3649,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "BITX": [
-      0.0128,
-      0.8353,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0411,
+      0.7745,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "BRK-B": [
-      0.0129,
-      0.4682,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0421,
+      0.5355,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "BTC-USD": [
-      0.0252,
-      0.5866,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0487,
+      0.5363,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "COIN": [
-      0.1065,
-      0.5977,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0647,
+      0.6433,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "DOGE-USD": [
-      0.0204,
-      0.7805,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.2103,
+      0.4495,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "ETH-USD": [
-      0.0213,
-      0.6329,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0437,
+      0.4154,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "ETHU": [
-      0.021,
-      0.8137,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0965,
+      0.5576,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "GOOGL": [
-      0.1121,
-      0.4014,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.1759,
+      0.302,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "IWM": [
-      0.14,
-      0.3258,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0791,
+      0.3194,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "LABU": [
-      0.4743,
-      0.2463,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.09,
+      0.78,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "META": [
-      0.25,
-      0.2696,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.2629,
+      0.2642,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "MSFT": [
-      0.078,
-      0.3165,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.1325,
+      0.1968,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "MSTR": [
-      0.1381,
-      0.541,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.087,
+      0.5895,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "NVDA": [
-      0.0948,
-      0.3169,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.3432,
+      0.1247,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "PLTR": [
-      0.132,
-      0.4964,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.1461,
+      0.3328,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "QQQ": [
-      0.3535,
-      0.22,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.3005,
+      0.1289,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "SOL-USD": [
-      0.0269,
-      0.8162,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0381,
+      0.6983,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "SOXL": [
-      0.3979,
-      0.2686,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.5813,
+      0.1161,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "SPY": [
-      0.1406,
-      0.2041,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0719,
+      0.1698,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "SQQQ": [
-      0.1364,
-      0.5953,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0374,
+      0.7285,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "TECL": [
-      0.4963,
-      0.2774,
-      "2026-09-30T18:39:05.000148+00:00"
+      0.6658,
+      0.0937,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "TNA": [
-      0.3083,
-      0.3615,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.1814,
+      0.4501,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "TQQQ": [
-      0.2894,
-      0.2968,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.3517,
+      0.1237,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "TSLA": [
-      0.1939,
-      0.3005,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.2048,
+      0.1409,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "UPRO": [
-      0.2858,
-      0.3975,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.2234,
+      0.2734,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "XRP-USD": [
-      0.044,
-      0.7441,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.1319,
+      0.3703,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "NANC": [
-      0.1266,
-      0.5067,
-      "2026-09-30T18:25:05.000190+00:00"
+      0.1066,
+      0.4486,
+      "2026-09-30T18:57:05.000147+00:00"
      ]
     },
     "sold": {}
@@ -7882,159 +8097,159 @@
    "Breezy": {
     "probs": {
      "AAPL": [
-      0.1383,
-      0.018,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0442,
+      0.0402,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "AMD": [
-      0.0277,
-      0.1198,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0362,
+      0.1196,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "AMZN": [
-      0.0278,
-      0.0735,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0145,
+      0.0572,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "ARKK": [
-      0.0073,
-      0.1021,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0044,
+      0.1158,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "BITX": [
       0.0,
-      0.5162,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.5178,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "BRK-B": [
-      0.012,
-      0.0519,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0124,
+      0.1501,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "BTC-USD": [
       0.0001,
-      0.1428,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.1281,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "COIN": [
       0.0001,
-      0.364,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.2907,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "DOGE-USD": [
       0.0,
-      0.5005,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.3248,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "ETH-USD": [
       0.0001,
-      0.1652,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.1028,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "ETHU": [
-      0.0001,
-      0.6082,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0015,
+      0.463,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "GOOGL": [
-      0.0191,
-      0.0685,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0383,
+      0.033,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "IWM": [
-      0.019,
-      0.0751,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.012,
+      0.0972,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "LABU": [
-      0.0178,
-      0.2609,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0,
+      0.45,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "META": [
-      0.0324,
-      0.0272,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0259,
+      0.0373,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "MSFT": [
-      0.0424,
-      0.0252,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0483,
+      0.0161,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "MSTR": [
-      0.0031,
-      0.4383,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0001,
+      0.4105,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "NVDA": [
-      0.0435,
-      0.0153,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0414,
+      0.0204,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "PLTR": [
-      0.0121,
-      0.0802,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0061,
+      0.0682,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "QQQ": [
-      0.0753,
-      0.0314,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0644,
+      0.0253,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "SOL-USD": [
       0.0001,
-      0.4895,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.4355,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "SOXL": [
       0.0,
-      0.5231,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.469,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "SPY": [
-      0.0604,
-      0.0397,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0422,
+      0.036,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "SQQQ": [
       0.0001,
-      0.436,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.4609,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "TECL": [
-      0.0107,
-      0.3338,
-      "2026-09-30T18:39:05.000148+00:00"
+      0.0108,
+      0.3261,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "TNA": [
-      0.0061,
-      0.227,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0001,
+      0.3296,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "TQQQ": [
       0.0001,
-      0.4572,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.4511,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "TSLA": [
-      0.0184,
-      0.0874,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0185,
+      0.0434,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "UPRO": [
       0.0,
-      0.3594,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.3183,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "XRP-USD": [
       0.0,
-      0.3711,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.2046,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "NANC": [
-      0.01,
-      0.2327,
-      "2026-09-30T18:25:05.000190+00:00"
+      0.0051,
+      0.1183,
+      "2026-09-30T18:57:05.000147+00:00"
      ]
     },
     "sold": {}
@@ -8042,159 +8257,159 @@
    "Boozy": {
     "probs": {
      "AAPL": [
-      0.0685,
-      0.0922,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0431,
+      0.1258,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "AMD": [
-      0.1612,
-      0.1729,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.3229,
+      0.1532,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "AMZN": [
-      0.0639,
-      0.1347,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0476,
+      0.159,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "ARKK": [
-      0.0468,
-      0.1694,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0546,
+      0.2073,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "BITX": [
-      0.3064,
-      0.4233,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.3701,
+      0.3888,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "BRK-B": [
-      0.0101,
-      0.2857,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.019,
+      0.334,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "BTC-USD": [
-      0.2275,
-      0.2354,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.2543,
+      0.2256,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "COIN": [
-      0.5227,
-      0.2392,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.5389,
+      0.2498,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "DOGE-USD": [
-      0.0697,
-      0.4606,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.183,
+      0.2339,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "ETH-USD": [
-      0.192,
-      0.3277,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.2439,
+      0.2356,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "ETHU": [
-      0.2925,
-      0.4379,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.3783,
+      0.3402,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "GOOGL": [
-      0.0683,
-      0.2204,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.1019,
+      0.2002,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "IWM": [
-      0.065,
-      0.1785,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0511,
+      0.2207,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "LABU": [
-      0.3451,
-      0.2295,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.16,
+      0.51,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "META": [
-      0.1038,
-      0.1303,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.107,
+      0.1814,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "MSFT": [
-      0.0537,
-      0.1955,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0619,
+      0.2072,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "MSTR": [
-      0.4397,
-      0.2883,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.4478,
+      0.3008,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "NVDA": [
-      0.0688,
-      0.2024,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.1416,
+      0.1989,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "PLTR": [
-      0.0861,
-      0.3552,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0937,
+      0.3085,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "QQQ": [
-      0.1039,
-      0.1732,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.1209,
+      0.1525,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "SOL-USD": [
-      0.121,
-      0.4817,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.1453,
+      0.4319,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "SOXL": [
-      0.2843,
-      0.2573,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.4537,
+      0.1594,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "SPY": [
-      0.0455,
-      0.1632,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0384,
+      0.1661,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "SQQQ": [
-      0.1136,
-      0.4459,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.0731,
+      0.4926,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "TECL": [
-      0.3396,
-      0.2216,
-      "2026-09-30T18:39:05.000148+00:00"
+      0.4828,
+      0.1443,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "TNA": [
-      0.2109,
-      0.22,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.1603,
+      0.3145,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "TQQQ": [
-      0.3586,
-      0.187,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.4366,
+      0.1334,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "TSLA": [
-      0.0874,
-      0.2662,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.1105,
+      0.1972,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "UPRO": [
-      0.2249,
-      0.2468,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.2785,
+      0.2045,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "XRP-USD": [
-      0.098,
-      0.3845,
-      "2026-09-30T18:40:05.000144+00:00"
+      0.1142,
+      0.2122,
+      "2026-09-30T19:10:05.000178+00:00"
      ],
      "NANC": [
-      0.106,
-      0.3484,
-      "2026-09-30T18:25:05.000190+00:00"
+      0.1125,
+      0.2223,
+      "2026-09-30T18:57:05.000147+00:00"
      ]
     },
     "sold": {}
