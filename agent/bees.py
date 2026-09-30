@@ -133,9 +133,10 @@ def plan(bee: Bee, answers: dict, keys: dict[str, str], book: dict[str, Holding]
     """Jev's answers -> target weights, trading only on steady, confident calls.
 
     Acting on every minute's answer churned the first bees into the ground: fees were nearly all of their
-    losses. So each symbol's buy and sell probabilities are smoothed over the bee's recent answers, a buy needs
-    both the latest answer and the running probability, a new position is held at least ``hold_minutes`` unless
-    its stop-loss hits, and a sold symbol isn't bought back until its cooldown ends.
+    losses. So each symbol's buy and sell probabilities are smoothed over the bee's recent answers (a symbol's
+    first answer, or its first after a gap, only seeds them), a buy needs both the latest answer and the running
+    probability, a new position is held at least ``hold_minutes`` unless its stop-loss hits, and a sold symbol
+    isn't bought back until its cooldown ends.
     ``memory`` (running probabilities and sale times) is updated in place.
     Returns (targets, {symbol: [choice, running buy probability, what was done]})."""
     stamp = now.isoformat()
@@ -150,7 +151,8 @@ def plan(bee: Bee, answers: dict, keys: dict[str, str], book: dict[str, Holding]
         choice, probabilities = answer.get("choice"), answer.get("probabilities")
         p_buy, p_sell = _prob(probabilities, "buy"), _prob(probabilities, "sell")
         prev = probs.get(symbol)
-        if prev and now - pd.Timestamp(prev[2]) <= MEMORY:
+        warm = bool(prev) and now - pd.Timestamp(prev[2]) <= MEMORY  # a first answer (or one after a gap) only seeds
+        if warm:
             p_buy_avg = SMOOTHING * p_buy + (1 - SMOOTHING) * prev[0]
             p_sell_avg = SMOOTHING * p_sell + (1 - SMOOTHING) * prev[1]
         else:
@@ -163,6 +165,8 @@ def plan(bee: Bee, answers: dict, keys: dict[str, str], book: dict[str, Holding]
                 note = f"stop-loss at {100 * held.pnl:+.1f}%"
             elif symbol in locked:
                 note = f"holding ({held.age_minutes:.0f} of {bee.hold_minutes:.0f} min)"
+            elif not warm:
+                note = "warming up"
             elif choice == "sell" and p_sell_avg >= bee.sell_prob:
                 note = f"sell (sell p={p_sell_avg:.2f}) after {held.age_minutes:.0f} min"
             elif choice == "buy" and p_buy_avg >= bee.min_prob:
@@ -171,6 +175,8 @@ def plan(bee: Bee, answers: dict, keys: dict[str, str], book: dict[str, Holding]
             if note.startswith(("stop", "sell")):
                 targets.pop(symbol)
                 locked.discard(symbol)
+        elif not warm:
+            note = "warming up"
         elif choice == "buy" and min(p_buy, p_buy_avg) >= bee.min_prob:
             if symbol in sold and now - pd.Timestamp(sold[symbol]) < pd.Timedelta(minutes=bee.cooldown_minutes):
                 note = "cooling down after a sale"
@@ -194,6 +200,19 @@ def plan(bee: Bee, answers: dict, keys: dict[str, str], book: dict[str, Holding]
         for symbol in [s for s, v in table.items() if now - pd.Timestamp(v[2] if isinstance(v, list) else v) > pd.Timedelta(days=1)]:
             del table[symbol]
     return targets, decisions
+
+
+def book_of(sleeve: Sleeve, now: pd.Timestamp) -> dict[str, Holding]:
+    """The sleeve's positions: weight, gain after fees (at the last marked price) and age."""
+    held = sleeve.weights()
+    book = {}
+    for symbol, position in sleeve.data["positions"].items():
+        mark = sleeve.data["last_marks"].get(symbol)
+        opened = pd.Timestamp(position["opened_at"])
+        book[symbol] = Holding(held.get(symbol, 0.0),
+                               position["units"] * mark / position["cost_gbp"] - 1 if mark and position["cost_gbp"] > 0 else None,
+                               (now - (opened if opened.tzinfo else opened.tz_localize("UTC"))) / pd.Timedelta(minutes=1))
+    return book
 
 
 class JevError(RuntimeError):
@@ -312,14 +331,7 @@ class Hive:
             usage["usd"] += cost
             usage["calls"] += 1
             answers.update(part)
-        book = {}
-        for symbol, position in positions.items():
-            mark = sleeve.data["last_marks"].get(symbol)
-            opened = pd.Timestamp(position["opened_at"])
-            book[symbol] = Holding(held.get(symbol, 0.0),
-                                   position["units"] * mark / position["cost_gbp"] - 1 if mark and position["cost_gbp"] > 0 else None,
-                                   (now - (opened if opened.tzinfo else opened.tz_localize("UTC"))) / pd.Timedelta(minutes=1))
-        return plan(bee, answers, keys, book, memory, now)
+        return plan(bee, answers, keys, book_of(sleeve, now), memory, now)
 
     def run(self, state: dict, now: pd.Timestamp, fx_to_gbp, risk_for) -> list[dict]:
         """One round: fresh 1-minute bars, one Jev call per bee, then each bee's sleeve trades."""
@@ -369,13 +381,20 @@ class Hive:
                 spend["decisions"] += len(decisions)
                 counts = {c: sum(1 for d in decisions.values() if d[0] == c) for c in MENU}
                 info = {"at": now_iso, "decisions": decisions, "counts": counts, "targets": targets, "error": None}
+                notes = {s: f"Jev: {d[2] or d[0]}" for s, d in decisions.items()}
             else:
-                targets = sleeve.weights()  # no fresh decision: hold what it has
+                # no fresh decision (budget spent, API down, no data): hold, but stop-losses still apply
+                book, notes = book_of(sleeve, now), {}
+                targets = {s: h.weight for s, h in book.items() if h.weight > 1e-9}
+                for symbol, h in book.items():
+                    if symbol in targets and h.pnl is not None and h.pnl <= -bee.stop_loss:
+                        del targets[symbol]
+                        memory[bee.name].setdefault("sold", {})[symbol] = now.isoformat()
+                        notes[symbol] = f"stop-loss at {100 * h.pnl:+.1f}% (no fresh Jev call)"
                 if error is not None:
                     log.warning("%s: Jev call failed: %s", bee.sleeve, error)
                     info = {**info, "error": str(error)[:300], "error_at": now_iso}
-            reason = lambda symbol, side, d=info.get("decisions") or {}: (  # noqa: E731
-                f"Jev: {d[symbol][2] or d[symbol][0]}" if symbol in d and len(d[symbol]) > 2 else "")
+            reason = lambda symbol, side, notes=notes: notes.get(symbol, "")  # noqa: E731
             trades.extend(sleeve.rebalance(targets, quotes, risk_for(bee.sleeve), now_iso, today, reason))
             state["sleeves"][bee.sleeve] = sleeve.data
             store[bee.name] = info
