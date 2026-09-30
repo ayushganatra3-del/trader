@@ -201,7 +201,7 @@ def _check_bees(config) -> bool:
         sleeve = Sleeve(new_sleeve("check", config.starting_capital_gbp, now.isoformat()))
         sleeve.mark(quotes)
         usage = {"usd": 0.0, "calls": 0}
-        targets, decisions = hive.ask(BEES[0], market, sleeve, usage)
+        targets, decisions = hive.ask(BEES[0], market, sleeve, usage, {}, now)
         counts = {c: sum(1 for d in decisions.values() if d[0] == c) for c in ("buy", "hold", "sell")}
         print(f"jev ok: {config.bees.model}, {len(decisions)}/{len(market)} decisions {counts}, "
               f"${usage['usd']:.5f} in {usage['calls']} call(s); "
