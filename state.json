@@ -8,33 +8,65 @@
    "name": "EMA 9/21 cross",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 54.13073945202565,
+   "cash_gbp": 0.0,
    "positions": {
     "ETH-USD": {
-     "units": 0.009011816638962823,
-     "cost_gbp": 18.260303534675955,
+     "units": 0.007128950574569792,
+     "cost_gbp": 14.44512317444678,
      "opened_at": "2026-09-30T20:35:05.000138Z",
      "entry_price": 2678.46,
+     "realised_gbp": -0.008767998186893333
+    },
+    "BTC-USD": {
+     "units": 0.00028569492623652044,
+     "cost_gbp": 18.09728856424529,
+     "opened_at": "2026-09-30T22:30:05.000156Z",
+     "entry_price": 83773.72,
+     "realised_gbp": 0.0
+    },
+    "SOL-USD": {
+     "units": 0.20241649827434813,
+     "cost_gbp": 18.09728856424529,
+     "opened_at": "2026-09-30T22:30:05.000156Z",
+     "entry_price": 118.24,
+     "realised_gbp": 0.0
+    },
+    "DOGE-USD": {
+     "units": 250.66719586818132,
+     "cost_gbp": 17.936162323535072,
+     "opened_at": "2026-09-30T22:35:05.000153Z",
+     "entry_price": 0.09463,
+     "realised_gbp": 0.0
+    },
+    "XRP-USD": {
+     "units": 3.3712788117790717,
+     "cost_gbp": 3.8064123620422827,
+     "opened_at": "2026-09-30T22:40:05.000141Z",
+     "entry_price": 1.4932,
      "realised_gbp": 0.0
     }
    },
-   "realised_gbp": -27.608957013298408,
-   "fees_gbp": 27.17978863667663,
+   "realised_gbp": -27.6177250114853,
+   "fees_gbp": 27.364533815256493,
    "closed_trades": 342,
    "wins": 57,
    "losses": 285,
    "gross_win_gbp": 5.707614949264707,
    "gross_loss_gbp": 33.3165719625631,
    "peak_equity_gbp": 101.03420206936936,
-   "max_drawdown_pct": -28.419,
+   "max_drawdown_pct": -28.489,
    "day": "2026-09-30",
    "day_start_equity_gbp": 75.96648671846818,
    "halted_day": "2026-09-26",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 72.32121596933482,
+   "equity_gbp": 72.25361858754324,
    "last_marks": {
-    "ETH-USD": 2018.5138297934484
+    "ETH-USD": 2027.6885499833966,
+    "BTC-USD": 63144.21636386724,
+    "SOL-USD": 89.25939773951234,
+    "DOGE-USD": 0.07139244059064036,
+    "XRP-USD": 1.1256936883837823
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -134,24 +166,50 @@
    "name": "MACD zero-line",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 78.4326538707426,
-   "positions": {},
+   "cash_gbp": 19.60816346768565,
+   "positions": {
+    "BTC-USD": {
+     "units": 0.0003095202571337836,
+     "cost_gbp": 19.60816346768565,
+     "opened_at": "2026-09-30T22:35:05.000153Z",
+     "entry_price": 83780.83,
+     "realised_gbp": 0.0
+    },
+    "DOGE-USD": {
+     "units": 274.0342813535011,
+     "cost_gbp": 19.60816346768565,
+     "opened_at": "2026-09-30T22:35:05.000153Z",
+     "entry_price": 0.09463,
+     "realised_gbp": 0.0
+    },
+    "SOL-USD": {
+     "units": 0.21913016769039892,
+     "cost_gbp": 19.60816346768565,
+     "opened_at": "2026-09-30T22:35:05.000153Z",
+     "entry_price": 118.34,
+     "realised_gbp": 0.0
+    }
+   },
    "realised_gbp": -21.567346129257363,
-   "fees_gbp": 20.635299137686545,
+   "fees_gbp": 20.81124477199279,
    "closed_trades": 248,
    "wins": 40,
    "losses": 208,
    "gross_win_gbp": 4.012245884020878,
    "gross_loss_gbp": 25.57959201327824,
    "peak_equity_gbp": 100.50057588205145,
-   "max_drawdown_pct": -21.958,
+   "max_drawdown_pct": -22.133,
    "day": "2026-09-30",
    "day_start_equity_gbp": 81.93361357429322,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 78.4326538707426,
-   "last_marks": {},
+   "equity_gbp": 78.27598049907311,
+   "last_marks": {
+    "BTC-USD": 63144.21636386724,
+    "DOGE-USD": 0.07139244059064036,
+    "SOL-USD": 89.25939773951234
+   },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 88.04550228447555,
@@ -163,7 +221,7 @@
    "name": "Supertrend",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 59.80616223090746,
+   "cash_gbp": 19.9634468812105,
    "positions": {
     "DOGE-USD": {
      "units": 279.26112389851204,
@@ -171,10 +229,24 @@
      "opened_at": "2026-09-30T20:25:05.000150Z",
      "entry_price": 0.09462,
      "realised_gbp": 0.0
+    },
+    "ETH-USD": {
+     "units": 0.009804348486386043,
+     "cost_gbp": 19.923718417123595,
+     "opened_at": "2026-09-30T22:30:05.000156Z",
+     "entry_price": 2687.5,
+     "realised_gbp": 0.0
+    },
+    "SOL-USD": {
+     "units": 0.22260387339449933,
+     "cost_gbp": 19.918996932573364,
+     "opened_at": "2026-09-30T22:35:05.000153Z",
+     "entry_price": 118.34,
+     "realised_gbp": 0.0
     }
    },
    "realised_gbp": -20.20424687639435,
-   "fees_gbp": 18.570927511330606,
+   "fees_gbp": 18.69009814547725,
    "closed_trades": 205,
    "wins": 39,
    "losses": 166,
@@ -187,9 +259,11 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 79.59592485537206,
+   "equity_gbp": 79.65023291797817,
    "last_marks": {
-    "DOGE-USD": 0.07086472455670743
+    "DOGE-USD": 0.07139244059064036,
+    "ETH-USD": 2027.6885499833966,
+    "SOL-USD": 89.25939773951234
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -202,24 +276,50 @@
    "name": "Parabolic SAR",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 69.40602392271964,
-   "positions": {},
+   "cash_gbp": 17.36798254576653,
+   "positions": {
+    "ETH-USD": {
+     "units": 0.008547928415921061,
+     "cost_gbp": 17.35150598067991,
+     "opened_at": "2026-09-30T22:25:05.000151Z",
+     "entry_price": 2684.56,
+     "realised_gbp": 0.0
+    },
+    "BTC-USD": {
+     "units": 0.00027379148915759123,
+     "cost_gbp": 17.3432676981366,
+     "opened_at": "2026-09-30T22:30:05.000156Z",
+     "entry_price": 83773.72,
+     "realised_gbp": 0.0
+    },
+    "SOL-USD": {
+     "units": 0.19398284464708293,
+     "cost_gbp": 17.3432676981366,
+     "opened_at": "2026-09-30T22:30:05.000156Z",
+     "entry_price": 118.24,
+     "realised_gbp": 0.0
+    }
+   },
    "realised_gbp": -30.593976077280296,
-   "fees_gbp": 28.187892477243413,
+   "fees_gbp": 28.343539659826522,
    "closed_trades": 329,
    "wins": 44,
    "losses": 285,
    "gross_win_gbp": 3.9279631645313193,
    "gross_loss_gbp": 34.52193924181161,
    "peak_equity_gbp": 100.2496815738259,
-   "max_drawdown_pct": -30.767,
+   "max_drawdown_pct": -30.903,
    "day": "2026-09-30",
    "day_start_equity_gbp": 72.65295761748081,
    "halted_day": "2026-09-29",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 69.40602392271964,
-   "last_marks": {},
+   "equity_gbp": 69.30366003575574,
+   "last_marks": {
+    "ETH-USD": 2027.6885499833966,
+    "BTC-USD": 63144.21636386724,
+    "SOL-USD": 89.25939773951234
+   },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 81.37368212889099,
@@ -231,24 +331,34 @@
    "name": "ADX DI cross",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 75.80747994665053,
-   "positions": {},
+   "cash_gbp": 56.8556099599879,
+   "positions": {
+    "ETH-USD": {
+     "units": 0.009341993136077874,
+     "cost_gbp": 18.951869986662633,
+     "opened_at": "2026-09-30T22:20:05.000118Z",
+     "entry_price": 2682.93,
+     "realised_gbp": 0.0
+    }
+   },
    "realised_gbp": -24.192520053349412,
-   "fees_gbp": 21.20342131608182,
+   "fees_gbp": 21.260106869381907,
    "closed_trades": 238,
    "wins": 19,
    "losses": 219,
    "gross_win_gbp": 1.6840552459911624,
    "gross_loss_gbp": 25.87657529934056,
    "peak_equity_gbp": 100.0,
-   "max_drawdown_pct": -24.193,
+   "max_drawdown_pct": -24.249,
    "day": "2026-09-30",
    "day_start_equity_gbp": 79.09649238582328,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 75.80747994665053,
-   "last_marks": {},
+   "equity_gbp": 75.79826247603648,
+   "last_marks": {
+    "ETH-USD": 2027.6885499833966
+   },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 86.4191623377048,
@@ -405,24 +515,50 @@
    "name": "RSI momentum",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 77.14140506516026,
-   "positions": {},
+   "cash_gbp": 19.319470069722193,
+   "positions": {
+    "ETH-USD": {
+     "units": 0.009490211643152295,
+     "cost_gbp": 19.285351266290064,
+     "opened_at": "2026-09-30T22:30:05.000156Z",
+     "entry_price": 2687.5,
+     "realised_gbp": 0.0
+    },
+    "DOGE-USD": {
+     "units": 269.3450225226964,
+     "cost_gbp": 19.27262970438216,
+     "opened_at": "2026-09-30T22:35:05.000153Z",
+     "entry_price": 0.09463,
+     "realised_gbp": 0.0
+    },
+    "SOL-USD": {
+     "units": 0.21517437385984822,
+     "cost_gbp": 19.263954024765837,
+     "opened_at": "2026-09-30T22:40:05.000141Z",
+     "entry_price": 118.4,
+     "realised_gbp": 0.0
+    }
+   },
    "realised_gbp": -22.85859493483974,
-   "fees_gbp": 18.814670148297164,
+   "fees_gbp": 18.98761711239119,
    "closed_trades": 240,
    "wins": 37,
    "losses": 203,
    "gross_win_gbp": 3.841591645954721,
    "gross_loss_gbp": 26.700186580794465,
    "peak_equity_gbp": 101.03420206936936,
-   "max_drawdown_pct": -23.648,
+   "max_drawdown_pct": -23.79,
    "day": "2026-09-30",
    "day_start_equity_gbp": 79.74443359490203,
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 77.14140506516026,
-   "last_marks": {},
+   "equity_gbp": 76.99819709400423,
+   "last_marks": {
+    "ETH-USD": 2027.6885499833966,
+    "DOGE-USD": 0.07139244059064036,
+    "SOL-USD": 89.25939773951234
+   },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 87.42097017056156,
@@ -463,24 +599,58 @@
    "name": "Donchian 20/10",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 78.52109753259239,
-   "positions": {},
+   "cash_gbp": 0.03884727024975376,
+   "positions": {
+    "ETH-USD": {
+     "units": 0.009659946346679332,
+     "cost_gbp": 19.630274383148098,
+     "opened_at": "2026-09-30T22:30:05.000156Z",
+     "entry_price": 2687.5,
+     "realised_gbp": 0.0
+    },
+    "BTC-USD": {
+     "units": 0.00030966487906902284,
+     "cost_gbp": 19.617325293064848,
+     "opened_at": "2026-09-30T22:35:05.000153Z",
+     "entry_price": 83780.83,
+     "realised_gbp": 0.0
+    },
+    "DOGE-USD": {
+     "units": 274.1623226276272,
+     "cost_gbp": 19.617325293064848,
+     "opened_at": "2026-09-30T22:35:05.000153Z",
+     "entry_price": 0.09463,
+     "realised_gbp": 0.0
+    },
+    "SOL-USD": {
+     "units": 0.21923255526662463,
+     "cost_gbp": 19.617325293064848,
+     "opened_at": "2026-09-30T22:35:05.000153Z",
+     "entry_price": 118.34,
+     "realised_gbp": 0.0
+    }
+   },
    "realised_gbp": -21.478902467407565,
-   "fees_gbp": 19.286074790127426,
+   "fees_gbp": 19.520817313344793,
    "closed_trades": 250,
    "wins": 48,
    "losses": 202,
    "gross_win_gbp": 4.699795533345766,
    "gross_loss_gbp": 26.178698000753332,
    "peak_equity_gbp": 100.74725899397845,
-   "max_drawdown_pct": -22.061,
+   "max_drawdown_pct": -22.287,
    "day": "2026-09-30",
    "day_start_equity_gbp": 81.04420872922269,
    "halted_day": "2026-09-25",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 78.52109753259239,
-   "last_marks": {},
+   "equity_gbp": 78.32143917346866,
+   "last_marks": {
+    "ETH-USD": 2027.6885499833966,
+    "BTC-USD": 63144.21636386724,
+    "DOGE-USD": 0.07139244059064036,
+    "SOL-USD": 89.25939773951234
+   },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 85.72403992314084,
@@ -492,10 +662,18 @@
    "name": "Donchian 55/20",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 86.05253303712443,
-   "positions": {},
+   "cash_gbp": 64.53939977784333,
+   "positions": {
+    "ETH-USD": {
+     "units": 0.010586490487979152,
+     "cost_gbp": 21.51313325928111,
+     "opened_at": "2026-09-30T22:30:05.000156Z",
+     "entry_price": 2687.5,
+     "realised_gbp": 0.0
+    }
+   },
    "realised_gbp": -13.947466962875538,
-   "fees_gbp": 10.813004931519579,
+   "fees_gbp": 10.877351292215334,
    "closed_trades": 120,
    "wins": 24,
    "losses": 96,
@@ -508,8 +686,10 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 86.05253303712443,
-   "last_marks": {},
+   "equity_gbp": 86.0055053248268,
+   "last_marks": {
+    "ETH-USD": 2027.6885499833966
+   },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 91.0842291884426,
@@ -521,24 +701,58 @@
    "name": "Bollinger breakout",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 76.91716228046943,
-   "positions": {},
+   "cash_gbp": 0.036981887901575305,
+   "positions": {
+    "BTC-USD": {
+     "units": 0.000303565406027961,
+     "cost_gbp": 19.229290570117357,
+     "opened_at": "2026-09-30T22:30:05.000156Z",
+     "entry_price": 83773.72,
+     "realised_gbp": 0.0
+    },
+    "ETH-USD": {
+     "units": 0.009462624493496826,
+     "cost_gbp": 19.229290570117357,
+     "opened_at": "2026-09-30T22:30:05.000156Z",
+     "entry_price": 2687.5,
+     "realised_gbp": 0.0
+    },
+    "SOL-USD": {
+     "units": 0.21507783597997904,
+     "cost_gbp": 19.229290570117357,
+     "opened_at": "2026-09-30T22:30:05.000156Z",
+     "entry_price": 118.24,
+     "realised_gbp": 0.0
+    },
+    "DOGE-USD": {
+     "units": 268.222494468337,
+     "cost_gbp": 19.19230868221578,
+     "opened_at": "2026-09-30T22:35:05.000153Z",
+     "entry_price": 0.09463,
+     "realised_gbp": 0.0
+    }
+   },
    "realised_gbp": -23.082837719530538,
-   "fees_gbp": 19.710208066681684,
+   "fees_gbp": 19.940158755792048,
    "closed_trades": 252,
    "wins": 41,
    "losses": 211,
    "gross_win_gbp": 3.6125904290836575,
    "gross_loss_gbp": 26.69542814861418,
    "peak_equity_gbp": 100.12010489251558,
-   "max_drawdown_pct": -23.175,
+   "max_drawdown_pct": -23.38,
    "day": "2026-09-30",
    "day_start_equity_gbp": 80.45264912643843,
    "halted_day": "2026-09-25",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 76.91716228046943,
-   "last_marks": {},
+   "equity_gbp": 76.73941351306696,
+   "last_marks": {
+    "BTC-USD": 63144.21636386724,
+    "ETH-USD": 2027.6885499833966,
+    "SOL-USD": 89.25939773951234,
+    "DOGE-USD": 0.07139244059064036
+   },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 87.08936683179962,
@@ -550,10 +764,18 @@
    "name": "Keltner breakout",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 83.43630823314474,
-   "positions": {},
+   "cash_gbp": 62.577231174858554,
+   "positions": {
+    "ETH-USD": {
+     "units": 0.010261006006107362,
+     "cost_gbp": 20.859077058286186,
+     "opened_at": "2026-09-30T22:35:05.000153Z",
+     "entry_price": 2688.45,
+     "realised_gbp": 0.0
+    }
+   },
    "realised_gbp": -16.563691766855214,
-   "fees_gbp": 14.66655175706617,
+   "fees_gbp": 14.728941818058054,
    "closed_trades": 174,
    "wins": 26,
    "losses": 148,
@@ -566,8 +788,10 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 83.43630823314474,
-   "last_marks": {},
+   "equity_gbp": 83.38335556475332,
+   "last_marks": {
+    "ETH-USD": 2027.6885499833966
+   },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 90.44400874027002,
@@ -579,10 +803,25 @@
    "name": "Squeeze breakout",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 87.40791107989996,
-   "positions": {},
+   "cash_gbp": 43.71589764656127,
+   "positions": {
+    "ETH-USD": {
+     "units": 0.010753233943994198,
+     "cost_gbp": 21.85197776997499,
+     "opened_at": "2026-09-30T22:30:05.000156Z",
+     "entry_price": 2687.5,
+     "realised_gbp": 0.0
+    },
+    "SOL-USD": {
+     "units": 0.24394867185103566,
+     "cost_gbp": 21.8400356633637,
+     "opened_at": "2026-09-30T22:40:05.000141Z",
+     "entry_price": 118.4,
+     "realised_gbp": 0.0
+    }
+   },
    "realised_gbp": -12.592088920100064,
-   "fees_gbp": 9.49623799805483,
+   "fees_gbp": 9.626921986389835,
    "closed_trades": 110,
    "wins": 15,
    "losses": 95,
@@ -595,8 +834,11 @@
    "halted_day": "2026-09-25",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 87.40791107989996,
-   "last_marks": {},
+   "equity_gbp": 87.29481851886848,
+   "last_marks": {
+    "ETH-USD": 2027.6885499833966,
+    "SOL-USD": 89.25939773951234
+   },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 91.55650642450262,
@@ -637,30 +879,15 @@
    "name": "RSI(14) reversion",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 45.4326407120888,
-   "positions": {
-    "XRP-USD": {
-     "units": 20.2169334040415,
-     "cost_gbp": 22.80222352235662,
-     "opened_at": "2026-09-30T18:45:05.000153Z",
-     "entry_price": 1.4918,
-     "realised_gbp": 0.0
-    },
-    "SOL-USD": {
-     "units": 0.25481216687219044,
-     "cost_gbp": 22.7051972508555,
-     "opened_at": "2026-09-30T19:30:05.000140Z",
-     "entry_price": 117.83,
-     "realised_gbp": 0.0
-    }
-   },
-   "realised_gbp": -9.059938514699116,
-   "fees_gbp": 10.2110082717217,
-   "closed_trades": 131,
+   "cash_gbp": 90.75274936880356,
+   "positions": {},
+   "realised_gbp": -9.247250631196465,
+   "fees_gbp": 10.347377705994665,
+   "closed_trades": 133,
    "wins": 46,
-   "losses": 85,
+   "losses": 87,
    "gross_win_gbp": 3.2142471138188293,
-   "gross_loss_gbp": 12.274185628517948,
+   "gross_loss_gbp": 12.461497745015297,
    "peak_equity_gbp": 100.0,
    "max_drawdown_pct": -9.538,
    "day": "2026-09-30",
@@ -668,17 +895,14 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 90.672935052967,
-   "last_marks": {
-    "XRP-USD": 1.1196626479959775,
-    "SOL-USD": 88.70906530412515
-   },
+   "equity_gbp": 90.75274936880356,
+   "last_marks": {},
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 95.49015418719266,
    "month": "2026-09",
    "month_start_equity_gbp": 99.46653033177967,
-   "loss_streak": 3
+   "loss_streak": 5
   },
   "Connors RSI(2)": {
    "name": "Connors RSI(2)",
@@ -713,76 +937,44 @@
    "name": "Bollinger reversion",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 53.79082901104549,
-   "positions": {
-    "XRP-USD": {
-     "units": 15.940341830776847,
-     "cost_gbp": 17.93027633701516,
-     "opened_at": "2026-09-30T21:55:05.000148Z",
-     "entry_price": 1.4876,
-     "realised_gbp": 0.0
-    }
-   },
-   "realised_gbp": -28.27889465193934,
-   "fees_gbp": 28.18642241784211,
-   "closed_trades": 367,
+   "cash_gbp": 71.33278996570166,
+   "positions": {},
+   "realised_gbp": -28.667210034298325,
+   "fees_gbp": 28.58348623532694,
+   "closed_trades": 372,
    "wins": 63,
-   "losses": 304,
+   "losses": 309,
    "gross_win_gbp": 2.099363266254277,
-   "gross_loss_gbp": 30.378257918193636,
+   "gross_loss_gbp": 30.766573300552626,
    "peak_equity_gbp": 100.0,
-   "max_drawdown_pct": -28.361,
+   "max_drawdown_pct": -28.667,
    "day": "2026-09-30",
    "day_start_equity_gbp": 74.74619965297055,
    "halted_day": "2026-09-28",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 71.63863435525414,
-   "last_marks": {
-    "XRP-USD": 1.1196626479959775
-   },
+   "equity_gbp": 71.33278996570166,
+   "last_marks": {},
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 84.31960104802228,
    "month": "2026-09",
    "month_start_equity_gbp": 96.78988308248742,
-   "loss_streak": 7
+   "loss_streak": 12
   },
   "Z-score reversion": {
    "name": "Z-score reversion",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 24.8191928865546,
-   "positions": {
-    "XRP-USD": {
-     "units": 18.449310902173256,
-     "cost_gbp": 20.850996891466796,
-     "opened_at": "2026-09-30T14:40:05.000181Z",
-     "entry_price": 1.4962,
-     "realised_gbp": -0.10592026513143793
-    },
-    "SOL-USD": {
-     "units": 0.18722419717070238,
-     "cost_gbp": 16.63335396859714,
-     "opened_at": "2026-09-30T19:45:05.000151Z",
-     "entry_price": 117.88,
-     "realised_gbp": -0.026082528765037694
-    },
-    "BTC-USD": {
-     "units": 0.00032929297507404475,
-     "cost_gbp": 20.81261824693412,
-     "opened_at": "2026-09-30T20:01:05.000153Z",
-     "entry_price": 83556.83,
-     "realised_gbp": 0.0
-    }
-   },
-   "realised_gbp": -16.883838006447366,
-   "fees_gbp": 17.986337464125338,
-   "closed_trades": 207,
+   "cash_gbp": 82.83090192280245,
+   "positions": {},
+   "realised_gbp": -17.169098077197575,
+   "fees_gbp": 18.16089626764464,
+   "closed_trades": 210,
    "wins": 65,
-   "losses": 142,
+   "losses": 145,
    "gross_win_gbp": 3.532589359814536,
-   "gross_loss_gbp": 20.28442457236543,
+   "gross_loss_gbp": 20.701687437012115,
    "peak_equity_gbp": 100.0,
    "max_drawdown_pct": -17.272,
    "day": "2026-09-30",
@@ -790,18 +982,14 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 82.83064179733097,
-   "last_marks": {
-    "XRP-USD": 1.1196626479959775,
-    "SOL-USD": 88.70906530412515,
-    "BTC-USD": 63001.529487092266
-   },
+   "equity_gbp": 82.83090192280245,
+   "last_marks": {},
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 91.13915337613706,
    "month": "2026-09",
    "month_start_equity_gbp": 98.63506607166025,
-   "loss_streak": 1
+   "loss_streak": 4
   },
   "VWAP reversion": {
    "name": "VWAP reversion",
@@ -831,9 +1019,9 @@
    "halted_day": "2026-09-28",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 83.03139871670561,
+   "equity_gbp": 83.16037692321706,
    "last_marks": {
-    "SOL-USD": 88.70906530412515
+    "SOL-USD": 89.25939773951234
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -846,23 +1034,15 @@
    "name": "Stochastic reversion",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 55.08265547927248,
-   "positions": {
-    "DOGE-USD": {
-     "units": 257.77424804415307,
-     "cost_gbp": 18.360885159757494,
-     "opened_at": "2026-09-30T21:55:05.000148Z",
-     "entry_price": 0.0942,
-     "realised_gbp": 0.0
-    }
-   },
-   "realised_gbp": -26.55645936097005,
-   "fees_gbp": 27.484884090049622,
-   "closed_trades": 391,
+   "cash_gbp": 73.38601676038842,
+   "positions": {},
+   "realised_gbp": -26.613983239611613,
+   "fees_gbp": 27.539959399822287,
+   "closed_trades": 392,
    "wins": 95,
-   "losses": 296,
+   "losses": 297,
    "gross_win_gbp": 3.632138519900909,
-   "gross_loss_gbp": 30.18859788087097,
+   "gross_loss_gbp": 30.246121759512533,
    "peak_equity_gbp": 100.0,
    "max_drawdown_pct": -26.65,
    "day": "2026-09-30",
@@ -870,16 +1050,14 @@
    "halted_day": "2026-09-28",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 73.34975656473377,
-   "last_marks": {
-    "DOGE-USD": 0.07086472455670743
-   },
+   "equity_gbp": 73.38601676038842,
+   "last_marks": {},
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 86.0869668467867,
    "month": "2026-09",
    "month_start_equity_gbp": 97.65255615456758,
-   "loss_streak": 1
+   "loss_streak": 2
   },
   "Williams %R": {
    "name": "Williams %R",
@@ -914,71 +1092,63 @@
    "name": "CCI reversion",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 34.867829623042226,
-   "positions": {
-    "XRP-USD": {
-     "units": 15.523660273422525,
-     "cost_gbp": 17.46460362440036,
-     "opened_at": "2026-09-30T20:05:05.000142Z",
-     "entry_price": 1.4877,
-     "realised_gbp": 0.0
-    },
-    "SOL-USD": {
-     "units": 0.19666642849694618,
-     "cost_gbp": 17.454184898124563,
-     "opened_at": "2026-09-30T20:10:05.000134Z",
-     "entry_price": 117.36,
-     "realised_gbp": 0.0
-    }
-   },
-   "realised_gbp": -30.213381854432853,
-   "fees_gbp": 28.03092503924967,
-   "closed_trades": 319,
-   "wins": 42,
-   "losses": 277,
-   "gross_win_gbp": 1.4943562794977412,
-   "gross_loss_gbp": 31.707738133930597,
+   "cash_gbp": 69.54361087660881,
+   "positions": {},
+   "realised_gbp": -30.45638912339119,
+   "fees_gbp": 28.44911611305928,
+   "closed_trades": 324,
+   "wins": 43,
+   "losses": 281,
+   "gross_win_gbp": 1.5109783980926585,
+   "gross_loss_gbp": 31.96736752148385,
    "peak_equity_gbp": 100.31126675914274,
-   "max_drawdown_pct": -30.521,
+   "max_drawdown_pct": -30.672,
    "day": "2026-09-30",
    "day_start_equity_gbp": 73.3151962713903,
    "halted_day": "2026-09-28",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 69.69518724003711,
-   "last_marks": {
-    "XRP-USD": 1.1196626479959775,
-    "SOL-USD": 88.70906530412515
-   },
+   "equity_gbp": 69.54361087660881,
+   "last_marks": {},
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 81.82183099669754,
    "month": "2026-09",
    "month_start_equity_gbp": 95.66812060665958,
-   "loss_streak": 21
+   "loss_streak": 2
   },
   "MFI reversion": {
    "name": "MFI reversion",
    "created_at": "2026-09-24T19:49:18.203581Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 78.7671736660453,
-   "positions": {},
+   "cash_gbp": 59.07538024953397,
+   "positions": {
+    "ETH-USD": {
+     "units": 0.009690219513013599,
+     "cost_gbp": 19.691793416511324,
+     "opened_at": "2026-09-30T22:30:05.000156Z",
+     "entry_price": 2687.5,
+     "realised_gbp": 0.0
+    }
+   },
    "realised_gbp": -21.232826333954634,
-   "fees_gbp": 20.534571979938928,
+   "fees_gbp": 20.593470664135868,
    "closed_trades": 205,
    "wins": 40,
    "losses": 165,
    "gross_win_gbp": 2.650135798027782,
    "gross_loss_gbp": 23.882962131982403,
    "peak_equity_gbp": 100.0,
-   "max_drawdown_pct": -21.233,
+   "max_drawdown_pct": -21.292,
    "day": "2026-09-30",
    "day_start_equity_gbp": 80.99983479150936,
    "halted_day": "2026-09-25",
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 78.7671736660453,
-   "last_marks": {},
+   "equity_gbp": 78.72412740289732,
+   "last_marks": {
+    "ETH-USD": 2027.6885499833966
+   },
    "halt_reason": null,
    "week": "2026-W40",
    "week_start_equity_gbp": 86.57827613956636,
@@ -1014,9 +1184,9 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 99.71058172329961,
+   "equity_gbp": 99.93640785170224,
    "last_marks": {
-    "BTC-USD": 63001.529487092266
+    "BTC-USD": 63144.21636386724
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -1320,11 +1490,11 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 91.06418865293188,
+   "equity_gbp": 91.08722038689278,
    "last_marks": {
     "NVDA": 172.1032712050467,
     "SOXL": 111.3103845561053,
-    "BTC-USD": 63001.529487092266,
+    "BTC-USD": 63144.21636386724,
     "LABU": 199.98175217675174,
     "AMZN": 187.73874755161768,
     "QQQ": 557.6450810600468,
@@ -1833,15 +2003,15 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 95.7799807112246,
+   "equity_gbp": 95.925871399151,
    "last_marks": {
     "MSFT": 386.71032623079657,
     "SQQQ": 25.94741968924024,
     "TECL": 174.9454022087228,
     "NVDA": 172.1032712050467,
-    "BTC-USD": 63001.529487092266,
-    "DOGE-USD": 0.07086472455670743,
-    "ETH-USD": 2018.5138297934484,
+    "BTC-USD": 63144.21636386724,
+    "DOGE-USD": 0.07139244059064036,
+    "ETH-USD": 2027.6885499833966,
     "AAPL": 251.04960230497306,
     "GOOGL": 259.43274476296693,
     "AMZN": 187.73874755161768,
@@ -2455,14 +2625,14 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 86.28281840892724,
+   "equity_gbp": 86.31039168032645,
    "last_marks": {
     "AMZN": 187.73874755161768,
     "LABU": 199.98175217675174,
     "MSFT": 386.71032623079657,
     "TECL": 174.9454022087228,
     "TQQQ": 58.81771885134191,
-    "BTC-USD": 63001.529487092266
+    "BTC-USD": 63144.21636386724
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -3271,7 +3441,7 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 98.63346104322478,
+   "equity_gbp": 98.65791732590053,
    "last_marks": {
     "BITX": 14.772279032231248,
     "ETHU": 22.54855213487256,
@@ -3282,7 +3452,7 @@
     "COIN": 140.47800547215417,
     "SQQQ": 25.94741968924024,
     "AMD": 461.1785734923604,
-    "SOL-USD": 88.70906530412515
+    "SOL-USD": 89.25939773951234
    },
    "halt_reason": null,
    "week": "2026-W40",
@@ -3389,7 +3559,7 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 98.10597775945776,
+   "equity_gbp": 98.20844272573592,
    "last_marks": {
     "ETHU": 22.54855213487256,
     "BITX": 14.772279032231248,
@@ -3399,8 +3569,8 @@
     "AAPL": 251.04960230497306,
     "NVDA": 172.1032712050467,
     "TSLA": 267.54450144667436,
-    "SOL-USD": 88.70906530412515,
-    "XRP-USD": 1.1196626479959775,
+    "SOL-USD": 89.25939773951234,
+    "XRP-USD": 1.1256936883837823,
     "COIN": 140.47800547215417
    },
    "halt_reason": null,
@@ -3616,11 +3786,11 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 94.5112376301074,
+   "equity_gbp": 94.69548372975639,
    "last_marks": {
-    "SOL-USD": 88.70906530412515,
+    "SOL-USD": 89.25939773951234,
     "UPRO": 110.7449745197486,
-    "ETH-USD": 2018.5138297934484,
+    "ETH-USD": 2027.6885499833966,
     "TSLA": 267.54450144667436,
     "SPY": 574.7883060002723,
     "SQQQ": 25.94741968924024
@@ -4215,10 +4385,18 @@
    "name": "Three white soldiers",
    "created_at": "2026-09-25T14:39:33.674994Z",
    "capital_gbp": 100.0,
-   "cash_gbp": 94.4757649255365,
-   "positions": {},
+   "cash_gbp": 70.85682369415237,
+   "positions": {
+    "XRP-USD": {
+     "units": 20.91892011597452,
+     "cost_gbp": 23.618941231384124,
+     "opened_at": "2026-09-30T22:40:05.000141Z",
+     "entry_price": 1.4932,
+     "realised_gbp": 0.0
+    }
+   },
    "realised_gbp": -5.524235074463494,
-   "fees_gbp": 5.846094460534662,
+   "fees_gbp": 5.91673934956173,
    "closed_trades": 51,
    "wins": 10,
    "losses": 41,
@@ -4231,8 +4409,10 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 94.4757649255365,
-   "last_marks": {},
+   "equity_gbp": 94.40512003650943,
+   "last_marks": {
+    "XRP-USD": 1.1256936883837823
+   },
    "week": "2026-W40",
    "week_start_equity_gbp": 97.27831982815255,
    "month": "2026-09",
@@ -4345,7 +4525,7 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 97.81367107437751,
+   "equity_gbp": 97.84183850837036,
    "last_marks": {
     "QQQ": 557.6450810600468,
     "META": 546.7816437941287,
@@ -4358,7 +4538,7 @@
     "TSLA": 267.54450144667436,
     "MSTR": 115.43410934153063,
     "SQQQ": 25.94741968924024,
-    "ETH-USD": 2018.5138297934484
+    "ETH-USD": 2027.6885499833966
    },
    "week": "2026-W40",
    "week_start_equity_gbp": 99.9231519585962,
@@ -4733,7 +4913,7 @@
    "halted_day": null,
    "disabled": false,
    "disabled_reason": null,
-   "equity_gbp": 95.42380199260572,
+   "equity_gbp": 95.48013844951475,
    "last_marks": {
     "AMD": 461.1785734923604,
     "BITX": 14.772279032231248,
@@ -4746,10 +4926,10 @@
     "NVDA": 172.1032712050467,
     "AMZN": 187.73874755161768,
     "MSTR": 115.43410934153063,
-    "DOGE-USD": 0.07086472455670743,
+    "DOGE-USD": 0.07139244059064036,
     "TSLA": 267.54450144667436,
     "COIN": 140.47800547215417,
-    "ETH-USD": 2018.5138297934484,
+    "ETH-USD": 2027.6885499833966,
     "AAPL": 251.04960230497306,
     "PLTR": 141.00571920542777,
     "MSFT": 386.71032623079657,
@@ -4888,19 +5068,19 @@
   }
  },
  "kronos": {},
- "last_history_at": "2026-09-30T22:09:05.000149Z",
- "ticks": 7334,
+ "last_history_at": "2026-09-30T22:30:05.000156Z",
+ "ticks": 7355,
  "broker": null,
  "last_tick": {
-  "at": "2026-09-30T22:10:05.000149Z",
-  "seconds": 74.55,
+  "at": "2026-09-30T22:40:05.000141Z",
+  "seconds": 73.32,
   "data_errors": {
    "CRAFX": "yfinance: 'tradingPeriods'; yahoo: cooling down after a rate limit",
    "CYBN": "yfinance: $CYBN: possibly delisted; no timezone found; yahoo: cooling down after a rate limit",
    "GREE": "yfinance: $GREE: possibly delisted; no timezone found; yahoo: cooling down after a rate limit"
   },
-  "new_trades": 4,
-  "latest_bar": "2026-09-30T22:05:00Z",
+  "new_trades": 5,
+  "latest_bar": "2026-09-30T22:35:00Z",
   "tradable": [
    "BTC-USD",
    "DOGE-USD",
@@ -5599,55 +5779,57 @@
   "model": "typesafe/jev-1.13",
   "spend": {
    "day": "2026-09-30",
-   "usd": 0.486314,
-   "calls": 3294,
-   "decisions": 39258
+   "usd": 0.490702,
+   "calls": 3357,
+   "decisions": 39573
   },
   "data_errors": {},
   "budget_spent": false,
   "Bizzy": {
-   "at": "2026-09-30T22:10:05.000149Z",
+   "at": "2026-09-30T22:40:05.000141Z",
    "decisions": {
     "BTC-USD": [
-     "sell",
-     0.18,
+     "hold",
+     0.091,
      ""
     ],
     "DOGE-USD": [
      "buy",
-     0.257,
-     ""
+     0.64,
+     "buy (buy p=0.64)"
     ],
     "ETH-USD": [
-     "sell",
-     0.048,
+     "hold",
+     0.344,
      ""
     ],
     "SOL-USD": [
-     "sell",
-     0.053,
+     "hold",
+     0.552,
      ""
     ],
     "XRP-USD": [
-     "sell",
-     0.13,
+     "hold",
+     0.489,
      ""
     ]
    },
    "counts": {
     "buy": 1,
-    "hold": 0,
-    "sell": 4
+    "hold": 4,
+    "sell": 0
    },
-   "targets": {},
+   "targets": {
+    "DOGE-USD": 0.1601
+   },
    "error": null
   },
   "Breezy": {
-   "at": "2026-09-30T22:10:05.000149Z",
+   "at": "2026-09-30T22:40:05.000141Z",
    "decisions": {
     "BTC-USD": [
      "hold",
-     0.005,
+     0.016,
      ""
     ],
     "DOGE-USD": [
@@ -5657,7 +5839,7 @@
     ],
     "ETH-USD": [
      "hold",
-     0.002,
+     0.011,
      ""
     ],
     "SOL-USD": [
@@ -5667,7 +5849,7 @@
     ],
     "XRP-USD": [
      "hold",
-     0.0,
+     0.001,
      ""
     ]
    },
@@ -5680,40 +5862,42 @@
    "error": null
   },
   "Boozy": {
-   "at": "2026-09-30T22:10:05.000149Z",
+   "at": "2026-09-30T22:40:05.000141Z",
    "decisions": {
     "BTC-USD": [
      "hold",
-     0.359,
+     0.447,
      ""
     ],
     "DOGE-USD": [
-     "hold",
-     0.237,
-     ""
+     "buy",
+     0.603,
+     "buy (buy p=0.60)"
     ],
     "ETH-USD": [
-     "hold",
-     0.368,
-     ""
+     "buy",
+     0.661,
+     "buy (buy p=0.66)"
     ],
     "SOL-USD": [
-     "hold",
-     0.184,
-     ""
+     "buy",
+     0.534,
+     "buy (buy p=0.53)"
     ],
     "XRP-USD": [
-     "hold",
-     0.143,
+     "buy",
+     0.451,
      ""
     ]
    },
    "counts": {
-    "buy": 0,
-    "hold": 5,
+    "buy": 4,
+    "hold": 1,
     "sell": 0
    },
-   "targets": {},
+   "targets": {
+    "ETH-USD": 0.6613
+   },
    "error": null
   },
   "memory": {
@@ -5750,9 +5934,9 @@
       "2026-09-30T19:59:05.000170+00:00"
      ],
      "BTC-USD": [
-      0.1798,
-      0.3766,
-      "2026-09-30T22:10:05.000149+00:00"
+      0.0905,
+      0.2107,
+      "2026-09-30T22:40:05.000141+00:00"
      ],
      "COIN": [
       0.0565,
@@ -5760,14 +5944,14 @@
       "2026-09-30T19:59:05.000170+00:00"
      ],
      "DOGE-USD": [
-      0.2571,
-      0.4953,
-      "2026-09-30T22:10:05.000149+00:00"
+      0.6404,
+      0.1096,
+      "2026-09-30T22:40:05.000141+00:00"
      ],
      "ETH-USD": [
-      0.0478,
-      0.6438,
-      "2026-09-30T22:10:05.000149+00:00"
+      0.3437,
+      0.1527,
+      "2026-09-30T22:40:05.000141+00:00"
      ],
      "ETHU": [
       0.0587,
@@ -5820,9 +6004,9 @@
       "2026-09-30T19:59:05.000170+00:00"
      ],
      "SOL-USD": [
-      0.0528,
-      0.6809,
-      "2026-09-30T22:10:05.000149+00:00"
+      0.552,
+      0.1299,
+      "2026-09-30T22:40:05.000141+00:00"
      ],
      "SOXL": [
       0.1427,
@@ -5865,9 +6049,9 @@
       "2026-09-30T19:59:05.000170+00:00"
      ],
      "XRP-USD": [
-      0.1302,
-      0.5786,
-      "2026-09-30T22:10:05.000149+00:00"
+      0.4886,
+      0.1247,
+      "2026-09-30T22:40:05.000141+00:00"
      ],
      "NANC": [
       0.1066,
@@ -5910,9 +6094,9 @@
       "2026-09-30T19:59:05.000170+00:00"
      ],
      "BTC-USD": [
-      0.0048,
-      0.0937,
-      "2026-09-30T22:10:05.000149+00:00"
+      0.016,
+      0.0196,
+      "2026-09-30T22:40:05.000141+00:00"
      ],
      "COIN": [
       0.0001,
@@ -5921,13 +6105,13 @@
      ],
      "DOGE-USD": [
       0.0,
-      0.2775,
-      "2026-09-30T22:10:05.000149+00:00"
+      0.1234,
+      "2026-09-30T22:40:05.000141+00:00"
      ],
      "ETH-USD": [
-      0.0017,
-      0.1659,
-      "2026-09-30T22:10:05.000149+00:00"
+      0.0106,
+      0.0243,
+      "2026-09-30T22:40:05.000141+00:00"
      ],
      "ETHU": [
       0.0001,
@@ -5981,8 +6165,8 @@
      ],
      "SOL-USD": [
       0.0001,
-      0.3542,
-      "2026-09-30T22:10:05.000149+00:00"
+      0.1272,
+      "2026-09-30T22:40:05.000141+00:00"
      ],
      "SOXL": [
       0.0,
@@ -6025,9 +6209,9 @@
       "2026-09-30T19:59:05.000170+00:00"
      ],
      "XRP-USD": [
-      0.0001,
-      0.1992,
-      "2026-09-30T22:10:05.000149+00:00"
+      0.0011,
+      0.0494,
+      "2026-09-30T22:40:05.000141+00:00"
      ],
      "NANC": [
       0.0051,
@@ -6070,9 +6254,9 @@
       "2026-09-30T19:59:05.000170+00:00"
      ],
      "BTC-USD": [
-      0.3586,
-      0.1721,
-      "2026-09-30T22:10:05.000149+00:00"
+      0.4468,
+      0.0491,
+      "2026-09-30T22:40:05.000141+00:00"
      ],
      "COIN": [
       0.51,
@@ -6080,14 +6264,14 @@
       "2026-09-30T19:59:05.000170+00:00"
      ],
      "DOGE-USD": [
-      0.237,
-      0.2577,
-      "2026-09-30T22:10:05.000149+00:00"
+      0.6031,
+      0.0689,
+      "2026-09-30T22:40:05.000141+00:00"
      ],
      "ETH-USD": [
-      0.3682,
-      0.257,
-      "2026-09-30T22:10:05.000149+00:00"
+      0.6613,
+      0.041,
+      "2026-09-30T22:40:05.000141+00:00"
      ],
      "ETHU": [
       0.3566,
@@ -6140,9 +6324,9 @@
       "2026-09-30T19:59:05.000170+00:00"
      ],
      "SOL-USD": [
-      0.184,
-      0.3449,
-      "2026-09-30T22:10:05.000149+00:00"
+      0.5338,
+      0.0761,
+      "2026-09-30T22:40:05.000141+00:00"
      ],
      "SOXL": [
       0.2064,
@@ -6185,9 +6369,9 @@
       "2026-09-30T19:59:05.000170+00:00"
      ],
      "XRP-USD": [
-      0.1426,
-      0.3237,
-      "2026-09-30T22:10:05.000149+00:00"
+      0.4507,
+      0.0749,
+      "2026-09-30T22:40:05.000141+00:00"
      ],
      "NANC": [
       0.1125,
