@@ -1,6 +1,6 @@
 # Trading agent — live leaderboard
 
-Mode: **paper** · started 2026-09-24T19:49:18.203581Z · updated 2026-11-15T02:40:05.000146+00:00 · 60129 ticks
+Mode: **paper** · started 2026-09-24T19:49:18.203581Z · updated 2026-11-15T03:10:05.000192+00:00 · 60152 ticks
 
 > Paper money unless the broker mode says otherwise. Backtests use the last ~60 days of 5-minute bars with modelled costs; past results do not predict future returns, and most day-trading strategies lose money after costs.
 
@@ -29,13 +29,13 @@ Best bullish scores: AAPL 6.8, SQQQ 5.9, AMZN 5.6, TSLA 5.2, META 3.4, AMD 3.0
 
 ### AI bees (Jev: typesafe/jev-1.13)
 
-Today: 2145 decisions in 429 calls, $0.0301 spent.
+Today: 2490 decisions in 498 calls, $0.0349 spent.
 
 | Bee | Last decided (UTC) | Buy / hold / sell | Holding | Problem |
 |---|---|---|---|---|
-| Bizzy | 2026-11-15T02:40 | 1 / 4 / 0 | cash |  |
-| Breezy | 2026-11-15T02:40 | 0 / 5 / 0 | cash |  |
-| Boozy | 2026-11-15T02:40 | 3 / 2 / 0 | ETH-USD 66% |  |
+| Bizzy | 2026-11-15T03:10 | 2 / 3 / 0 | cash |  |
+| Breezy | 2026-11-15T03:10 | 0 / 5 / 0 | cash |  |
+| Boozy | 2026-11-15T03:10 | 5 / 0 / 0 | ETH-USD 67% |  |
 
 ### Today's picks (walk-forward)
 
@@ -44,7 +44,7 @@ Today: 2145 decisions in 429 calls, $0.0301 spent.
 | MACD cross | COIN | 3.27 | +5.62% | 11 |
 | Bollinger reversion | TSLA | 2.67 | +2.69% | 7 |
 | RSI momentum | TNA | 2.47 | +2.95% | 5 |
-| Z-score reversion | TQQQ | 2.20 | +4.97% | 6 |
+| Z-score reversion | TQQQ | 2.19 | +4.95% | 6 |
 | RSI momentum | IWM | 2.10 | +0.63% | 5 |
 
 ## Every sleeve (each started with £100)
@@ -56,21 +56,21 @@ Today: 2145 decisions in 429 calls, $0.0301 spent.
 | 3 | Day trade: Open breakout · TQQQ/SQQQ | daytrade | 111.21 | 11.21 | 23 | 65.2 | 14.58 | 2.99 | -4.91 | 27 |
 | 4 | Daily: SMA 20/50 cross · AAPL | daily | 104.63 | 4.63 | 0 | — | 6.58 | 1.81 | -6.60 | 1 |
 | 5 | Day trade: Noise-area momentum · TQQQ/SQQQ | daytrade | 103.88 | 3.88 | 33 | 42.4 | 3.80 | 1.00 | -9.64 | 30 |
-| 6 | Day trade: Stocks in Play ORB | daytrade | 100.96 | 0.96 | 142 | 35.2 | 2.89 | 1.80 | -4.21 | 86 |
-| 7 | Gap and go | momentum | 100.43 | 0.43 | 193 | 33.2 | 6.59 | 1.86 | -9.06 | 230 |
+| 6 | Day trade: Stocks in Play ORB | daytrade | 100.96 | 0.96 | 142 | 35.2 | 2.98 | 1.86 | -4.12 | 86 |
+| 7 | Gap and go | momentum | 100.43 | 0.43 | 193 | 33.2 | 6.72 | 1.89 | -9.06 | 230 |
 | 8 | Daily: Exhaustion hammer | daily | 100.00 | 0.00 | 0 | — | 0.00 | 0.00 | 0.00 | 0 |
 | 9 | AI bee: Breezy | ai | 100.00 | 0.00 | 0 | — | — | — | — | — |
 | 10 | Daily: Connors RSI(2) · 3x ETFs | daily | 98.81 | -1.19 | 8 | 50.0 | 0.44 | 0.22 | -18.69 | 5 |
 | 11 | Hold SPY | benchmark | 98.33 | -1.67 | 0 | — | -0.61 | -0.22 | -6.18 | 1 |
 | 12 | Timing: Nasdaq FTD · QQQ | daily | 96.89 | -3.12 | 1 | 0.0 | -3.27 | -2.15 | -6.65 | 2 |
-| 13 | Agent (rotation) | meta | 96.69 | -3.31 | 191 | 30.4 | -3.17 | -1.11 | -8.46 | 150 |
+| 13 | Agent (rotation) | meta | 96.69 | -3.31 | 191 | 30.4 | -3.13 | -1.09 | -8.46 | 150 |
 | 14 | Copy: Hedge-fund gurus (GURU) | copy | 96.35 | -3.65 | 0 | — | -4.09 | -1.04 | -9.25 | 1 |
 | 15 | Copy: Insider buying | copy | 94.25 | -5.75 | 43 | 39.5 | -6.38 | -1.27 | -14.79 | 60 |
-| 16 | Three white soldiers · 1h | momentum | 93.89 | -6.12 | 20 | 10.0 | -4.01 | -3.41 | -5.99 | 23 |
+| 16 | Three white soldiers · 1h | momentum | 93.89 | -6.12 | 20 | 10.0 | -3.86 | -3.41 | -5.99 | 22 |
 | 17 | Copy: Congress Democrats (NANC) | copy | 93.70 | -6.30 | 0 | — | -4.81 | -1.27 | -10.64 | 1 |
 | 18 | Day trade: Last half hour · TQQQ/SQQQ | daytrade | 92.12 | -7.88 | 23 | 17.4 | -10.09 | -8.07 | -10.13 | 22 |
-| 19 | Trend pullback · 1h | trend | 91.84 | -8.15 | 110 | 22.7 | -16.08 | -6.12 | -17.77 | 69 |
-| 20 | VWAP reversion · 1h | reversion | 90.86 | -9.14 | 150 | 45.3 | -17.34 | -4.25 | -19.50 | 159 |
+| 19 | Trend pullback · 1h | trend | 91.84 | -8.15 | 110 | 22.7 | -16.12 | -6.14 | -17.77 | 69 |
+| 20 | VWAP reversion · 1h | reversion | 90.96 | -9.04 | 152 | 46.1 | -17.26 | -4.23 | -19.50 | 159 |
 | 21 | Squeeze breakout · 1h | breakout | 88.02 | -11.98 | 66 | 21.2 | -3.34 | -0.71 | -15.43 | 81 |
 | 22 | Timing: Nasdaq FTD · TQQQ | daily | 87.28 | -12.72 | 2 | 0.0 | -10.49 | -2.28 | -19.15 | 2 |
 | 23 | Opening range 30m | breakout | 85.82 | -14.19 | 436 | 33.5 | -10.29 | -3.64 | -14.11 | 604 |
@@ -83,75 +83,96 @@ Today: 2145 decisions in 429 calls, $0.0301 spent.
 | 30 | Connors RSI(2) · 1h | reversion | 80.64 | -19.36 | 212 | 40.1 | -17.99 | -6.32 | -18.11 | 112 |
 | 31 | Volume breakout · 1h | breakout | 80.53 | -19.47 | 160 | 28.8 | -14.40 | -3.35 | -23.29 | 89 |
 | 32 | Keltner breakout · 1h | breakout | 80.41 | -19.59 | 121 | 25.6 | -17.02 | -3.43 | -25.39 | 165 |
-| 33 | Stochastic reversion · 1h | reversion | 78.77 | -21.23 | 312 | 46.2 | -27.76 | -4.12 | -28.57 | 413 |
+| 33 | Stochastic reversion · 1h | reversion | 78.86 | -21.14 | 312 | 46.2 | -27.60 | -4.09 | -28.58 | 413 |
 | 34 | Opening range 15m | breakout | 78.27 | -21.73 | 529 | 31.6 | -17.51 | -4.92 | -21.36 | 720 |
-| 35 | MFI reversion · 1h | reversion | 76.97 | -23.03 | 406 | 35.0 | -21.88 | -2.81 | -26.15 | 170 |
+| 35 | MFI reversion · 1h | reversion | 77.08 | -22.92 | 406 | 35.0 | -22.37 | -2.86 | -26.93 | 173 |
 | 36 | ADX DI cross · 1h | trend | 76.53 | -23.47 | 200 | 20.0 | -23.69 | -3.52 | -32.66 | 266 |
-| 37 | Max aggression: 5-day momentum | meta | 76.15 | -23.85 | 21 | 42.9 | -40.05 | -2.59 | -50.62 | 22 |
-| 38 | Hold BTC | benchmark | 75.54 | -24.46 | 2 | 0.0 | -16.81 | -2.47 | -28.91 | 1 |
+| 37 | Hold BTC | benchmark | 76.26 | -23.75 | 2 | 0.0 | -16.08 | -2.33 | -28.91 | 1 |
+| 38 | Max aggression: 5-day momentum | meta | 76.15 | -23.85 | 21 | 42.9 | -40.05 | -2.59 | -50.62 | 22 |
 | 39 | Ichimoku · 1h | trend | 75.37 | -24.63 | 100 | 15.0 | -26.69 | -6.13 | -31.58 | 117 |
 | 40 | Bollinger breakout · 1h | breakout | 75.12 | -24.88 | 183 | 22.4 | -22.62 | -4.70 | -30.71 | 234 |
 | 41 | Max aggression: 1-day momentum | meta | 74.90 | -25.11 | 29 | 27.6 | -20.15 | -0.61 | -57.50 | 41 |
-| 42 | Heikin-Ashi · 1h | trend | 74.62 | -25.38 | 445 | 24.0 | -37.14 | -6.72 | -39.47 | 661 |
+| 42 | Heikin-Ashi · 1h | trend | 74.62 | -25.38 | 445 | 24.0 | -37.21 | -6.72 | -39.47 | 660 |
 | 43 | MACD zero-line · 1h | trend | 73.48 | -26.52 | 171 | 18.7 | -23.28 | -4.56 | -30.99 | 199 |
-| 44 | RSI momentum · 1h | momentum | 72.60 | -27.40 | 171 | 14.0 | -26.62 | -4.07 | -37.92 | 208 |
+| 44 | RSI momentum · 1h | momentum | 72.60 | -27.40 | 171 | 14.0 | -26.59 | -4.07 | -37.92 | 208 |
 | 45 | EMA 20/50 cross · 1h | trend | 72.54 | -27.46 | 109 | 10.1 | -28.26 | -4.77 | -40.51 | 120 |
 | 46 | MACD cross · 1h | trend | 72.12 | -27.88 | 393 | 23.2 | -31.46 | -4.66 | -40.30 | 473 |
 | 47 | Supertrend · 1h | trend | 71.93 | -28.07 | 182 | 14.8 | -29.23 | -4.95 | -36.83 | 206 |
 | 48 | Triple EMA stack · 1h | trend | 71.63 | -28.37 | 151 | 14.6 | -27.22 | -4.49 | -38.65 | 201 |
-| 49 | ROC + volume · 1h | momentum | 71.18 | -28.82 | 399 | 28.8 | -29.52 | -5.27 | -37.68 | 366 |
-| 50 | Bollinger reversion · 1h | reversion | 70.86 | -29.14 | 311 | 40.5 | -36.03 | -5.67 | -37.05 | 398 |
-| 51 | CCI reversion · 1h | reversion | 69.98 | -30.02 | 356 | 42.1 | -38.78 | -6.14 | -39.04 | 475 |
-| 52 | OBV trend · 1h | momentum | 69.68 | -30.32 | 299 | 19.1 | -28.67 | -4.99 | -38.43 | 271 |
+| 49 | ROC + volume · 1h | momentum | 71.18 | -28.82 | 399 | 28.8 | -29.74 | -5.33 | -37.65 | 367 |
+| 50 | Bollinger reversion · 1h | reversion | 70.95 | -29.05 | 311 | 40.5 | -35.83 | -5.62 | -37.04 | 399 |
+| 51 | CCI reversion · 1h | reversion | 70.07 | -29.93 | 356 | 42.1 | -38.71 | -6.12 | -39.04 | 479 |
+| 52 | OBV trend · 1h | momentum | 69.68 | -30.32 | 299 | 19.1 | -28.63 | -4.99 | -38.37 | 270 |
 | 53 | Daily: Momentum burst | daily | 69.40 | -30.60 | 30 | 13.3 | -33.12 | -4.64 | -37.81 | 33 |
 | 54 | Donchian 20/10 · 1h | breakout | 69.23 | -30.77 | 153 | 19.0 | -29.93 | -5.35 | -37.58 | 204 |
-| 55 | Williams %R · 1h | reversion | 65.95 | -34.05 | 398 | 42.0 | -44.67 | -7.46 | -45.18 | 550 |
-| 56 | Agent (ML meta-label) | meta | 65.07 | -34.93 | 1855 | 24.7 | -23.04 | -3.66 | -25.55 | 333 |
+| 55 | Williams %R · 1h | reversion | 66.07 | -33.92 | 398 | 42.0 | -44.58 | -7.43 | -45.18 | 552 |
+| 56 | Agent (ML meta-label) | meta | 65.07 | -34.93 | 1855 | 24.7 | -23.79 | -3.58 | -26.36 | 327 |
 | 57 | EMA 9/21 cross · 1h | trend | 64.70 | -35.30 | 267 | 11.6 | -36.96 | -7.42 | -43.16 | 323 |
-| 58 | VWAP momentum · 1h | momentum | 62.53 | -37.47 | 917 | 22.2 | -52.50 | -10.35 | -53.24 | 1234 |
-| 59 | RSI(14) reversion · 1h | reversion | 61.26 | -38.74 | 196 | 31.1 | -40.46 | -5.97 | -41.22 | 247 |
-| 60 | Candlestick reversal · 1h | reversion | 60.92 | -39.08 | 503 | 27.4 | -46.23 | -8.63 | -46.43 | 615 |
-| 61 | Z-score reversion · 1h | reversion | 60.56 | -39.45 | 215 | 35.3 | -33.82 | -4.70 | -34.52 | 233 |
-| 62 | Three white soldiers | momentum | 58.32 | -41.68 | 546 | 14.7 | -49.22 | -21.30 | -49.45 | 663 |
-| 63 | VWAP momentum ⛔ | momentum | 50.61 | -49.39 | 716 | 8.7 | -99.08 | -42.69 | -99.10 | 5362 |
-| 64 | EMA 20/50 cross ⛔ | trend | 50.58 | -49.42 | 644 | 20.0 | -80.40 | -25.87 | -80.74 | 1423 |
-| 65 | Triple EMA stack ⛔ | trend | 50.49 | -49.51 | 666 | 15.5 | -93.74 | -43.22 | -93.74 | 2537 |
-| 66 | Supertrend ⛔ | trend | 50.43 | -49.57 | 642 | 19.5 | -89.83 | -32.16 | -90.16 | 1936 |
-| 67 | RSI momentum ⛔ | momentum | 50.40 | -49.60 | 658 | 16.7 | -91.39 | -40.06 | -91.53 | 2353 |
-| 68 | Trend pullback ⛔ | trend | 50.40 | -49.60 | 637 | 14.1 | -89.27 | -29.48 | -89.32 | 2161 |
-| 69 | EMA 9/21 cross ⛔ | trend | 50.39 | -49.61 | 736 | 15.9 | -97.93 | -50.18 | -97.95 | 3506 |
-| 70 | OBV trend ⛔ | momentum | 50.37 | -49.63 | 760 | 14.6 | -96.17 | -52.24 | -96.18 | 3451 |
-| 71 | Consensus ⛔ | meta | 50.34 | -49.66 | 619 | 9.9 | -93.40 | -31.22 | -93.43 | 2308 |
-| 72 | Ichimoku ⛔ | trend | 50.30 | -49.70 | 572 | 11.4 | -82.92 | -32.85 | -82.96 | 1655 |
-| 73 | Candlestick reversal ⛔ | reversion | 50.30 | -49.70 | 807 | 14.9 | -99.60 | -50.58 | -99.60 | 6060 |
-| 74 | Donchian 20/10 ⛔ | breakout | 50.25 | -49.75 | 739 | 17.2 | -92.16 | -41.28 | -92.24 | 2625 |
-| 75 | Connors RSI(2) ⛔ | reversion | 50.25 | -49.75 | 752 | 20.2 | -95.08 | -34.59 | -95.08 | 3429 |
-| 76 | MACD cross ⛔ | trend | 50.17 | -49.83 | 660 | 12.9 | -99.82 | -64.43 | -99.82 | 6186 |
-| 77 | MACD zero-line ⛔ | trend | 50.15 | -49.85 | 682 | 14.8 | -92.53 | -42.95 | -92.57 | 2293 |
-| 78 | ROC + volume ⛔ | momentum | 50.11 | -49.89 | 880 | 21.7 | -76.05 | -25.39 | -76.50 | 1662 |
-| 79 | Parabolic SAR ⛔ | trend | 50.11 | -49.89 | 673 | 14.4 | -97.54 | -54.12 | -97.54 | 3501 |
+| 58 | VWAP momentum · 1h | momentum | 62.54 | -37.46 | 917 | 22.2 | -52.56 | -10.35 | -53.23 | 1236 |
+| 59 | RSI(14) reversion · 1h | reversion | 61.46 | -38.54 | 196 | 31.1 | -39.64 | -5.85 | -40.88 | 248 |
+| 60 | Candlestick reversal · 1h | reversion | 60.99 | -39.01 | 503 | 27.4 | -45.87 | -8.60 | -46.14 | 617 |
+| 61 | Z-score reversion · 1h | reversion | 60.69 | -39.31 | 215 | 35.3 | -33.68 | -4.67 | -34.69 | 238 |
+| 62 | Three white soldiers | momentum | 58.79 | -41.21 | 546 | 14.7 | -48.82 | -20.49 | -49.45 | 663 |
+| 63 | VWAP momentum ⛔ | momentum | 50.61 | -49.39 | 716 | 8.7 | -99.07 | -42.03 | -99.09 | 5357 |
+| 64 | EMA 20/50 cross ⛔ | trend | 50.58 | -49.42 | 644 | 20.0 | -80.33 | -25.46 | -80.74 | 1427 |
+| 65 | Triple EMA stack ⛔ | trend | 50.49 | -49.51 | 666 | 15.5 | -93.69 | -42.35 | -93.74 | 2539 |
+| 66 | Supertrend ⛔ | trend | 50.43 | -49.57 | 642 | 19.5 | -89.72 | -31.56 | -90.16 | 1936 |
+| 67 | RSI momentum ⛔ | momentum | 50.40 | -49.60 | 658 | 16.7 | -91.33 | -38.99 | -91.56 | 2354 |
+| 68 | Trend pullback ⛔ | trend | 50.40 | -49.60 | 637 | 14.1 | -89.24 | -29.48 | -89.32 | 2160 |
+| 69 | EMA 9/21 cross ⛔ | trend | 50.39 | -49.61 | 736 | 15.9 | -97.92 | -49.16 | -97.96 | 3507 |
+| 70 | OBV trend ⛔ | momentum | 50.37 | -49.63 | 760 | 14.6 | -96.19 | -51.39 | -96.22 | 3461 |
+| 71 | Consensus ⛔ | meta | 50.34 | -49.66 | 619 | 9.9 | -93.30 | -30.92 | -93.37 | 2307 |
+| 72 | Ichimoku ⛔ | trend | 50.30 | -49.70 | 572 | 11.4 | -82.64 | -31.98 | -82.85 | 1652 |
+| 73 | Candlestick reversal ⛔ | reversion | 50.30 | -49.70 | 807 | 14.9 | -99.60 | -50.51 | -99.60 | 6066 |
+| 74 | Donchian 20/10 ⛔ | breakout | 50.25 | -49.75 | 739 | 17.2 | -92.08 | -40.33 | -92.24 | 2625 |
+| 75 | Connors RSI(2) ⛔ | reversion | 50.25 | -49.75 | 752 | 20.2 | -95.07 | -34.58 | -95.07 | 3424 |
+| 76 | MACD cross ⛔ | trend | 50.17 | -49.83 | 660 | 12.9 | -99.81 | -62.82 | -99.82 | 6183 |
+| 77 | MACD zero-line ⛔ | trend | 50.15 | -49.85 | 682 | 14.8 | -92.48 | -41.96 | -92.60 | 2296 |
+| 78 | ROC + volume ⛔ | momentum | 50.11 | -49.89 | 880 | 21.7 | -75.83 | -24.74 | -76.53 | 1664 |
+| 79 | Parabolic SAR ⛔ | trend | 50.11 | -49.89 | 673 | 14.4 | -97.53 | -54.13 | -97.53 | 3500 |
 | 80 | CCI reversion ⛔ | reversion | 50.01 | -49.99 | 719 | 16.8 | -98.98 | -52.37 | -99.01 | 4967 |
 | 81 | AI bee: Boozy ⛔ | ai | 49.97 | -50.03 | 347 | 5.8 | — | — | — | — |
-| 82 | Squeeze breakout ⛔ | breakout | 49.93 | -50.07 | 610 | 14.1 | -69.09 | -26.92 | -69.09 | 1252 |
-| 83 | Bollinger breakout ⛔ | breakout | 49.93 | -50.07 | 685 | 14.5 | -94.70 | -53.43 | -94.74 | 2802 |
-| 84 | Keltner breakout ⛔ | breakout | 49.91 | -50.09 | 708 | 16.7 | -84.90 | -36.60 | -85.11 | 1780 |
-| 85 | Williams %R ⛔ | reversion | 49.91 | -50.09 | 708 | 18.9 | -99.69 | -62.67 | -99.70 | 6396 |
+| 82 | Squeeze breakout ⛔ | breakout | 49.93 | -50.07 | 610 | 14.1 | -69.05 | -26.92 | -69.05 | 1251 |
+| 83 | Bollinger breakout ⛔ | breakout | 49.93 | -50.07 | 685 | 14.5 | -94.64 | -51.69 | -94.74 | 2802 |
+| 84 | Keltner breakout ⛔ | breakout | 49.91 | -50.09 | 708 | 16.7 | -84.68 | -35.44 | -85.05 | 1779 |
+| 85 | Williams %R ⛔ | reversion | 49.91 | -50.09 | 708 | 18.9 | -99.69 | -62.67 | -99.70 | 6395 |
 | 86 | Z-score reversion ⛔ | reversion | 49.91 | -50.09 | 678 | 22.0 | -91.03 | -29.78 | -91.15 | 2354 |
-| 87 | RSI(14) reversion ⛔ | reversion | 49.88 | -50.12 | 865 | 25.9 | -80.50 | -18.78 | -81.20 | 1829 |
-| 88 | MFI reversion ⛔ | reversion | 49.87 | -50.12 | 749 | 19.8 | -91.15 | -35.65 | -91.25 | 2204 |
-| 89 | Bollinger reversion ⛔ | reversion | 49.86 | -50.14 | 775 | 17.4 | -97.34 | -43.33 | -97.38 | 3911 |
-| 90 | ADX DI cross ⛔ | trend | 49.84 | -50.16 | 668 | 10.2 | -89.30 | -53.65 | -89.49 | 2164 |
-| 91 | Volume breakout ⛔ | breakout | 49.84 | -50.16 | 526 | 12.5 | -65.77 | -28.89 | -65.81 | 824 |
-| 92 | Donchian 55/20 ⛔ | breakout | 49.83 | -50.17 | 629 | 19.2 | -71.53 | -22.49 | -71.63 | 1259 |
-| 93 | VWAP reversion ⛔ | reversion | 49.77 | -50.23 | 825 | 24.8 | -81.39 | -17.81 | -81.93 | 1763 |
-| 94 | Stochastic reversion ⛔ | reversion | 49.77 | -50.23 | 881 | 22.8 | -97.59 | -43.73 | -97.65 | 4370 |
-| 95 | Heikin-Ashi ⛔ | trend | 49.77 | -50.23 | 605 | 8.3 | -99.93 | -89.21 | -99.93 | 8454 |
+| 87 | RSI(14) reversion ⛔ | reversion | 49.88 | -50.12 | 865 | 25.9 | -80.54 | -18.78 | -81.20 | 1831 |
+| 88 | MFI reversion ⛔ | reversion | 49.87 | -50.12 | 749 | 19.8 | -91.17 | -35.67 | -91.27 | 2202 |
+| 89 | Bollinger reversion ⛔ | reversion | 49.86 | -50.14 | 775 | 17.4 | -97.35 | -43.33 | -97.38 | 3911 |
+| 90 | ADX DI cross ⛔ | trend | 49.84 | -50.16 | 668 | 10.2 | -89.17 | -51.16 | -89.51 | 2165 |
+| 91 | Volume breakout ⛔ | breakout | 49.84 | -50.16 | 526 | 12.5 | -65.66 | -28.64 | -65.79 | 823 |
+| 92 | Donchian 55/20 ⛔ | breakout | 49.83 | -50.17 | 629 | 19.2 | -71.28 | -22.05 | -71.63 | 1260 |
+| 93 | VWAP reversion ⛔ | reversion | 49.77 | -50.23 | 825 | 24.8 | -81.37 | -17.80 | -81.90 | 1760 |
+| 94 | Stochastic reversion ⛔ | reversion | 49.77 | -50.23 | 881 | 22.8 | -97.59 | -43.75 | -97.65 | 4369 |
+| 95 | Heikin-Ashi ⛔ | trend | 49.77 | -50.23 | 605 | 8.3 | -99.93 | -85.93 | -99.93 | 8456 |
 | 96 | AI bee: Bizzy ⛔ | ai | 49.68 | -50.32 | 1067 | 8.9 | — | — | — | — |
 
 ## Recent trades
 
 | Time (UTC) | Sleeve | Side | Symbol | £ | P/L £ | Why |
 |---|---|---|---|---:|---:|---|
+| 2026-11-15T03:00 | CCI reversion · 1h | buy | SOL-USD | 3.33 | — | entry signal |
+| 2026-11-15T03:00 | CCI reversion · 1h | buy | ETH-USD | 3.33 | — | entry signal |
+| 2026-11-15T03:00 | CCI reversion · 1h | buy | DOGE-USD | 3.33 | — | entry signal |
+| 2026-11-15T03:00 | CCI reversion · 1h | buy | BTC-USD | 3.33 | — | entry signal |
+| 2026-11-15T03:00 | Williams %R · 1h | buy | SOL-USD | 3.30 | — | entry signal |
+| 2026-11-15T03:00 | Williams %R · 1h | buy | BTC-USD | 3.30 | — | entry signal |
+| 2026-11-15T03:00 | VWAP reversion · 1h | sell | XRP-USD | 23.69 | 0.85 | exit signal |
+| 2026-11-15T03:00 | VWAP reversion · 1h | sell | ETH-USD | 23.30 | 0.45 | exit signal |
+| 2026-11-15T03:00 | Z-score reversion · 1h | buy | XRP-USD | 10.09 | — | entry signal |
+| 2026-11-15T03:00 | Z-score reversion · 1h | buy | SOL-USD | 10.09 | — | entry signal |
+| 2026-11-15T03:00 | Z-score reversion · 1h | buy | ETH-USD | 10.09 | — | entry signal |
+| 2026-11-15T03:00 | Z-score reversion · 1h | buy | DOGE-USD | 10.09 | — | entry signal |
+| 2026-11-15T03:00 | Z-score reversion · 1h | buy | BTC-USD | 10.09 | — | entry signal |
+| 2026-11-15T03:00 | RSI(14) reversion · 1h | buy | SOL-USD | 2.60 | — | entry signal |
+| 2026-11-15T03:00 | RSI(14) reversion · 1h | buy | ETH-USD | 7.67 | — | entry signal |
+| 2026-11-15T03:00 | RSI(14) reversion · 1h | buy | DOGE-USD | 7.67 | — | entry signal |
+| 2026-11-15T03:00 | RSI(14) reversion · 1h | buy | BTC-USD | 7.67 | — | entry signal |
+| 2026-11-15T03:00 | RSI(14) reversion · 1h | sell | XRP-USD | 8.00 | 0.22 | rebalance down |
+| 2026-11-15T03:00 | Candlestick reversal · 1h | buy | DOGE-USD | 3.39 | — | entry signal |
+| 2026-11-15T03:00 | Candlestick reversal · 1h | buy | BTC-USD | 3.39 | — | entry signal |
+| 2026-11-15T03:00 | VWAP momentum · 1h | buy | BTC-USD | 3.13 | — | entry signal |
 | 2026-11-15T02:20 | Three white soldiers | buy | SOL-USD | 14.56 | — | entry signal |
 | 2026-11-15T02:20 | Three white soldiers | buy | ETH-USD | 14.56 | — | entry signal |
 | 2026-11-15T02:15 | Three white soldiers | buy | XRP-USD | 14.53 | — | entry signal |
@@ -171,31 +192,10 @@ Today: 2145 decisions in 429 calls, $0.0301 spent.
 | 2026-11-15T00:00 | Williams %R · 1h | buy | XRP-USD | 3.30 | — | entry signal |
 | 2026-11-15T00:00 | Williams %R · 1h | buy | SOL-USD | 3.30 | — | entry signal |
 | 2026-11-15T00:00 | Williams %R · 1h | buy | ETH-USD | 3.30 | — | entry signal |
-| 2026-11-15T00:00 | Williams %R · 1h | buy | DOGE-USD | 3.30 | — | entry signal |
-| 2026-11-15T00:00 | Williams %R · 1h | buy | BTC-USD | 3.30 | — | entry signal |
-| 2026-11-15T00:00 | VWAP reversion · 1h | buy | XRP-USD | 22.84 | — | entry signal |
-| 2026-11-15T00:00 | VWAP reversion · 1h | buy | SOL-USD | 22.84 | — | entry signal |
-| 2026-11-15T00:00 | VWAP reversion · 1h | buy | ETH-USD | 22.84 | — | entry signal |
-| 2026-11-15T00:00 | VWAP reversion · 1h | buy | BTC-USD | 22.84 | — | entry signal |
-| 2026-11-15T00:00 | Bollinger reversion · 1h | buy | DOGE-USD | 3.19 | — | entry signal |
-| 2026-11-15T00:00 | Bollinger reversion · 1h | buy | BTC-USD | 5.90 | — | entry signal |
-| 2026-11-15T00:00 | Candlestick reversal · 1h | buy | XRP-USD | 4.06 | — | entry signal |
-| 2026-11-15T00:00 | Candlestick reversal · 1h | buy | SOL-USD | 4.06 | — | entry signal |
-| 2026-11-14T23:55 | Three white soldiers | buy | XRP-USD | 14.55 | — | entry signal |
-| 2026-11-14T23:55 | Three white soldiers | buy | BTC-USD | 14.55 | — | entry signal |
-| 2026-11-14T22:10 | Hold BTC | sell | BTC-USD | 75.13 | -13.30 | Daily loss limit (6%) hit; paused until tomorrow (UTC) |
-| 2026-11-14T22:00 | Stochastic reversion · 1h | buy | SOL-USD | 2.86 | — | entry signal |
-| 2026-11-14T22:00 | Stochastic reversion · 1h | buy | DOGE-USD | 4.91 | — | entry signal |
-| 2026-11-14T21:10 | Williams %R · 1h | sell | BTC-USD | 3.83 | -0.10 | stop-loss |
-| 2026-11-14T21:10 | Stochastic reversion · 1h | sell | ETH-USD | 4.47 | -0.16 | stop-loss |
-| 2026-11-14T21:10 | Stochastic reversion · 1h | sell | BTC-USD | 3.29 | -0.08 | stop-loss |
-| 2026-11-14T21:10 | Bollinger reversion · 1h | sell | BTC-USD | 6.31 | -0.14 | stop-loss |
-| 2026-11-14T21:10 | RSI(14) reversion · 1h | sell | BTC-USD | 15.14 | -0.37 | stop-loss |
-| 2026-11-14T20:55 | MFI reversion · 1h | sell | XRP-USD | 8.49 | -0.38 | stop-loss |
 
 ## Data problems on the last tick
 
-- AXIA: yfinance: $AXIA: possibly delisted; no price data found  (5m 2026-09-17 02:40:05.000146+00:00 -> 2026-11-15 02:50:05.000146+00:00); yahoo: cooling down after a rate limit
+- AXIA: yfinance: $AXIA: possibly delisted; no price data found  (5m 2026-09-17 03:10:05.000192+00:00 -> 2026-11-15 03:20:05.000192+00:00); yahoo: cooling down after a rate limit
 - CRAFX: yfinance: 'tradingPeriods'; yahoo: cooling down after a rate limit
 
 Open `dashboard.html` (download it or use a raw HTML viewer) for charts.
